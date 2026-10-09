@@ -209,6 +209,14 @@ footer{border-top:1px solid var(--line2);margin-top:60px}
  .cfg{grid-template-columns:1fr}.viewer{min-height:400px;border-right:0;border-bottom:1px solid var(--line)}.panel{padding:24px 20px}
  .vtoggle{top:82px;right:18px}.vtoggle button{padding:8px 10px;font-size:10px}.frame{inset:72px 10px 10px 10px}.phase{display:none}
 }
+.brakebtn{position:absolute;top:96px;right:250px;z-index:4;display:flex;align-items:center;gap:8px;border:1px solid rgba(255,106,26,.55);background:rgba(5,1,15,.75);color:#ffb38a;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:9px 14px;cursor:pointer;transition:.2s}
+.brakebtn i{width:8px;height:8px;border-radius:50%;background:#ff6a1a;box-shadow:0 0 10px #ff6a1a}.brakebtn:hover,.brakebtn.on{background:rgba(255,106,26,.15);color:#fff}
+.brakehud{position:absolute;left:50%;bottom:86px;transform:translateX(-50%);z-index:4;font-size:13px;color:#ffd0b0;letter-spacing:.06em;opacity:0;transition:opacity .4s;background:rgba(5,1,15,.7);border:1px solid rgba(255,106,26,.4);padding:8px 16px;pointer-events:none}
+.brakehud.on{opacity:1}.brakehud b{color:#fff;font-size:16px}
+.tip{position:absolute;z-index:6;pointer-events:none;font-size:11px;letter-spacing:.06em;color:#fff;background:rgba(5,1,15,.88);border:1px solid #00e5ff;padding:6px 10px;opacity:0;transition:opacity .15s;white-space:nowrap}.tip.on{opacity:1}
+.seg.brands{grid-auto-flow:row;grid-template-columns:repeat(5,1fr)}.seg.brands button{padding:10px 8px;font-size:12.5px}
+.panel .disc{font-size:10px;color:var(--dim);line-height:1.5;margin:10px 0 0}
+@media (max-width:820px){.brakebtn{top:126px;right:18px;padding:7px 10px;font-size:10px}.seg.brands{grid-template-columns:repeat(3,1fr)}.seg.brands button{border-bottom:1px solid var(--line)}}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/"}}</script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
@@ -222,7 +230,7 @@ footer{border-top:1px solid var(--line2);margin-top:60px}
    <svg viewBox="0 0 32 32" fill="none" stroke="#00e5ff" stroke-width="1.2"><circle cx="16" cy="16" r="14"/><circle cx="16" cy="16" r="6"/><path d="M16 0v32M0 16h32" stroke-dasharray="3 2 1 2" stroke-opacity=".6"/><path d="M6 6a14 14 0 0 1 20 0" stroke="#ff4d00" stroke-width="3"/></svg>
    STOPPER
   </a>
-  <span class="dwg mono">DWG STP-6P-380 · REV.C</span>
+  <span class="dwg mono">STOPPER · тормоза</span>
   <nav class="nav mono" id="nav">
    <a href="#hero" data-n="01">Конструкция</a><a href="#configurator" data-n="02">Конфигуратор</a><a href="#features" data-n="03">Спецификация</a><a href="#pricing" data-n="04">Комплекты</a><a href="#contacts" data-n="05">Контакты</a>
   </nav>
@@ -236,7 +244,7 @@ footer{border-top:1px solid var(--line2);margin-top:60px}
  <div class="stage" id="stage">
   <canvas id="gl"></canvas>
   <div class="loader mono" id="loader">ЗАГРУЗКА МОДЕЛИ · 0%</div>
-  <div class="fallback" id="fallback"><img src="assets/render-6p-assembled.png" alt="Суппорт STOPPER 6П и диск Ø380"></div>
+  <div class="fallback" id="fallback"><img src="assets/render-6p-assembled.png" alt="Суппорт на 6 поршней и тормозной диск 380 мм"></div>
   <svg id="lines"></svg>
   <div class="frame" aria-hidden="true">
    <div class="zx t mono"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span></div>
@@ -244,22 +252,25 @@ footer{border-top:1px solid var(--line2);margin-top:60px}
    <div class="zy l mono"><span>A</span><span>B</span><span>C</span><span>D</span><span>E</span></div>
    <div class="zy r mono"><span>A</span><span>B</span><span>C</span><span>D</span><span>E</span></div>
   </div>
-  <div class="phase mono" id="phase"><i></i><span id="phaseTxt">Вид А · сборка</span><i></i></div>
+  <div class="phase mono" id="phase"><i></i><span id="phaseTxt">Собранный узел</span><i></i></div>
   <div class="intro" id="intro">
-   <span class="tag mono"><i></i>Серия 6П-380 · 2026</span>
+   <span class="tag mono"><i></i>Тормозные системы · 2026</span>
    <h1 class="disp">Торможение,<br>рассчитанное<br><em>до микрона.</em></h1>
-   <p><span id="introTxt">6-поршневой суппорт-моноблок, вентилируемый диск Ø380&nbsp;мм и плавающий колокол.</span> Прокрутите вниз, чтобы разобрать узел по деталям.</p>
-   <div class="row"><a href="#pricing" class="btn">Выбрать комплект</a><a href="#cta" class="btn ghost">Консультация инженера</a></div>
-   <div class="kpis mono"><div><b><span id="kP">6</span><small>порш.</small></b><span id="kPd">Ø33/38/43</span></div><div><b><span id="kD">380</span><small>мм</small></b><span id="kDd">диск, 34 мм</span></div><div><b>−4,1<small>кг</small></b><span>неподрессор.</span></div></div>
+   <p><span id="introTxt">Суппорт на 6 поршней, вентилируемый диск 380&nbsp;мм и плавающий колокол.</span> Прокрутите вниз — узел разберётся по деталям. Наведите курсор на деталь, чтобы узнать, что это.</p>
+   <div class="row"><a href="#pricing" class="btn">Выбрать комплект</a><a href="#cta" class="btn ghost">Консультация</a></div>
+   <div class="kpis mono"><div><b><span id="kP">6</span></b><span id="kPd">поршней в суппорте</span></div><div><b><span id="kD">380</span><small>мм</small></b><span id="kDd">диаметр диска</span></div><div><b>−4,1<small>кг</small></b><span>легче штатных тормозов</span></div></div>
   </div>
   <div class="callouts" id="callouts"></div>
   <div class="legend mono" id="legend"></div>
   <div class="vtoggle" id="vtoggle" role="group" aria-label="Вариант суппорта"><button data-v="6p" class="on">6 поршней</button><button data-v="4p">4 поршня</button></div>
+  <button class="brakebtn mono" id="brakeBtn" type="button"><i></i>Тест торможения</button>
+  <div class="brakehud mono" id="brakeHud"></div>
+  <div class="tip mono" id="tip"></div>
   <div class="outro mono" id="outro"><i></i>Сборка завершена · соберите свой комплект ↓<i></i></div>
-  <div class="prog mono"><span>РАЗНЕСЁННЫЙ ВИД</span><div class="bar"><i id="pbar"></i></div><b id="pval">0%</b></div>
+  <div class="prog mono"><span>РАЗБОРКА</span><div class="bar"><i id="pbar"></i></div><b id="pval">0%</b></div>
   <div class="tblock mono" aria-hidden="true">
-   <div class="big">Узел тормозной передний<b class="mono" id="tbCode" style="font-size:10px;color:#8a93a6">STP-GT6-380-F</b></div><div>Масштаб<b>1:2</b></div><div>Лист<b>1 / 1</b></div>
-   <div>Материал<b>Al 7075-T6</b></div><div>Масса<b id="tbMass">11,8 кг</b></div><div>Допуск<b>ISO 2768-f</b></div><div>Ред.<b>C</b></div>
+   <div class="big">Передние тормоза<b class="mono" style="font-size:10px;color:#8a93a6">чертёж для наглядности</b></div><div>Суппорт<b id="tbCode">6 поршней</b></div><div>Диск<b id="tbDisc">380 мм</b></div>
+   <div>Корпус<b>алюминий</b></div><div>Масса узла<b id="tbMass">11,8 кг</b></div><div>Поршни<b>нерж. сталь</b></div><div>Гарантия<b>2 года</b></div>
   </div>
  </div>
 </section>
@@ -272,23 +283,28 @@ footer{border-top:1px solid var(--line2);margin-top:60px}
    <div class="viewer">
     <canvas id="cfgGl" aria-label="3D-модель выбранного комплекта"></canvas>
     <i class="cm a"></i><i class="cm b"></i><i class="cm c"></i><i class="cm d"></i>
-    <div class="vtag tl mono">LIVE 3D · ПОТЯНИТЕ, ЧТОБЫ ПОВЕРНУТЬ</div><div class="vtag tr mono" id="cfgCode">STP-GT6-380-DS</div>
-    <div class="vtag bl mono" id="cfgHint">&nbsp;</div><div class="vtag br mono">М 1:2</div>
+    <div class="vtag tl mono">3D · ПОТЯНИТЕ, ЧТОБЫ ПОВЕРНУТЬ</div><div class="vtag tr mono" id="cfgCode"></div>
+    <div class="vtag bl mono" id="cfgHint">&nbsp;</div><div class="vtag br mono">вид примерный</div>
    </div>
    <div class="panel">
-    <div class="build"><span class="mono">ВАШ КОМПЛЕКТ</span><h3 id="cfgName">STOPPER GT6</h3><span class="tier mono" id="cfgTier"></span></div>
-    <div class="grp"><div class="gh mono"><span><b>01</b>Суппорт</span><em id="cfgCalNote"></em></div>
-     <div class="seg" data-k="cal"><button data-v="4p">4-поршневой<small>GT4 · диск Ø330</small></button><button data-v="6p">6-поршневой<small>GT6 · диск Ø380</small></button></div>
-     <div class="sw" data-k="color"><button data-v="red" style="--c:#c8102e"><i></i>Красный</button><button data-v="yellow" style="--c:#f2b800"><i></i>Жёлтый</button><button data-v="black" style="--c:#16161a"><i></i>Чёрный</button><button data-v="blue" style="--c:#1f4fbf"><i></i>Синий</button></div>
+    <div class="build"><span class="mono">ВАШ КОМПЛЕКТ</span><h3 id="cfgName">STOPPER 6 поршней</h3><span class="tier mono" id="cfgTier"></span></div>
+    <div class="grp"><div class="gh mono"><span><b>01</b>Производитель</span><em id="cfgBrandNote"></em></div>
+     <div class="seg brands" data-k="brand"><button data-v="stopper">STOPPER<small>наши</small></button><button data-v="brembo">Brembo<small>Италия</small></button><button data-v="ap">AP Racing<small>Англия</small></button><button data-v="alcon">Alcon<small>Англия</small></button><button data-v="wilwood">Wilwood<small>США</small></button></div>
     </div>
-    <div class="grp"><div class="gh mono"><span><b>02</b>Колодки</span><em id="cfgPadNote"></em></div>
-     <div class="seg" data-k="pads"><button data-v="street">Street<small>μ 0,40 · 450 °C</small></button><button data-v="sport">Sport<small>μ 0,48 · 650 °C</small></button><button data-v="track">Track<small>μ 0,55 · 800 °C</small></button></div>
+    <div class="grp"><div class="gh mono"><span><b>02</b>Суппорт и цвет</span><em id="cfgCalNote"></em></div>
+     <div class="seg" data-k="cal"><button data-v="4p">4 поршня<small id="m4"></small></button><button data-v="6p">6 поршней<small id="m6"></small></button></div>
+     <div class="sw" data-k="color" id="cfgColors"></div>
     </div>
-    <div class="grp"><div class="gh mono"><span><b>03</b>Диск</span><em id="cfgDiscNote"></em></div>
-     <div class="seg q" data-k="disc"><button data-v="plain">Гладкий<small>тихий, макс. площадь</small></button><button data-v="drilled">Перфорированный<small>сверловка 72 отв.</small></button><button data-v="slotted">С насечками<small>12 насечек</small></button><button data-v="ds">Перф. + насечки<small>баланс охлаждения</small></button></div>
+    <div class="grp"><div class="gh mono"><span><b>03</b>Колодки</span><em id="cfgPadNote"></em></div>
+     <div class="seg q" data-k="pads"><button data-v="city">Для города<small>Hawk HPS</small></button><button data-v="active">Активная езда<small>EBC Yellowstuff</small></button><button data-v="track">Трек-дни<small>Ferodo DS2500</small></button><button data-v="race">Трек и гонки<small>Pagid RS29</small></button></div>
+    </div>
+    <div class="grp"><div class="gh mono"><span><b>04</b>Диск</span><em id="cfgDiscNote"></em></div>
+     <div class="seg q" data-k="disc"><button data-v="plain">Гладкий<small>тихий, долговечный</small></button><button data-v="drilled">Перфорированный<small>с отверстиями</small></button><button data-v="slotted">С насечками<small>с канавками</small></button><button data-v="ds">Отверстия + насечки<small>для активной езды</small></button></div>
+     <div class="seg" data-k="size" id="cfgSizes" style="margin-top:10px"></div>
     </div>
     <dl class="sum mono" id="cfgSpec"></dl>
-    <div class="cprice"><div><span class="mono">ЦЕНА ЗА ОСЬ · ПРИМЕРНАЯ</span><b id="cfgPrice">—</b></div><small class="mono">* примерная, точная после подбора по VIN</small></div>
+    <div class="cprice"><div><span class="mono">ЦЕНА ЗА ОСЬ · ПРИМЕРНАЯ</span><b id="cfgPrice">—</b></div><small class="mono">* цена примерная, точная — после подбора по VIN</small></div>
+    <p class="disc mono">Товарные знаки Brembo, AP Racing, Alcon, Wilwood, Hawk, EBC, Ferodo, Pagid принадлежат их владельцам. Мы не официальный представитель этих брендов; внешний вид в 3D — примерный.</p>
     <button class="btn" id="cfgOrder" type="button">Оставить заявку на этот комплект →</button>
    </div>
   </div>
@@ -303,34 +319,34 @@ footer{border-top:1px solid var(--line2);margin-top:60px}
    <article>
     <div class="idx mono"><b>01</b><span>ДИСК</span></div>
     <svg viewBox="0 0 200 120" fill="none" stroke="#00e5ff" stroke-width=".8"><circle cx="100" cy="60" r="52"/><circle cx="100" cy="60" r="30"/><circle cx="100" cy="60" r="10" stroke-opacity=".5"/><path d="M40 60h120M100 2v116" stroke-dasharray="6 3 1 3" stroke-opacity=".5"/><path d="M48 112h104M48 108v8M152 108v8" stroke-opacity=".7"/><text x="100" y="108" fill="#00e5ff" stroke="none" font-size="8" text-anchor="middle" font-family="JetBrains Mono">Ø380</text><g fill="#00e5ff" stroke="none" opacity=".7"><circle cx="100" cy="17" r="1.6"/><circle cx="137" cy="38" r="1.6"/><circle cx="137" cy="82" r="1.6"/><circle cx="100" cy="103" r="1.6"/><circle cx="63" cy="82" r="1.6"/><circle cx="63" cy="38" r="1.6"/></g></svg>
-    <h3>Вентилируемый диск</h3><p>40 изогнутых рёбер прокачивают воздух как центробежный насос. Сверловка и насечки сбрасывают газы и обновляют рабочий слой колодки.</p>
-    <dl class="mono"><dt>Размер</dt><dd>380×40 мм</dd><dt>Материал</dt><dd>GG20HC</dd><dt>Отверстия</dt><dd>108 · Ø8,4</dd></dl>
+    <h3>Вентилируемый диск</h3><p>Внутри диска — рёбра, которые прокачивают воздух и охлаждают его. Отверстия и насечки отводят газы и очищают колодку.</p>
+    <dl class="mono"><dt>Размер</dt><dd>330–380 мм</dd><dt>Материал</dt><dd>чугун</dd><dt>Охлаждение</dt><dd>рёбра внутри</dd></dl>
    </article>
    <article>
     <div class="idx mono"><b>02</b><span>СУППОРТ</span></div>
-    <svg viewBox="0 0 200 120" fill="none" stroke="#00e5ff" stroke-width=".8"><path d="M30 92 Q100 2 170 92 L152 100 Q100 34 48 100Z"/><circle cx="72" cy="68" r="9"/><circle cx="100" cy="58" r="11"/><circle cx="128" cy="68" r="13"/><path d="M100 10v100" stroke-dasharray="6 3 1 3" stroke-opacity=".5"/><text x="128" y="96" fill="#00e5ff" stroke="none" font-size="7" text-anchor="middle" font-family="JetBrains Mono">Ø43</text><text x="72" y="92" fill="#00e5ff" stroke="none" font-size="7" text-anchor="middle" font-family="JetBrains Mono">Ø33</text></svg>
-    <h3>Моноблок 6П</h3><p>Корпус фрезеруется из цельной поковки: без стяжных болтов, без деформации под давлением. Дифференциальные поршни выравнивают износ колодки.</p>
-    <dl class="mono"><dt>Материал</dt><dd>Al 7075-T6</dd><dt>Поршни</dt><dd>Ti Gr.5</dd><dt>Давление</dt><dd>до 180 бар</dd></dl>
+    <svg viewBox="0 0 200 120" fill="none" stroke="#00e5ff" stroke-width=".8"><path d="M30 92 Q100 2 170 92 L152 100 Q100 34 48 100Z"/><circle cx="72" cy="68" r="9"/><circle cx="100" cy="58" r="11"/><circle cx="128" cy="68" r="13"/><path d="M100 10v100" stroke-dasharray="6 3 1 3" stroke-opacity=".5"/><text x="128" y="96" fill="#00e5ff" stroke="none" font-size="7" text-anchor="middle" font-family="JetBrains Mono">Ø38</text><text x="72" y="92" fill="#00e5ff" stroke="none" font-size="7" text-anchor="middle" font-family="JetBrains Mono">Ø30</text></svg>
+    <h3>Цельный суппорт</h3><p>Корпус из одного куска алюминия — не «дышит» при сильном нажатии, педаль остаётся твёрдой. Поршни разного размера, чтобы колодка стиралась ровно.</p>
+    <dl class="mono"><dt>Корпус</dt><dd>алюминий</dd><dt>Поршни</dt><dd>нерж. сталь</dd><dt>Поршней</dt><dd>4 или 6</dd></dl>
    </article>
    <article>
     <div class="idx mono"><b>03</b><span>КОЛОДКИ</span></div>
-    <svg viewBox="0 0 200 120" fill="none" stroke="#00e5ff" stroke-width=".8"><path d="M36 88 Q100 26 164 88 L150 98 Q100 50 50 98Z"/><path d="M42 80 Q100 20 158 80" stroke-opacity=".5"/><path d="M100 46v52" stroke-opacity=".6"/><path d="M20 60h22M158 60h22" stroke-opacity=".7"/><text x="100" y="114" fill="#00e5ff" stroke="none" font-size="7" text-anchor="middle" font-family="JetBrains Mono">μ 0,45–0,55</text></svg>
-    <h3>Спортивные колодки</h3><p>Стабильный коэффициент трения от холодного старта до трек-дня. Центральная канавка отводит пыль и снижает скрип.</p>
-    <dl class="mono"><dt>Рабочая t°</dt><dd>до 800 °C</dd><dt>Толщина</dt><dd>16 мм</dd><dt>Пылеобр.</dt><dd>низкое</dd></dl>
+    <svg viewBox="0 0 200 120" fill="none" stroke="#00e5ff" stroke-width=".8"><path d="M36 88 Q100 26 164 88 L150 98 Q100 50 50 98Z"/><path d="M42 80 Q100 20 158 80" stroke-opacity=".5"/><path d="M100 46v52" stroke-opacity=".6"/><path d="M20 60h22M158 60h22" stroke-opacity=".7"/><text x="100" y="114" fill="#00e5ff" stroke="none" font-size="7" text-anchor="middle" font-family="JetBrains Mono">канавка</text></svg>
+    <h3>Колодки под ваш стиль</h3><p>От тихих городских до трековых. Канавка посередине отводит пыль, скошенные края уменьшают скрип.</p>
+    <dl class="mono"><dt>Город</dt><dd>до 400 °C</dd><dt>Трек</dt><dd>до 750 °C</dd><dt>Толщина</dt><dd>17–18 мм</dd></dl>
    </article>
    <article>
     <div class="idx mono"><b>04</b><span>КОЛОКОЛ</span></div>
     <svg viewBox="0 0 200 120" fill="none" stroke="#00e5ff" stroke-width=".8"><rect x="60" y="22" width="80" height="76"/><path d="M50 22h100M50 98h100" stroke-opacity=".6"/><rect x="88" y="22" width="24" height="12" stroke-opacity=".6"/><path d="M100 8v104" stroke-dasharray="6 3 1 3" stroke-opacity=".5"/><g stroke-opacity=".7"><circle cx="54" cy="30" r="3"/><circle cx="54" cy="90" r="3"/><circle cx="146" cy="30" r="3"/><circle cx="146" cy="90" r="3"/></g></svg>
-    <h3>Плавающий колокол</h3><p>Алюминиевая ступица на 12 плавающих втулках позволяет диску расширяться при нагреве без коробления и биения.</p>
-    <dl class="mono"><dt>Материал</dt><dd>Al 6061-T6</dd><dt>Втулки</dt><dd>12 шт.</dd><dt>Экономия</dt><dd>−1,6 кг</dd></dl>
+    <h3>Плавающий колокол</h3><p>Алюминиевый центр диска. Диск может чуть «плавать» при нагреве и не ведёт — нет биения руля.</p>
+    <dl class="mono"><dt>Материал</dt><dd>алюминий</dd><dt>Крепление</dt><dd>плавающее</dd><dt>Экономия</dt><dd>−1,6 кг</dd></dl>
    </article>
   </div>
   <div class="render rv">
-   <figure><img src="assets/render-6p-exploded.png" alt="Разнесённый вид тормозного узла STOPPER" loading="lazy"><figcaption class="mono">РЕНДЕР · РАЗНЕСЁННЫЙ ВИД · CYCLES</figcaption></figure>
+   <figure><img src="assets/render-6p-exploded.png" alt="Разнесённый вид тормозного узла STOPPER" loading="lazy"><figcaption class="mono">ВИЗУАЛИЗАЦИЯ · УЗЕЛ В РАЗОБРАННОМ ВИДЕ</figcaption></figure>
    <table>
     <tr><td>Тормозной момент</td><td>+38 % к штатному*</td></tr>
     <tr><td>Масса узла</td><td>11,8 кг</td></tr>
-    <tr><td>Объём рабочих камер</td><td>6 × Ø33/38/43</td></tr>
+    <tr><td>Поршни</td><td>6 шт., Ø30/34/38 мм</td></tr>
     <tr><td>Площадь колодки</td><td>86 см²</td></tr>
     <tr><td>Диаметр колеса</td><td>от 19″</td></tr>
     <tr><td>Тормозная жидкость</td><td>DOT 5.1</td></tr>
@@ -344,20 +360,20 @@ footer{border-top:1px solid var(--line2);margin-top:60px}
 <!-- ===== PRICING ===== -->
 <section class="s" id="pricing">
  <div class="wrap">
-  <div class="shead rv"><div class="k mono">04 / Комплекты</div><h2 class="disp">Три конфигурации. <span>От города до трек-дня.</span></h2></div>
+  <div class="shead rv"><div class="k mono">04 / Комплекты</div><h2 class="disp">Три готовых комплекта. <span>От города до трек-дня.</span></h2></div>
   <div class="plans rv">
-   <div class="plan"><div class="ph mono"><b>КОМПЛЕКТ 01</b><span>STREET</span></div><h3 class="disp">Orbit</h3><p class="sub">GT4 · уверенность каждый день</p>
+   <div class="plan"><div class="ph mono"><b>КОМПЛЕКТ 01</b><span>ГОРОД</span></div><h3 class="disp">Для города</h3><p class="sub">4 поршня · уверенность каждый день</p>
     <div class="price">от 49 900 <small>₽ / ось</small></div>
-    <ul><li>Суппорт-моноблок<span>4П · Ø36/40</span></li><li>Диск гладкий<span>330×32</span></li><li>Колодки<span>STREET</span></li><li>Шланги армированные<span>PTFE</span></li><li>Гарантия<span>1 год</span></li></ul>
-    <a href="#configurator" data-preset="orbit" class="btn ghost" style="justify-content:center">Настроить комплект</a></div>
-   <div class="plan hot"><div class="ph mono"><b>КОМПЛЕКТ 02 · ХИТ</b><span>SPORT</span></div><h3 class="disp">Nova</h3><p class="sub">GT6 · активная езда и серпантины</p>
+    <ul><li>Суппорт<span>4 поршня</span></li><li>Диск гладкий<span>330 мм</span></li><li>Колодки<span>городские</span></li><li>Шланги в оплётке<span>есть</span></li><li>Гарантия<span>1 год</span></li></ul>
+    <a href="#configurator" data-preset="city" class="btn ghost" style="justify-content:center">Настроить комплект</a></div>
+   <div class="plan hot"><div class="ph mono"><b>КОМПЛЕКТ 02 · ХИТ</b><span>АКТИВНАЯ ЕЗДА</span></div><h3 class="disp">Для активной езды</h3><p class="sub">6 поршней · серпантины и быстрая трасса</p>
     <div class="price">от 108 900 <small>₽ / ось</small></div>
-    <ul><li>Суппорт-моноблок<span>6П · Ø33/38/43</span></li><li>Диск перф. + насечки<span>380×34</span></li><li>Колодки<span>SPORT · 650 °C</span></li><li>Жидкость<span>DOT 5.1</span></li><li>Гарантия<span>2 года</span></li></ul>
-    <a href="#configurator" data-preset="nova" class="btn" style="justify-content:center">Настроить комплект</a></div>
-   <div class="plan"><div class="ph mono"><b>КОМПЛЕКТ 03</b><span>TRACK</span></div><h3 class="disp">Supernova</h3><p class="sub">GT6 · максимум для трек-дней</p>
+    <ul><li>Суппорт<span>6 поршней</span></li><li>Диск с отверстиями и насечками<span>380 мм</span></li><li>Колодки<span>для активной езды</span></li><li>Тормозная жидкость<span>DOT 5.1</span></li><li>Гарантия<span>2 года</span></li></ul>
+    <a href="#configurator" data-preset="active" class="btn" style="justify-content:center">Настроить комплект</a></div>
+   <div class="plan"><div class="ph mono"><b>КОМПЛЕКТ 03</b><span>ТРЕК</span></div><h3 class="disp">Для трека</h3><p class="sub">6 поршней · максимум для трек-дней</p>
     <div class="price">от 118 900 <small>₽ / ось</small></div>
-    <ul><li>Суппорт-моноблок<span>6П · Ø33/38/43</span></li><li>Диск перф. + насечки<span>380×34</span></li><li>Колодки<span>TRACK · 800 °C</span></li><li>Жидкость<span>DOT 5.1</span></li><li>Гарантия и настройка<span>2 года</span></li></ul>
-    <a href="#configurator" data-preset="supernova" class="btn ghost" style="justify-content:center">Настроить комплект</a></div>
+    <ul><li>Суппорт<span>6 поршней</span></li><li>Диск с отверстиями и насечками<span>380 мм</span></li><li>Колодки<span>трековые</span></li><li>Тормозная жидкость<span>DOT 5.1</span></li><li>Гарантия и настройка<span>2 года</span></li></ul>
+    <a href="#configurator" data-preset="track" class="btn ghost" style="justify-content:center">Настроить комплект</a></div>
   </div>
   <p class="note mono">* Цены примерные и зависят от модели автомобиля. Точную стоимость назовём после подбора.</p>
  </div>
@@ -399,8 +415,8 @@ footer{border-top:1px solid var(--line2);margin-top:60px}
   </div>
  </div>
  <div class="fbig" aria-hidden="true">STOPPER</div>
- <p class="credit mono">3D-модель 6П: «<a href="https://sketchfab.com/3d-models/brake-assembly-d36d43ad176a45a18095c04b1754ea79" target="_blank" rel="noopener">Brake Assembly</a>» — Nieve5677 (<a href="https://sketchfab.com/niev" target="_blank" rel="noopener">@niev</a>), лицензия <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>; изменено: разделение на детали, PBR-материалы, варианты дисков. 4П и диски-варианты: процедурные модели STOPPER (Blender 4.2). Освещение: HDRI «Studio Small 09», <a href="https://polyhaven.com/a/studio_small_09" target="_blank" rel="noopener">Poly Haven</a>, лицензия CC0. Изображения продукта являются визуализацией.</p>
- <div class="fbot mono"><span>© 2026 STOPPER · Контакты указаны для примера</span><span>DWG STP-6P-380 · ЛИСТ 1/1</span></div>
+ <p class="credit mono">Суппорты, колодки и крепёж — собственные 3D-модели STOPPER (Blender), пропорции по открытым монтажным чертежам AP Racing (CP9660, CP5555, CP9449). Диск и колокол 6-поршневого варианта: «<a href="https://sketchfab.com/3d-models/brake-assembly-d36d43ad176a45a18095c04b1754ea79" target="_blank" rel="noopener">Brake Assembly</a>» — Nieve5677 (<a href="https://sketchfab.com/niev" target="_blank" rel="noopener">@niev</a>), <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>, изменено. HDRI «Studio Small 09», <a href="https://polyhaven.com/a/studio_small_09" target="_blank" rel="noopener">Poly Haven</a>, CC0. Изображения — визуализация.</p>
+ <div class="fbot mono"><span>© 2026 STOPPER · Контакты указаны для примера</span><span>Товарные знаки принадлежат их владельцам</span></div>
 </footer>
 
 <script>
@@ -429,25 +445,42 @@ const isMobile=()=>innerWidth<820;
 const fmt=n=>n.toLocaleString('ru-RU').replace(/\u00a0/g,' ');
 
 const VAR={
- '6p':{code:'GT6',hd:'drilled',R:.19,size:380,disc:'Ø380×40',dim:'Ø380 ±0,05',pist:'Поршни Ø33 / 38 / 43',pistN:'6 × Ø33/38/43',kp:['6','Ø33/38/43','380','диск, 40 мм'],mass:'11,8 кг',price:89900},
- '4p':{code:'GT4',hd:'ds',R:.165,size:330,disc:'Ø330×32',dim:'Ø330 ±0,05',pist:'Поршни Ø36 / 40',pistN:'4 × Ø36/40',kp:['4','Ø36/40','330','диск, 32 мм'],mass:'9,6 кг',price:49900},
+ '6p':{hd:'drilled',R:.19,size:380,disc:'380 мм',dim:'Ø 380 мм',pist:'Поршни Ø30 / 34 / 38 мм',pistN:'6 поршней Ø30/34/38 мм',kp:['6','поршней в суппорте','380','мм — диаметр диска'],mass:'11,8 кг',sizes:[355,380],label:'Суппорт 6 поршней'},
+ '4p':{hd:'ds',R:.165,size:330,disc:'330 мм',dim:'Ø 330 мм',pist:'Поршни Ø36 / 40 мм',pistN:'4 поршня Ø36/40 мм',kp:['4','поршня в суппорте','330','мм — диаметр диска'],mass:'9,6 кг',sizes:[330,355],label:'Суппорт 4 поршня'},
 };
-const PADS={street:{n:'Street',mu:'0,38–0,42',t:'до 450 °C',use:'город, низкое пыление',p:0,fr:0x6a6661,frR:.92,bk:0x8d939b},
-            sport:{n:'Sport',mu:'0,45–0,50',t:'до 650 °C',use:'активная езда, серпантин',p:9000,fr:0x34302c,frR:.85,bk:0xc79a1e},
-            track:{n:'Track',mu:'0,50–0,55',t:'до 800 °C',use:'трек-дни, нужен прогрев',p:19000,fr:0x18181a,frR:.7,bk:0x2251b5}};
-const DISCS={plain:{n:'гладкий',c:'PL',use:'тихая работа, макс. площадь трения',p:0},drilled:{n:'перфорированный',c:'DR',use:'отвод газов, быстрое охлаждение',p:6000},
-             slotted:{n:'с насечками',c:'SL',use:'очистка колодки, стабильность',p:6000},ds:{n:'перф. + насечки',c:'DS',use:'баланс охлаждения и очистки',p:10000}};
-const COLORS={red:{n:'красный',hex:0xc8102e,p:0},yellow:{n:'жёлтый',hex:0xf2b800,p:4900},black:{n:'чёрный',hex:0x141417,p:0},blue:{n:'синий',hex:0x1f4fbf,p:4900}};
-const PRESETS={orbit:{cal:'4p',pads:'street',disc:'plain',color:'red',name:'Orbit'},nova:{cal:'6p',pads:'sport',disc:'ds',color:'red',name:'Nova'},supernova:{cal:'6p',pads:'track',disc:'ds',color:'red',name:'Supernova'}};
+// third-party brands: approximate look of our own 3D model, prices approximate; no partnership implied
+const BRANDS={
+ stopper:{n:'STOPPER',d:'наша линейка',m:{'4p':'4 поршня','6p':'6 поршней'},p:{'4p':49900,'6p':89900},colors:['red','yellow','black','blue'],fin:'gloss',logo:true},
+ brembo:{n:'Brembo',d:'серия GT',m:{'4p':'GT, 4 поршня','6p':'GT, 6 поршней'},p:{'4p':260000,'6p':380000},colors:['red','yellow','black','silver'],fin:'gloss'},
+ ap:{n:'AP Racing',d:'Radi-CAL',m:{'4p':'CP9440, 4 поршня','6p':'CP9660, 6 поршней'},p:{'4p':190000,'6p':280000},colors:['anogrey','red','black'],fin:'anod'},
+ alcon:{n:'Alcon',d:'серия RC',m:{'4p':'RC4, 4 поршня','6p':'RC6, 6 поршней'},p:{'4p':230000,'6p':330000},colors:['red','black','silver'],fin:'gloss'},
+ wilwood:{n:'Wilwood',d:'серия DynaPro',m:{'4p':'DynaPro, 4 поршня','6p':'DynaPro 6A, 6 поршней'},p:{'4p':110000,'6p':160000},colors:['red','black','anogrey'],fin:'powder'},
+};
+const PADS={
+ city:{n:'Hawk HPS',t:'Для города',temp:'до 400 °C',use:'тихие, мало пыли, хорошо работают холодными',p:0,fr:0x5f5a55,frR:.92,bk:0x3a3d42},
+ active:{n:'EBC Yellowstuff',t:'Для активной езды',temp:'до 600 °C',use:'город + серпантин и редкий трек-день',p:7000,fr:0x3a352f,frR:.86,bk:0xc9a227},
+ track:{n:'Ferodo DS2500',t:'Трек-дни',temp:'до 650 °C',use:'быстрая дорога и трек, стабильны при нагреве',p:16000,fr:0x24211f,frR:.8,bk:0x1d4fa8},
+ race:{n:'Pagid RS29',t:'Трек и гонки',temp:'до 750 °C',use:'максимум сцепления, нужен прогрев, шумнее на улице',p:26000,fr:0x141416,frR:.72,bk:0xd8d9db},
+};
+const DISCS={plain:{n:'гладкий',use:'тихий, максимальная площадь трения',p:0},drilled:{n:'перфорированный',use:'отводит газы, быстрее остывает',p:6000},
+             slotted:{n:'с насечками',use:'очищает колодку, стабильное торможение',p:6000},ds:{n:'перфорация + насечки',use:'баланс охлаждения и очистки',p:10000}};
+const COLORS={red:{n:'красный',hex:0xc8102e,p:0},yellow:{n:'жёлтый',hex:0xf2b800,p:4900},black:{n:'чёрный',hex:0x141417,p:0},blue:{n:'синий',hex:0x1f4fbf,p:4900},
+ silver:{n:'серебристый',hex:0xb9bdc3,p:6900,met:true},anogrey:{n:'серый анодированный',hex:0x5d636c,p:0,met:true}};
+const SIZEP={330:0,355:8000,380:0};
+const PRESETS={city:{brand:'stopper',cal:'4p',pads:'city',disc:'plain',color:'red',size:330,name:'Комплект для города'},
+ active:{brand:'stopper',cal:'6p',pads:'active',disc:'ds',color:'red',size:380,name:'Для активной езды'},
+ track:{brand:'stopper',cal:'6p',pads:'track',disc:'ds',color:'red',size:380,name:'Для трека'}};
+const LABEL={Disc_:'Тормозной диск',Hat:'Колокол (центр диска)',CaliperBody:'Корпус суппорта',Piston_:'Поршень',Pad_:'Тормозная колодка',Bracket:'Кронштейн крепления',
+ Bolt_M:'Болт крепления',PadPin:'Палец колодок',PadSpring:'Пружина колодок',Bleed:'Штуцеры прокачки',Fitting:'Подвод тормозной жидкости'};
+const labelOf=n=>{const k=Object.keys(LABEL).find(k=>n.startsWith(k));return k?LABEL[k]:n};
 
 // ---------- shared loading
 const draco=new DRACOLoader().setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/libs/draco/gltf/');
 const gl=new GLTFLoader().setDRACOLoader(draco);
 const loaderEl=$('loader'); const prog={};
 const showProg=()=>{const v=Object.values(prog);if(loaderEl)loaderEl.textContent='ЗАГРУЗКА МОДЕЛИ · '+Math.round(v.reduce((a,b)=>a+b,0)/3*100)+'%'};
-const loadGLB=v=>new Promise((res,rej)=>gl.load(`assets/brake-${v}.glb?r=9`,res,x=>{if(x.total){prog[v]=x.loaded/x.total;showProg()}},rej));
+const loadGLB=v=>new Promise((res,rej)=>gl.load(`assets/brake-${v}.glb?r=v3c`,res,x=>{if(x.total){prog[v]=x.loaded/x.total;showProg()}},rej));
 const loadHDR=()=>new Promise((res,rej)=>new RGBELoader().load('assets/studio_1k.hdr',t=>{prog.h=1;showProg();res(t)},undefined,rej));
-
 function makeRenderer(canvas){
   const r=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:'high-performance'});
   r.setPixelRatio(Math.min(devicePixelRatio,2)); r.toneMapping=THREE.NeutralToneMapping; r.toneMappingExposure=1.0;
@@ -455,8 +488,7 @@ function makeRenderer(canvas){
 }
 function studio(scene,renderer,hdr){
   const pm=new THREE.PMREMGenerator(renderer); hdr.mapping=THREE.EquirectangularReflectionMapping;
-  scene.environment=pm.fromEquirectangular(hdr).texture; scene.environmentIntensity=.85;
-  scene.environmentRotation=new THREE.Euler(0,1.9,0);
+  scene.environment=pm.fromEquirectangular(hdr).texture; scene.environmentIntensity=.85; scene.environmentRotation=new THREE.Euler(0,1.9,0);
   const key=new THREE.DirectionalLight(0xfff4ea,2.4); key.position.set(-1.4,2.2,1.6); key.castShadow=true;
   key.shadow.mapSize.set(1024,1024); Object.assign(key.shadow.camera,{left:-.7,right:.7,top:.7,bottom:-.7,near:.5,far:6}); key.shadow.bias=-.0004; key.shadow.normalBias=.002; key.shadow.radius=4;
   const rim=new THREE.DirectionalLight(0x9fe9ff,1.6); rim.position.set(2.2,.8,-2);
@@ -471,7 +503,10 @@ function ground(R){
   const blob=new THREE.Mesh(new THREE.PlaneGeometry(R*2.3,R*1.1),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(c),transparent:true,depthWrite:false}));
   blob.rotation.x=-Math.PI/2; blob.position.y=.0005; g.add(blob); g.userData={sh,blob}; return g;
 }
-function prep(root){ root.traverse(m=>{ if(m.isMesh){ m.castShadow=true; m.receiveShadow=true; if(m.material){ m.material.envMapIntensity=1; } } }); }
+// emissive heat map for discs (planar UVs: centre .5,.5, radius .5 = disc OD)
+const heatTex=(()=>{const c=document.createElement('canvas');c.width=c.height=512;const x=c.getContext('2d');const g=x.createRadialGradient(256,256,0,256,256,256);
+  g.addColorStop(0,'rgba(0,0,0,1)');g.addColorStop(.55,'rgba(0,0,0,1)');g.addColorStop(.66,'rgb(90,12,0)');g.addColorStop(.8,'rgb(255,96,18)');g.addColorStop(.92,'rgb(230,60,8)');g.addColorStop(1,'rgb(50,6,0)');
+  x.fillStyle=g;x.fillRect(0,0,512,512);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t})();
 
 // ---------- HERO (pinned exploded view)
 const canvas=$('gl'), stage=$('stage');
@@ -481,60 +516,105 @@ const root=new THREE.Group(), model=new THREE.Group(); root.add(model); scene.ad
 function cline(a,b){const g=new THREE.BufferGeometry().setFromPoints([a,b]);const l=new THREE.Line(g,new THREE.LineDashedMaterial({color:0x00e5ff,dashSize:.03,gapSize:.012,transparent:true,opacity:.3}));l.computeLineDistances();return l}
 const axes=[cline(new THREE.Vector3(0,0,-.75),new THREE.Vector3(0,0,.75)),cline(new THREE.Vector3(0,-.3,0),new THREE.Vector3(0,.85,0)),cline(new THREE.Vector3(-.3,0,0),new THREE.Vector3(.3,0,0))];
 axes.forEach(a=>model.add(a));
-const SPEC={PadPin:{d:[0,.34,.30],t:[0,.30]},PadSpring:{d:[0,.40,0],t:[0,.30]},Bleed:{d:[0,.30,-.05],t:[.02,.32]},Fitting:{d:[-.04,.28,-.16],t:[.02,.34]},
- Bolt_M:{d:[0,.10,-.42],t:[.05,.38]},Bracket:{d:[0,.04,-.30],t:[.12,.48]},CaliperBody:{d:[0,.22,0],t:[.18,.55]},Pad_Outer:{d:[0,.12,.17],t:[.30,.66]},
- Pad_Inner:{d:[0,.12,-.16],t:[.30,.66]},Piston_O:{d:[0,.20,.27],t:[.36,.74],xs:.7},Piston_I:{d:[0,.20,-.27],t:[.36,.74],xs:.7},Hat:{d:[0,-.02,.36],t:[.44,.82]},Disc_:{d:[0,-.03,.06],t:[.50,.86]}};
-const H={cur:'6p',groups:{},parts:{},by:{},gnd:null};
+// choreography: path = list of segment end offsets (three.js: y up, +z outboard); f = follow caliper body; spin = turns while moving
+const SPEC={
+ PadPin:{p:[[0,0,.17],[0,.30,.22]],t:[.02,.30]}, PadSpring:{p:[[0,.24,0]],t:[.12,.34]},
+ Bolt_M:{p:[[0,-.05,0],[0,-.22,0]],t:[.04,.36],spin:5},
+ Pad_Outer:{p:[[0,.19,0],[0,.27,.13]],t:[.20,.54]}, Pad_Inner:{p:[[0,.19,0],[0,.27,-.13]],t:[.22,.56]},
+ Bracket:{p:[[0,-.04,-.16],[0,-.12,-.30]],t:[.30,.60]},
+ CaliperBody:{p:[[0,.21,0]],t:[.38,.68]},
+ Bleed:{p:[[0,.07,0]],t:[.62,.80],f:1}, Fitting:{p:[[-.04,.03,-.07]],t:[.62,.80],f:1},
+ Piston_O:{p:[[0,0,.09],[0,-.03,.20]],t:[.62,.92],f:1,xs:.5}, Piston_I:{p:[[0,0,-.09],[0,-.03,-.20]],t:[.64,.94],f:1,xs:.5},
+ Hat:{p:[[0,0,.18],[0,-.02,.34]],t:[.50,.86]}, Disc_:{p:[[0,-.03,.05]],t:[.50,.86]}};
+const H={cur:'6p',groups:{},parts:{},by:{},gnd:null,disc:null};
 const edgeMat=new THREE.LineBasicMaterial({color:0x00e5ff,transparent:true,opacity:0});
 function calls(v){const V=VAR[v];return[
- {k:'Disc_'+V.hd,n:'01',h:'Диск вентилируемый '+V.disc,p:v==='6p'?'GG20HC · вентилируемый · перфорированный':'GG20HC · 40 изогнутых рёбер · перф. + насечки'},
- {k:'Hat',n:'02',h:'Колокол плавающий',p:v==='6p'?'Al 6061-T6 · твёрдое анодирование':'Al 6061-T6 · 12 плавающих втулок'},
- {k:'CaliperBody',n:'03',h:(v==='6p'?'Суппорт-моноблок 6П':'Суппорт-моноблок 4П'),p:'Поковка Al 7075-T6 · фрезеровка ЧПУ · эмаль'},
- v==='6p'?{k:'Bleed',n:'04',h:'Прокачка · 4 штуцера',p:'Латунь · колпачки EPDM · магистраль-перемычка'}:{k:'Piston_O2',n:'04',h:V.pist,p:'Нерж. сталь · дифференциальная схема'},
- {k:'Pad_Outer',n:'05',h:'Колодки STOPPER RS',p:'Street / Sport / Track · до 800 °C'},
- {k:'Bracket',n:'06',h:'Кронштейн радиальный',p:'Al 7075-T6 · анодирование'},
- {k:'Bolt_M2',n:'07',h:'Крепёж M12×1,5',p:'Титан Gr.5 · момент 110 Н·м'},
- {k:'PadPin',n:'08',h:'Пальцы и фиксаторы колодок',p:'Нерж. сталь · противоскрипная пружина'}].filter(c=>!H.by[v]||H.by[v][c.k])}
+ {k:'Disc_'+V.hd,n:'01',h:'Тормозной диск '+V.disc,p:'вентилируемый, с рёбрами внутри'},
+ {k:'Hat',n:'02',h:'Колокол (центр диска)',p:'алюминий, плавающее крепление'},
+ {k:'CaliperBody',n:'03',h:V.label,p:'цельный алюминиевый корпус, эмаль'},
+ {k:'Piston_O2',n:'04',h:'Поршни',p:V.pist.replace('Поршни ','нержавеющая сталь, ')},
+ {k:'Pad_Outer',n:'05',h:'Тормозные колодки',p:'стальная основа, накладка с канавкой'},
+ {k:'Bracket',n:'06',h:'Кронштейн крепления',p:'радиальное крепление на 2 болта'},
+ {k:'Bolt_M2',n:'07',h:'Болты крепления',p:'титан, откручиваются при разборке'},
+ {k:'PadPin',n:'08',h:'Палец и пружина колодок',p:'держат колодки без стука'}].filter(c=>!H.by[v]||H.by[v][c.k])}
 let CALL=[];
 function buildCallouts(){
   const w=$('callouts'); w.innerHTML=''; CALL=calls(H.cur);
   CALL.forEach(c=>{const d=document.createElement('div');d.className='co';d.innerHTML=`<div class="n mono">${c.n} ——</div><h4>${c.h}</h4><p class="mono">${c.p}</p>`;w.appendChild(d);c.el=d});
-  $('legend').innerHTML=CALL.map(c=>`<div><b>${c.n}</b>${c.h.replace(/ Ø\d+×\d+| Ø[\d /]+$| M12×1,5| STOPPER RS|-моноблок/,'')}</div>`).join('');
+  $('legend').innerHTML=CALL.map(c=>`<div><b>${c.n}</b>${c.h.replace(/ \d+ мм$/,'')}</div>`).join('');
   const V=VAR[H.cur]; $('kP').textContent=V.kp[0];$('kPd').textContent=V.kp[1];$('kD').textContent=V.kp[2];$('kDd').textContent=V.kp[3];
-  $('tbCode').textContent=`STP-${V.code}-${V.size}-F`; $('introTxt').textContent=`${V.kp[0]==='6'?'6':'4'}-поршневой суппорт-моноблок, вентилируемый диск Ø${V.size} мм и плавающий колокол.`; $('tbMass').textContent=V.mass;
+  $('tbCode').textContent=V.label.replace('Суппорт ',''); $('tbDisc').textContent=V.disc;
+  $('introTxt').textContent=`Суппорт на ${V.kp[0]==='6'?'6 поршней':'4 поршня'}, вентилируемый диск ${V.size} мм и плавающий колокол.`; $('tbMass').textContent=V.mass;
 }
 function setHeroVariant(v){ H.cur=v; for(const k in H.groups) H.groups[k].visible=(k===v);
   document.querySelectorAll('#vtoggle button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
-  buildCallouts(); if(H.gnd){H.gnd.position.y=-VAR[v].R-.001;} last=-1; tick(); }
+  buildCallouts(); if(H.gnd){H.gnd.position.y=-VAR[v].R-.001;} last=-1; }
 $('vtoggle').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;setHeroVariant(b.dataset.v); if(window.CFG) CFG.set({cal:b.dataset.v});});
 
-let P=0,last=-1; function tick(){ if(P!==last){ last=P; update(); } }
+let P=0,Ps=0,last=-1;
 const svg=$('lines'); const v3=new THREE.Vector3();
 function onResize(){const w=stage.clientWidth,h=stage.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();svg.setAttribute('viewBox',`0 0 ${w} ${h}`)}
-addEventListener('resize',()=>{onResize();last=-1;tick()});
+addEventListener('resize',()=>{onResize();last=-1});
 function proj(obj,local){ v3.copy(local); obj.localToWorld(v3); v3.project(camera); return [(v3.x+1)/2*stage.clientWidth,(1-v3.y)/2*stage.clientHeight]; }
 const _b=new THREE.Box3(), _c=new THREE.Vector3();
 function worldCenterScreen(o){ _b.setFromObject(o); _b.getCenter(_c); _c.project(camera); return [(_c.x+1)/2*stage.clientWidth,(1-_c.y)/2*stage.clientHeight]; }
 function explodeAmount(p){ return Math.min(clamp((p-.06)/.56), 1-clamp((p-.80)/.14)); }
+const tmp=new THREE.Vector3();
+function pathAt(path,k,out){ out.set(0,0,0); if(k<=0) return out; const n=path.length, f=k*n, i=Math.min(n-1,Math.floor(f)), u=ease(f-i);
+  const a=i?path[i-1]:[0,0,0], b=path[i]; return out.set(a[0]+(b[0]-a[0])*u, a[1]+(b[1]-a[1])*u, a[2]+(b[2]-a[2])*u); }
+// ---- braking demo state
+const DEMO={on:false,t0:0,ang:0,heat:0,clamp:0,zoom:0};
+function demoStep(now){
+  if(!DEMO.on) return false; const t=DEMO.fix!=null?DEMO.fix:(now-DEMO.t0)/1000;
+  const spd=t<.9?1:Math.max(0,1-ease(clamp((t-.9)/2.8)));            // wheel speed 1..0
+  DEMO.ang+=spd*.22;
+  DEMO.clamp=t<.45?-clamp(t/.45):t<.9?-1+2*ease(clamp((t-.45)/.45)):t<6.2?1:1-clamp((t-6.2)/.6);    // -1 retracted .. 1 clamped
+  DEMO.heat=t<.9?0:t<3.8?ease(clamp((t-.9)/2.9)):Math.max(0,1-clamp((t-3.8)/4.5));
+  DEMO.zoom=t<.6?ease(t/.6):t<7?1:1-clamp((t-7)/1.2);
+  const kmh=Math.round(200*spd), deg=Math.round(60+640*DEMO.heat);
+  $('brakeHud').innerHTML=`<b>${kmh}</b> км/ч &nbsp;·&nbsp; диск <b>${deg}</b> °C`;
+  if(t>8.6){DEMO.on=false;DEMO.heat=0;DEMO.clamp=0;DEMO.zoom=0;$('brakeHud').classList.remove('on');$('brakeBtn').classList.remove('on');applyHeat(0);}
+  return true;
+}
+function applyHeat(h){ const g=H.groups[H.cur]; if(!g) return; const d=H.by[H.cur]['Disc_'+VAR[H.cur].hd]; if(!d) return;
+  d.traverse(m=>{ if(m.isMesh){ const mt=m.material; if(!mt.userData.heat){ mt.emissiveMap=heatTex; mt.userData.heat=1; mt.needsUpdate=true; }
+    mt.emissive.setRGB(1,.55+.35*h,.25+.3*h); mt.emissiveIntensity=h*h*1.5; } }); }
+$('brakeBtn').addEventListener('click',()=>{ if(DEMO.on) return; const r=$('hero').getBoundingClientRect(); if(r.top<-30){ scrollTo({top:scrollY+r.top,behavior:'instant'}); P=Ps=0; }
+  DEMO.on=true; DEMO.t0=performance.now(); $('brakeHud').classList.add('on'); $('brakeBtn').classList.add('on'); });
+// ---- hover highlight
+const ray=new THREE.Raycaster(), ndc=new THREE.Vector2(); let hovered=null;
+function partOf(obj){ const g=H.groups[H.cur]; while(obj&&obj.parent&&obj.parent!==g) obj=obj.parent; return obj&&obj.parent===g?obj:null; }
+function setHL(o,on){ if(!o) return; o.traverse(m=>{ if(m.isMesh&&m.material&&m.material.emissive&&!m.material.userData.heat){ m.material.emissive.setHex(on?0x00a8c0:0); m.material.emissiveIntensity=on?.55:1; } }); }
+stage.addEventListener('pointermove',e=>{ if(isMobile()||!H.groups[H.cur]) return; const r=canvas.getBoundingClientRect(); ndc.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);
+  ray.setFromCamera(ndc,camera); const hit=ray.intersectObject(H.groups[H.cur],true).find(h=>h.object.isMesh&&h.object.visible); const p=hit?partOf(hit.object):null;
+  if(p!==hovered){ setHL(hovered,false); hovered=p; setHL(hovered,true); last=-1; }
+  const tip=$('tip'); if(p){ tip.textContent=labelOf(p.name); tip.style.left=(e.clientX-r.left+16)+'px'; tip.style.top=(e.clientY-r.top+12)+'px'; tip.classList.add('on'); } else tip.classList.remove('on'); });
+stage.addEventListener('pointerleave',()=>{ setHL(hovered,false); hovered=null; $('tip').classList.remove('on'); last=-1; });
 
 function update(){
   if(!H.groups[H.cur]) return;
-  const w=stage.clientWidth,h=stage.clientHeight,mob=isMobile(); const E=explodeAmount(P), e=ease(E);
-  const intro=$('intro'); const io_=clamp(1-P/.10); intro.style.opacity=io_; intro.style.transform=(mob?'':'translateY(-46%) ')+`translateX(${-40*(1-io_)}px)`; intro.style.pointerEvents=io_>.3?'auto':'none';
-  $('outro').style.opacity=clamp((P-.9)/.06);
+  const w=stage.clientWidth,h=stage.clientHeight,mob=isMobile(); const E=explodeAmount(Ps), e=ease(E);
+  const intro=$('intro'); const io_=clamp(1-Ps/.10); intro.style.opacity=io_; intro.style.transform=(mob?'':'translateY(-46%) ')+`translateX(${-40*(1-io_)}px)`; intro.style.pointerEvents=io_>.3?'auto':'none';
+  $('outro').style.opacity=clamp((Ps-.9)/.06);
   { const lg=$('legend'); const lo=mob?clamp((E-.04)/.14):1; lg.style.opacity=lo; lg.style.visibility=lo<.02?'hidden':'visible'; }
-  const lift=mob? .36*(1-clamp(P/.12))+.07*e : 0;
-  const dist=(mob?2.6:1.55)+e*(mob?1.4:1.0);
-  camera.position.set(0,.18+e*.25-lift,dist); camera.lookAt(0,.08+e*.14-lift,0);
-  root.position.x=mob?0:.18*(1-clamp(P/.12))*(P<.5?1:0);
-  root.rotation.y=-0.66+e*.04; root.rotation.x=.10+e*.12;
-  for(const p of H.parts[H.cur]){ const k=ease(clamp((E-p.t[0])/(p.t[1]-p.t[0]))); p.o.position.copy(p.base).addScaledVector(p.d,k); }
-  const by=H.by[H.cur]; by['Disc_'+VAR[H.cur].hd].rotation.z=-P*2.2; by.Hat.rotation.z=-P*2.2;
+  const lift=mob? .36*(1-clamp(Ps/.12))+.07*e : 0;
+  const dist=(mob?2.6:1.55)+e*(mob?1.4:1.0)-DEMO.zoom*(mob?.5:.32);
+  camera.position.set(0,.18+e*.25-lift-DEMO.zoom*.04,dist); camera.lookAt(0,.08+e*.14-lift+DEMO.zoom*.04,0);
+  root.position.x=mob?0:.18*(1-clamp(Ps/.12))*(Ps<.5?1:0);
+  root.rotation.y=-0.66+e*.04+DEMO.zoom*.12; root.rotation.x=.10+e*.12;
+  const parts=H.parts[H.cur]; const body=parts.find(p=>p.o.name==='CaliperBody'); let bodyOff=new THREE.Vector3();
+  if(body){ const s=body.s; pathAt(s.p,clamp((E-s.t[0])/(s.t[1]-s.t[0])),bodyOff); }
+  const cl=DEMO.clamp*.0035;
+  for(const p of parts){ const s=p.s, k=clamp((E-s.t[0])/(s.t[1]-s.t[0])); pathAt(s.p,k,tmp); if(s.xs) tmp.x+=p.base.x*s.xs*ease(k)*3;
+    p.o.position.copy(p.base).add(tmp); if(s.f) p.o.position.add(bodyOff);
+    if(s.spin) p.o.rotation.y=p.r0+ease(k)*s.spin*Math.PI*2;
+    if(DEMO.on&&E<.02){ const n=p.o.name; const sg=n.endsWith('Outer')||n.startsWith('Piston_O')?-1:n.endsWith('Inner')||n.startsWith('Piston_I')?1:0; if(sg&&(n.startsWith('Pad_')||n.startsWith('Piston_'))) p.o.position.z+=sg*cl*(n.startsWith('Pad_')?1:1); } }
+  const by=H.by[H.cur]; const dk=by['Disc_'+VAR[H.cur].hd]; dk.rotation.z=-Ps*2.2-DEMO.ang; by.Hat.rotation.z=-Ps*2.2-DEMO.ang;
   edgeMat.opacity=e*.32; axes.forEach(a=>a.material.opacity=.12+e*.45);
   if(H.gnd){H.gnd.userData.sh.material.opacity=.45*(1-e); H.gnd.userData.blob.material.opacity=.9*(1-e);}
   renderer.render(scene,camera);
-  $('pbar').style.width=(P*100)+'%'; $('pval').textContent=Math.round(e*100)+'%';
-  $('phaseTxt').textContent=P>.9?'Сборка · вид А':e<.02?'Вид А · сборка':e<.98?'Разборка узла · '+Math.round(e*100)+'%':'Разнесённый вид · 8 позиций';
+  $('pbar').style.width=(Ps*100)+'%'; $('pval').textContent=Math.round(e*100)+'%';
+  $('phaseTxt').textContent=DEMO.on?'Тест торможения':Ps>.9?'Узел снова собран':e<.02?'Собранный узел':e<.98?'Разборка · '+Math.round(e*100)+'%':'Разобранный вид · 8 деталей';
   let out=''; const items=[];
   CALL.forEach((c,i)=>{const o=by[c.k]; if(!o) return; const show=E>.18+i*.085; c.el.classList.toggle('on',show); const [x,y]=worldCenterScreen(o); items.push({c,x,y,show});});
   if(mob){ items.forEach(t=>{ if(!t.show) return; out+=`<circle cx="${t.x}" cy="${t.y}" r="9" fill="#05010f" stroke="#00e5ff"/><text x="${t.x}" y="${t.y+3.5}" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#00e5ff">${t.c.n}</text>`; }); }
@@ -545,7 +625,7 @@ function update(){
       const ex=side==='l'?lx+260:lx-10, el=side==='l'?ex+40:ex-40;
       out+=`<polyline points="${ex},${ly} ${el},${ly} ${t.x},${t.y}" fill="none" stroke="#00e5ff" stroke-opacity=".55"/><circle cx="${t.x}" cy="${t.y}" r="3.5" fill="#05010f" stroke="#00e5ff"/><circle cx="${t.x}" cy="${t.y}" r="1.2" fill="#00e5ff"/><line x1="${ex}" y1="${ly-6}" x2="${ex}" y2="${ly+6}" stroke="#00e5ff" stroke-opacity=".8"/>`; }); };
   place(L,'l'); place(R,'r');
-  if(E>.55){ const V=VAR[H.cur], d=by['Disc_'+V.hd], par=d.parent, c0=d.position.clone();
+  if(E>.55){ const V=VAR[H.cur], d=dk, par=d.parent, c0=d.position.clone();
     const a=proj(par,c0.clone().add(new THREE.Vector3(0,V.R,0))), b=proj(par,c0.clone().add(new THREE.Vector3(0,-V.R,0)));
     const cc=proj(par,c0), tp=proj(par,c0.clone().add(new THREE.Vector3(V.R,0,0)));
     const ang=Math.atan2(b[1]-a[1],b[0]-a[0]), nx=Math.sin(ang), ny=Math.cos(ang), off=Math.abs(tp[0]-cc[0])+34, op=clamp((E-.55)/.3);
@@ -556,6 +636,9 @@ function update(){
   svg.innerHTML=out;
 }
 function readP(){const r=$('hero').getBoundingClientRect();P=clamp(-r.top/(r.height-innerHeight));}
+function tick(now){ let dirty=false; const d=P-Ps; if(Math.abs(d)>1e-4){ Ps+=d*.14; dirty=true; } else if(Ps!==P){ Ps=P; dirty=true; }
+  if(demoStep(now)){ applyHeat(DEMO.heat); dirty=true; }
+  if(dirty||last<0){ last=1; update(); } }
 
 // ---------- CONFIGURATOR
 function makeConfigurator(gltfs,hdr){
@@ -565,39 +648,49 @@ function makeConfigurator(gltfs,hdr){
   ctl.minDistance=1.0; ctl.maxDistance=2.6; ctl.minPolarAngle=.5; ctl.maxPolarAngle=1.75; ctl.autoRotate=true; ctl.autoRotateSpeed=.7;
   const G={}, mats={}, pads={}, discs={};
   for(const v of ['6p','4p']){ const g=gltfs[v].scene.clone(true); g.traverse(m=>{ if(m.isMesh){ m.material=m.material.clone(); m.castShadow=m.receiveShadow=true; } });
-    mats[v]={paint:[],fr:[],bk:[]}; discs[v]={}; pads[v]=[];
-    g.traverse(m=>{ if(m.isMesh){ const n=m.material.name; if(n==='Caliper_Paint')mats[v].paint.push(m.material); if(n==='Pad_Friction')mats[v].fr.push(m.material); if(n==='Pad_Backing')mats[v].bk.push(m.material);} });
+    mats[v]={paint:[],fr:[],bk:[],logo:[]}; discs[v]={}; pads[v]=[];
+    g.traverse(m=>{ if(m.isMesh){ const n=m.material.name; if(n==='Caliper_Paint')mats[v].paint.push(m.material); if(n==='Pad_Friction')mats[v].fr.push(m.material); if(n==='Pad_Backing')mats[v].bk.push(m.material); if(n==='Logo_Paint')mats[v].logo.push(m.material);} });
     g.children.forEach(o=>{ if(o.name.startsWith('Disc_')) discs[v][o.name.slice(5)]=o; if(o.name.startsWith('Pad_')) pads[v].push({o,base:o.position.clone(),s:o.name==='Pad_Outer'?1:-1}); });
     const holder=new THREE.Group(); holder.add(g); const gnd=ground(VAR[v].R); gnd.position.y=-VAR[v].R-.001; holder.add(gnd); holder.rotation.y=-.35;
     sc.add(holder); G[v]=holder; }
-  const st={cal:"6p",color:"red",pads:"sport",disc:"drilled"}; let peek=0, peekT=0, visible=false, dirty=true;
+  const st={brand:'stopper',cal:'6p',color:'red',pads:'active',disc:'drilled',size:380}; let peek=0, peekT=0, visible=false, dirty=true;
   function resize(){const w=box.clientWidth,h=box.clientHeight;r.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix();dirty=true}
   addEventListener('resize',resize); resize();
   ctl.addEventListener('start',()=>{ctl.autoRotate=false}); ctl.addEventListener('change',()=>dirty=true);
   new IntersectionObserver(es=>es.forEach(e=>visible=e.isIntersecting),{threshold:.05}).observe(box);
+  function renderOptions(){ const B=BRANDS[st.brand];
+    if(!B.colors.includes(st.color)) st.color=B.colors[0];
+    if(!VAR[st.cal].sizes.includes(st.size)) st.size=VAR[st.cal].sizes[VAR[st.cal].sizes.length-1];
+    $('cfgColors').innerHTML=B.colors.map(c=>`<button data-v="${c}" style="--c:#${COLORS[c].hex.toString(16).padStart(6,'0')}"><i></i>${COLORS[c].n[0].toUpperCase()+COLORS[c].n.slice(1)}</button>`).join('');
+    $('cfgSizes').innerHTML=VAR[st.cal].sizes.map(s=>`<button data-v="${s}">${s} мм<small>${SIZEP[s]?'+'+fmt(SIZEP[s])+' ₽':'базовый'}</small></button>`).join('');
+    $('m4').textContent=B.m['4p']; $('m6').textContent=B.m['6p']; }
   function apply(){
+    renderOptions(); const B=BRANDS[st.brand], C=COLORS[st.color];
     for(const v in G){ G[v].visible=(v===st.cal); for(const k in discs[v]) discs[v][k].visible=(k===st.disc);
-      mats[v].paint.forEach(m=>{m.color.setHex(COLORS[st.color].hex); m.roughness=st.color==='black'?.38:.3;});
+      mats[v].paint.forEach(m=>{m.color.setHex(C.hex); m.metalness=C.met?.75:B.fin==='anod'?.35:.0; m.roughness=C.met?.32:B.fin==='powder'?.48:B.fin==='anod'?.36:st.color==='black'?.38:.3;
+        if('clearcoat' in m) m.clearcoat=B.fin==='gloss'?1:B.fin==='anod'?.25:.4; });
+      mats[v].logo.forEach(m=>{ if(B.logo){m.color.setHex(0xf2f2f2);m.roughness=.4;m.metalness=0;} else {m.color.setHex(C.hex);m.roughness=mats[v].paint[0]?.roughness??.3;m.metalness=mats[v].paint[0]?.metalness??0;} });
       mats[v].fr.forEach(m=>{m.color.setHex(PADS[st.pads].fr); m.roughness=PADS[st.pads].frR;});
       mats[v].bk.forEach(m=>{m.color.setHex(PADS[st.pads].bk); m.metalness=.3; m.roughness=.45;}); }
-    document.querySelectorAll('.panel [data-k]').forEach(g=>g.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===st[g.dataset.k])));
-    const V=VAR[st.cal], Pd=PADS[st.pads], Dc=DISCS[st.disc], C=COLORS[st.color];
-    const price=V.price+Pd.p+Dc.p+C.p; const tier=Object.values(PRESETS).find(p=>p.cal===st.cal&&p.pads===st.pads&&p.disc===st.disc);
-    const name=`STOPPER ${V.code} · ${Pd.n} · Ø${V.size} ${Dc.n}`;
-    $('cfgName').textContent=name; $('cfgTier').textContent=tier?`= КОМПЛЕКТ ${tier.name.toUpperCase()}`:'';
-    $('cfgCode').textContent=`STP-${V.code}-${V.size}-${Dc.c}-${Pd.n.toUpperCase()}`; $('cfgPrice').textContent=fmt(price)+' ₽';
-    $('cfgCalNote').textContent=C.p?`спецокраска +${fmt(C.p)} ₽`:'эмаль, 2 слоя лака';
-    $('cfgPadNote').textContent=Pd.use; $('cfgDiscNote').textContent=Dc.use;
-    $('cfgSpec').innerHTML=`<dt>Суппорт</dt><dd>моноблок ${V.pistN} · ${C.n}</dd><dt>Диск</dt><dd>${V.disc} мм · ${Dc.n}</dd><dt>Колодки</dt><dd>${Pd.n} · μ ${Pd.mu} · ${Pd.t}</dd><dt>Масса узла</dt><dd>≈ ${V.mass}</dd><dt>Колёса</dt><dd>от ${st.cal==='6p'?'19':'17'}″</dd>`;
-    $('cfgHint').textContent=peekT>0?'КОЛОДКИ ВЫДВИНУТЫ ДЛЯ ОСМОТРА':'\u00a0';
+    document.querySelectorAll('.panel [data-k]').forEach(g=>g.querySelectorAll('button').forEach(b=>b.classList.toggle('on',String(b.dataset.v)===String(st[g.dataset.k]))));
+    const V=VAR[st.cal], Pd=PADS[st.pads], Dc=DISCS[st.disc];
+    const price=B.p[st.cal]+Pd.p+Dc.p+C.p+(SIZEP[st.size]||0)-(st.cal==='6p'&&st.size===355?8000:0);
+    const tier=st.brand==='stopper'?Object.values(PRESETS).find(p=>p.cal===st.cal&&p.pads===st.pads&&p.disc===st.disc):null;
+    const name=`${B.n} ${B.m[st.cal]}`;
+    $('cfgName').textContent=name; $('cfgTier').textContent=tier?`= ${tier.name.toUpperCase()}`:''; $('cfgTier').style.display=tier?'':'none';
+    $('cfgCode').textContent=`${B.n} · ${st.size} мм · ${Pd.n}`; $('cfgPrice').textContent='≈ '+fmt(price)+' ₽';
+    $('cfgBrandNote').textContent=B.d; $('cfgCalNote').textContent=C.p?`особый цвет +${fmt(C.p)} ₽`:(B.fin==='anod'?'анодирование':'эмаль + лак');
+    $('cfgPadNote').textContent=Pd.t+' · '+Pd.temp; $('cfgDiscNote').textContent=Dc.use;
+    $('cfgSpec').innerHTML=`<dt>Суппорт</dt><dd>${name} · ${C.n}</dd><dt>Диск</dt><dd>${st.size} мм · ${Dc.n}</dd><dt>Колодки</dt><dd>${Pd.n} — ${Pd.use}</dd><dt>Поршни</dt><dd>${V.pistN}</dd><dt>Колёса</dt><dd>от ${st.size>=380?'19':st.size>=355?'18':'17'}″</dd>`;
+    $('cfgHint').textContent=peekT>performance.now()?'КОЛОДКИ ВЫДВИНУТЫ ДЛЯ ОСМОТРА':'\u00a0';
     window.__cfg={...st,price,name}; dirty=true;
   }
-  function set(o,src){ Object.assign(st,o); if(src==='pads'){peekT=performance.now()+3200;} apply(); }
-  document.querySelectorAll('.panel [data-k]').forEach(g=>g.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
-    set({[g.dataset.k]:b.dataset.v},g.dataset.k); if(g.dataset.k==='cal'&&H.cur!==b.dataset.v) setHeroVariant(b.dataset.v);}));
-  $('cfgOrder').addEventListener('click',()=>{const f=$('form'); const c=window.__cfg; f.kit.value=`${c.name} · ${COLORS[c.color].n} · ≈ ${fmt(c.price)} ₽/ось`;
+  function set(o,src){ for(const k in o) st[k]=k==='size'?+o[k]:o[k]; if(src==='pads'){peekT=performance.now()+3200;} apply(); }
+  document.querySelector('.panel').addEventListener('click',e=>{const b=e.target.closest('[data-k] button'); if(!b) return; const k=b.closest('[data-k]').dataset.k;
+    set({[k]:b.dataset.v},k); if(k==='cal'&&H.cur!==b.dataset.v) setHeroVariant(b.dataset.v);});
+  $('cfgOrder').addEventListener('click',()=>{const f=$('form'); const c=window.__cfg; f.kit.value=`${c.name} · ${COLORS[c.color].n} · диск ${c.size} мм ${DISCS[c.disc].n} · колодки ${PADS[c.pads].n} · ≈ ${fmt(c.price)} ₽/ось (примерно)`;
     $('cta').scrollIntoView({behavior:'smooth'}); setTimeout(()=>f.name.focus({preventScroll:true}),700);});
-  document.querySelectorAll('[data-preset]').forEach(a=>a.addEventListener('click',()=>{const p=PRESETS[a.dataset.preset]; set({cal:p.cal,pads:p.pads,disc:p.disc,color:p.color}); setHeroVariant(p.cal);}));
+  document.querySelectorAll('[data-preset]').forEach(a=>a.addEventListener('click',()=>{const p=PRESETS[a.dataset.preset]; set({brand:p.brand,cal:p.cal,pads:p.pads,disc:p.disc,color:p.color,size:p.size}); setHeroVariant(p.cal);}));
   apply();
   (function loop(){ requestAnimationFrame(loop); if(!visible) return;
     const now=performance.now(), target=now<peekT?1:0; const np=peek+(target-peek)*.08; if(Math.abs(np-peek)>1e-4){peek=np;dirty=true;} else peek=target;
@@ -613,19 +706,21 @@ Promise.all([loadGLB('6p'),loadGLB('4p'),loadHDR()]).then(([g6,g4,hdr])=>{
   const gltfs={'6p':g6,'4p':g4};
   try{ window.CFG=makeConfigurator(gltfs,hdr); }catch(e){ console.error(e); }
   studio(scene,renderer,hdr);
-  for(const v of ['6p','4p']){ const g=gltfs[v].scene; prep(g); H.groups[v]=g; H.parts[v]=[]; H.by[v]={}; g.visible=v===H.cur;
+  for(const v of ['6p','4p']){ const g=gltfs[v].scene; H.groups[v]=g; H.parts[v]=[]; H.by[v]={}; g.visible=v===H.cur;
+    g.traverse(m=>{ if(m.isMesh){ m.castShadow=m.receiveShadow=true; m.material=m.material.clone(); } });
     g.children.slice().forEach(o=>{ H.by[v][o.name]=o; if(o.name.startsWith('Disc_')&&o.name!=='Disc_'+VAR[v].hd){o.visible=false;return;}
-      const key=Object.keys(SPEC).find(k=>o.name.startsWith(k)); if(!key) return; const s=SPEC[key]; const d=new THREE.Vector3(...s.d); if(s.xs) d.x+=o.position.x*s.xs*3;
-      H.parts[v].push({o,base:o.position.clone(),d,t:s.t});
-      o.traverse(m=>{ if(m.isMesh && m.geometry.index && m.geometry.index.count<200000){ m.add(new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry,38),edgeMat)); } }); });
+      const key=Object.keys(SPEC).find(k=>o.name.startsWith(k)); if(!key) return;
+      H.parts[v].push({o,base:o.position.clone(),r0:o.rotation.y,s:SPEC[key]});
+      o.traverse(m=>{ if(m.isMesh && m.geometry.index && m.geometry.index.count<60000){ m.add(new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry,38),edgeMat)); } }); });
     model.add(g); }
   H.gnd=ground(.19); model.add(H.gnd);
-  loaderEl&&loaderEl.remove(); onResize(); setHeroVariant('6p'); readP(); last=-1; tick();
-  addEventListener('scroll',()=>{readP();tick();},{passive:true});
-  (function loop(){ tick(); requestAnimationFrame(loop); })();
+  loaderEl&&loaderEl.remove(); onResize(); setHeroVariant('6p'); readP(); Ps=P; last=-1;
+  addEventListener('scroll',readP,{passive:true});
+  (function loop(now){ tick(now||performance.now()); requestAnimationFrame(loop); })();
 }).catch(err=>{ console.error(err); loaderEl&&loaderEl.remove(); $('fallback').style.display='flex'; });
-window.__H=H; window.__THREE=THREE; window.__R=()=>{last=-1;tick()};
-window.__stopper={get progress(){return P}, parts:()=>H.parts[H.cur].map(p=>p.o.name)};
+window.__H=H; window.__THREE=THREE; window.__R=()=>{last=-1};
+window.__stopper={get progress(){return P}, parts:()=>(H.parts[H.cur]||[]).map(p=>p.o.name), demo:()=>$('brakeBtn').click(), demoAt:t=>{DEMO.fix=t;if(!DEMO.on)$('brakeBtn').click()}};
+
 </script>
 </body>
 </html>
