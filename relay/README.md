@@ -1,6 +1,6 @@
-# Релей заявок STOPPER → Telegram-бот
+# Релей заявок VRAKK → Telegram-бот
 
-Сайт отправляет заявку (JSON, `Content-Type: text/plain`) на адрес из `window.STOPPER_LEADS.endpoint` в `index.html`.
+Сайт отправляет заявку (JSON, `Content-Type: text/plain`) на адрес из `window.VRAKK_LEADS.endpoint` в `index.html`.
 Релей хранит токен бота и chat_id, поэтому в коде сайта их нет. Пока `endpoint` пустой, кнопка формы открывает
 `https://t.me/hv99978?text=…` с уже заполненной заявкой.
 
@@ -12,11 +12,11 @@
 ## 2а. Cloudflare Worker (рекомендуется)
 ```
 npm i -g wrangler && wrangler login
-wrangler init stopper-leads   # выберите «Hello World», JavaScript
+wrangler init vrakk-leads   # выберите «Hello World», JavaScript
 # замените src/index.js содержимым cloudflare-worker.js
 wrangler secret put TG_TOKEN
 wrangler secret put TG_CHAT_ID
-wrangler deploy               # получите https://stopper-leads.<аккаунт>.workers.dev
+wrangler deploy               # получите https://vrakk-leads.<аккаунт>.workers.dev
 ```
 Либо в панели Cloudflare: Workers → Create → вставить код → Settings → Variables → добавить секреты.
 
@@ -24,7 +24,7 @@ wrangler deploy               # получите https://stopper-leads.<акка
 См. комментарии в `apps-script.gs` (свойства скрипта TG_TOKEN / TG_CHAT_ID, развёртывание «Веб-приложение, доступ: все»).
 
 ## 3. Подключение на сайте
-В `index.html`: `window.STOPPER_LEADS={endpoint:'https://stopper-leads.<аккаунт>.workers.dev'};`
+В `index.html`: `window.VRAKK_LEADS={endpoint:'https://vrakk-leads.<аккаунт>.workers.dev'};`
 После этого основная кнопка — «Отправить заявку»: заявка уходит боту автоматически, посетитель видит
 «Заявка отправлена, свяжемся в течение 15 минут». Если релей не ответил, открывается Telegram с готовым текстом.
 

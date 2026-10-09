@@ -1,4 +1,4 @@
-// STOPPER — релей заявок в Telegram (Cloudflare Worker).
+// VRAKK — релей заявок в Telegram (Cloudflare Worker).
 // Токен бота и chat_id хранятся в секретах воркера, на сайте их нет.
 //   wrangler secret put TG_TOKEN     — токен от @BotFather
 //   wrangler secret put TG_CHAT_ID   — id чата, куда слать заявки (см. README)
@@ -28,7 +28,7 @@ export default {
     if (!clean(d.name) || digits.length < 10 || digits.length > 15) return json({ ok: false, error: 'validation' }, 400);
 
     const text = (clean(d.text) ? String(d.text).slice(0, MAX) : [
-      'Заявка STOPPER', '', 'Имя: ' + clean(d.name), 'Телефон: ' + phone, '',
+      'Заявка VRAKK', '', 'Имя: ' + clean(d.name), 'Телефон: ' + phone, '',
       'Автомобиль: ' + (clean(d.car) || 'не указан'), d.vin && 'VIN: ' + clean(d.vin), d.pcd && 'Разболтовка: ' + clean(d.pcd), '',
       d.brand && 'Бренд: ' + clean(d.brand), d.pistons && 'Поршни: ' + clean(d.pistons), d.disc && 'Диск: ' + clean(d.disc),
       d.pads && 'Колодки: ' + clean(d.pads), d.color && 'Цвет: ' + clean(d.color), d.price && 'Цена: ≈ ' + Number(d.price).toLocaleString('ru-RU') + ' ₽ за ось',

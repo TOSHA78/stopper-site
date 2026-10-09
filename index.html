@@ -3,22 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>STOPPER — тормозные системы Brembo, AP Racing, Alcon, Wilwood: 3D-конфигуратор и подбор по VIN</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%2713%27 fill=%27none%27 stroke=%27%2300e5ff%27 stroke-width=%273%27/%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%275%27 fill=%27%23ff6a1a%27/%3E%3C/svg%3E">
+<title>VRAKK — тормозные системы Brembo, AP Racing, Alcon, Wilwood: 3D-конфигуратор и подбор по VIN</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <meta name="description" content="Спортивные тормоза на 4 и 6 поршней с дисками 330–380 мм. Соберите комплект в 3D-конфигураторе, проверьте посадку по VIN и отправьте заявку в Telegram.">
 <meta name="theme-color" content="#05010f">
 <link rel="canonical" href="https://tosha78.github.io/stopper-site/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ru_RU">
-<meta property="og:site_name" content="STOPPER">
-<meta property="og:title" content="STOPPER — тормозные системы под ваш автомобиль">
+<meta property="og:site_name" content="VRAKK">
+<meta property="og:title" content="VRAKK — тормозные системы под ваш автомобиль">
 <meta property="og:description" content="3D-конфигуратор: суппорт, диск, колодки и цвет. Подбор по VIN и заявка в Telegram.">
 <meta property="og:url" content="https://tosha78.github.io/stopper-site/">
 <meta property="og:image" content="https://tosha78.github.io/stopper-site/assets/og.jpg">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#05010f;--ink:#e8edf5;--mute:#8a93a6;--dim:#6f7990;--cyan:#00e5ff;--violet:#8b5cf6;--hot:#ff4d00;--line:rgba(0,229,255,.16);--line2:rgba(0,229,255,.35)}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -45,8 +46,9 @@ body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;bac
 /* header */
 .hdr{position:fixed;inset:0 0 auto 0;z-index:50;border-bottom:1px solid var(--line);background:rgba(5,1,15,.72);backdrop-filter:blur(10px)}
 .hdr .wrap{display:flex;align-items:center;height:64px;gap:28px}
-.logo{display:flex;align-items:center;gap:12px;font-family:Unbounded,Manrope,sans-serif;font-weight:600;letter-spacing:.24em;font-size:14px}
-.logo svg{width:26px;height:26px}
+.logo{display:flex;align-items:center;gap:10px;font-family:Unbounded,Manrope,sans-serif;font-weight:800;font-size:19px;line-height:1;color:#fff}
+.logo .mk{width:30px;height:23px;flex:none;filter:drop-shadow(0 0 10px rgba(255,36,22,.35))}
+.logo .wm{display:inline-block;transform:skewX(-12deg);letter-spacing:.04em}.logo .wm b{color:#ff2416;font-weight:800}
 .dwg{font-size:10.5px;color:var(--dim);border-left:1px solid var(--line);padding-left:16px}
 .nav{margin-left:auto;display:flex;gap:30px;font-size:11.5px;text-transform:uppercase;color:var(--mute)}
 .nav a{position:relative;transition:color .2s}.nav a:hover{color:var(--cyan)}
@@ -212,7 +214,8 @@ footer{border-top:1px solid var(--line2);margin-top:60px}
 .fgrid>div{padding:40px 28px;border-right:1px solid var(--line)}.fgrid>div:last-child{border-right:0}
 .fgrid h5{font-size:10.5px;color:var(--dim);text-transform:uppercase;font-weight:400;margin-bottom:18px}
 .fgrid li{list-style:none;margin-bottom:10px;font-size:14px;color:var(--mute)}.fgrid li a:hover{color:var(--cyan)}
-.fbig{font-family:Unbounded,Manrope,sans-serif;font-weight:700;font-size:15.2vw;line-height:.8;letter-spacing:-.04em;text-align:center;color:transparent;-webkit-text-stroke:1px rgba(0,229,255,.28);user-select:none;padding-top:30px;overflow:hidden;white-space:nowrap}
+.fbig b{font-weight:inherit;-webkit-text-stroke-color:rgba(255,36,22,.45)}
+.fbig{font-family:Unbounded,Manrope,sans-serif;font-weight:800;font-style:normal;font-size:15.2vw;line-height:.8;letter-spacing:-.04em;text-align:center;color:transparent;-webkit-text-stroke:1px rgba(0,229,255,.28);user-select:none;padding-top:30px;overflow:hidden;white-space:nowrap;transform:skewX(-10deg)}
 .fbot{border-top:1px solid var(--line);display:flex;justify-content:space-between;padding:18px 28px;font-size:10.5px;color:var(--dim)}
 .rv{opacity:0;transform:translateY(24px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}.rv.on{opacity:1;transform:none}
 /* responsive */
@@ -277,11 +280,8 @@ footer{border-top:1px solid var(--line2);margin-top:60px}
 
 <header class="hdr">
  <div class="wrap">
-  <a href="#hero" class="logo" aria-label="STOPPER">
-   <svg viewBox="0 0 32 32" fill="none" stroke="#00e5ff" stroke-width="1.2"><circle cx="16" cy="16" r="14"/><circle cx="16" cy="16" r="6"/><path d="M16 0v32M0 16h32" stroke-dasharray="3 2 1 2" stroke-opacity=".6"/><path d="M6 6a14 14 0 0 1 20 0" stroke="#ff4d00" stroke-width="3"/></svg>
-   STOPPER
-  </a>
-  <span class="dwg mono">STOPPER · тормоза</span>
+  <a href="#hero" class="logo" aria-label="VRAKK — на главную"><svg class="mk" viewBox="0 0 64 48" aria-hidden="true"><path d="M2 2h16l14 31L46 2h16L39 46H25Z" fill="#ff2416"/><path d="M11 2h5l14 31-2.8 6Z" fill="#05010f" opacity=".55"/></svg><span class="wm">VRA<b>KK</b></span></a>
+  <span class="dwg mono">VRAKK · тормозные системы</span>
   <nav class="nav mono" id="nav">
    <a href="#hero" data-n="01">Конструкция</a><a href="#configurator" data-n="02">Конфигуратор</a><a href="#features" data-n="03">Спецификация</a><a href="#pricing" data-n="04">Комплекты</a><a href="#contacts" data-n="05">Контакты</a>
   </nav>
@@ -491,15 +491,15 @@ footer{border-top:1px solid var(--line2);margin-top:60px}
 <footer id="contacts">
  <div class="wrap" style="padding:0">
   <div class="fgrid">
-   <div><a href="#hero" class="logo">STOPPER</a><p style="color:#8a93a6;font-size:14px;line-height:1.6;max-width:320px;margin-top:16px">Инженерные тормозные системы для дороги и трека. Проектирование, подбор, установка.</p></div>
+   <div><a href="#hero" class="logo" aria-label="VRAKK"><svg class="mk" viewBox="0 0 64 48" aria-hidden="true"><path d="M2 2h16l14 31L46 2h16L39 46H25Z" fill="#ff2416"/><path d="M11 2h5l14 31-2.8 6Z" fill="#05010f" opacity=".55"/></svg><span class="wm">VRA<b>KK</b></span></a><p style="color:#8a93a6;font-size:14px;line-height:1.6;max-width:320px;margin-top:16px">Инженерные тормозные системы для дороги и трека. Проектирование, подбор, установка.</p></div>
    <div><h5 class="mono">Разделы</h5><ul><li><a href="#hero">Конструкция</a></li><li><a href="#features">Спецификация</a></li><li><a href="#pricing">Комплекты</a></li><li><a href="#configurator">Конфигуратор</a></li><li><a href="#fit">Подбор по авто</a></li></ul></div>
    <div><h5 class="mono">Связь</h5><ul><li><a href="https://t.me/hv99978" target="_blank" rel="noopener">Telegram: @hv99978</a></li><li><a href="#cta">Заявка на сайте</a></li><li><a href="#fit">Подбор по VIN</a></li></ul></div>
    <div><h5 class="mono">Комплекты</h5><ul><li><a href="#configurator" data-preset="city">Для города</a></li><li><a href="#configurator" data-preset="active">Для активной езды</a></li><li><a href="#configurator" data-preset="track">Для трека</a></li><li><a href="#configurator">Конфигуратор</a></li></ul></div>
   </div>
  </div>
- <div class="fbig" aria-hidden="true">STOPPER</div>
+ <div class="fbig" aria-hidden="true">VRA<b>KK</b></div>
  <p class="credit mono">3D-модели суппортов (Sketchfab, лицензия <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>, изменены: масштаб, ориентация, посадка на диск, материалы, цвет; логотип Spoon удалён): «<a href="https://sketchfab.com/3d-models/free-brake-caliper-brembo-39980ecb6a474ba38b1cf8e7df411a56" target="_blank" rel="noopener">FREE - Brake Caliper Brembo</a>» — Unity Fan (@unityfan777); «<a href="https://sketchfab.com/3d-models/ef37be6ddce44f49b6f616145c1e16af" target="_blank" rel="noopener">6- Lug Brake Rotor and Brembo brake calipers</a>» — @DRIVER-FIRE; «<a href="https://sketchfab.com/3d-models/brake-calliper-b18ea04df4504172a70a4b32d72818a2" target="_blank" rel="noopener">BRAKE CALLIPER</a>» и «<a href="https://sketchfab.com/3d-models/brake-calliper-0934bfa92bf44b1fbf4bbb5ce5e4c85b" target="_blank" rel="noopener">BRAKE CALLIPER</a>» — VR DESIGNER (@vr.designer_09); «<a href="https://sketchfab.com/3d-models/spoon-car-caliper-ad511e42db72421a9fa0b7b177833f93" target="_blank" rel="noopener">SPOON CAR CALIPER</a>» — ijiklvn (@kelvin-carvalho). Модели AP Racing, Alcon и Wilwood в конфигураторе — похожие по типу суппорты, не точные копии. Разборка в первом экране — детали тех же моделей «BRAKE CALLIPER» (корпус, половины, поршни, колодки, пальцы, болты); у 6-поршневого варианта поршни переставлены по три на сторону, щель под диск расширена под толщину диска. Диск и колокол 6-поршневого варианта: «<a href="https://sketchfab.com/3d-models/brake-assembly-d36d43ad176a45a18095c04b1754ea79" target="_blank" rel="noopener">Brake Assembly</a>» — Nieve5677 (@niev), CC BY 4.0, изменено. HDRI «Studio Small 09», <a href="https://polyhaven.com/a/studio_small_09" target="_blank" rel="noopener">Poly Haven</a>, CC0. Изображения — визуализация.</p>
- <div class="fbot mono"><span>© 2026 STOPPER</span><span>Товарные знаки принадлежат их владельцам</span></div>
+ <div class="fbot mono"><span>© 2026 VRAKK</span><span>Товарные знаки принадлежат их владельцам</span></div>
 </footer>
 
 <script>
@@ -514,7 +514,7 @@ document.querySelectorAll('.rv').forEach(el=>io.observe(el));
 /* ==== Приём заявок ====
    endpoint — адрес релея (Cloudflare Worker или Google Apps Script из папки relay/), который хранит токен бота и chat_id
    и пересылает заявку в Telegram. Пока пусто — кнопка формы открывает чат @hv99978 с уже заполненной заявкой. */
-window.STOPPER_LEADS={endpoint:''};
+window.VRAKK_LEADS={endpoint:''};
 
 (function(){
 const $=id=>document.getElementById(id), fmt=n=>n.toLocaleString('ru-RU').replace(/\u00a0/g,' ');
@@ -603,7 +603,7 @@ function leadData(){ const f=form, D=window.__cfgDesc||null, F=window.__fitInfo|
     pcd:F&&F.pcd?`${F.pcd}${F.cb?', ЦО '+F.cb+' мм':''}${F.w?', колёса R'+F.w:''}`:'',
     kit:f.kit.value.trim(), comment:(f.comment&&f.comment.value.trim())||'', D, link:(window.__kitLink&&window.__kitLink())||location.origin+location.pathname}; }
 function leadText(maxComment){ const d=leadData(), D=d.D, L=[];
-  L.push('Заявка STOPPER','');
+  L.push('Заявка VRAKK','');
   L.push('Имя: '+(d.name||'—'), 'Телефон: '+(d.phone||'—'), '');
   L.push('Автомобиль: '+(d.car?d.car.split(' · ')[0]:'не указан')); if(d.vin) L.push('VIN: '+d.vin); if(d.pcd) L.push('Разболтовка: '+d.pcd); L.push('');
   if(D){ L.push('Бренд: '+D.brand+' '+D.series, 'Поршни: '+D.pist, 'Диск: '+D.disc, 'Колодки: '+D.pads, 'Цвет: '+D.color, 'Цена: ≈ '+fmt(D.price)+' ₽ за ось (примерно)'); }
@@ -625,7 +625,7 @@ $('tgSend').onclick=()=>{ if(form.phone.value.trim()&&!phoneOk(form.phone.value)
   else { const w=window.open('about:blank','_blank'); if(w){ w.opener=null; w.location.href=L.web; } else location.href=L.web; } };
 // one primary action: with LEADS_ENDPOINT the request is delivered automatically (relay → Telegram bot);
 // without it (or if the relay fails) the same button opens the chat with the request already typed in
-const ENDPOINT=((window.STOPPER_LEADS||{}).endpoint||'').trim();
+const ENDPOINT=((window.VRAKK_LEADS||{}).endpoint||'').trim();
 const sendBtn=$('sendBtn'), tgAlt=$('tgSend');
 if(ENDPOINT){ sendBtn.textContent='Отправить заявку →'; tgAlt.style.display=''; $('legal').textContent='Заявка придёт инженеру сразу. Нажимая кнопку, вы соглашаетесь на обработку персональных данных.'; } else { sendBtn.textContent='Отправить в Telegram →'; tgAlt.style.display='none'; }
 function validate(needAll){ const f=form, okPhone=phoneOk(f.phone.value), okName=!!f.name.value.trim();
