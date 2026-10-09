@@ -95,7 +95,7 @@ body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;bac
 /* configurator */
 .cfg{display:grid;grid-template-columns:1.35fr 1fr;border:1px solid var(--line2)}
 .viewer{position:relative;min-height:640px;border-right:1px solid var(--line);background:radial-gradient(ellipse at 50% 58%,rgba(139,92,246,.10),transparent 62%)}
-#cfgGl{position:absolute;inset:0;width:100%;height:100%;cursor:grab;display:block}
+#cfgGl{position:sticky;top:56px;width:100%;height:min(calc(100vh - 56px),100%);min-height:400px;cursor:grab;display:block}
 #cfgGl:active{cursor:grabbing}
 .vtag{position:absolute;font-size:10px;color:var(--dim);pointer-events:none}.vtag.tl{left:18px;top:16px;color:var(--cyan)}.vtag.tr{right:18px;top:16px}.vtag.bl{left:18px;bottom:16px}.vtag.br{right:18px;bottom:16px}
 .viewer .cm{position:absolute;width:14px;height:14px;border-color:var(--line2);border-style:solid;pointer-events:none}
@@ -207,7 +207,7 @@ footer{border-top:1px solid var(--line2);margin-top:60px}
  .legend{display:grid;position:absolute;left:20px;right:20px;bottom:58px;z-index:3;grid-template-columns:1fr 1fr;gap:6px 14px;font-size:10px;color:#8a93a6;transition:opacity .4s;pointer-events:none;background:rgba(5,1,15,.75);padding:10px 12px;border:1px solid var(--line)}
  .legend b{color:var(--cyan);font-weight:500;margin-right:6px}
  .cta>div{padding:36px 24px}
- .cfg{grid-template-columns:1fr}.viewer{min-height:400px;border-right:0;border-bottom:1px solid var(--line)}.panel{padding:24px 20px}
+ .cfg{grid-template-columns:minmax(0,1fr)}.panel{min-width:0}.viewer{min-height:400px;min-width:0;border-right:0;border-bottom:1px solid var(--line)}.panel{padding:24px 20px}
  .vtoggle{top:82px;right:18px}.vtoggle button{padding:8px 10px;font-size:10px}.frame{inset:72px 10px 10px 10px}.phase{display:none}
 }
 .brakebtn{position:absolute;top:96px;right:250px;z-index:4;display:flex;align-items:center;gap:8px;border:1px solid rgba(255,106,26,.55);background:rgba(5,1,15,.75);color:#ffb38a;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:9px 14px;cursor:pointer;transition:.2s}
@@ -239,7 +239,7 @@ footer{border-top:1px solid var(--line2);margin-top:60px}
 .kit button{background:none;border:1px solid var(--cyan);color:var(--cyan);padding:8px 12px;font:11px 'JetBrains Mono';letter-spacing:.06em;cursor:pointer;text-transform:uppercase}.kit button:hover{background:rgba(0,229,255,.1)}
 .kit.no{opacity:.45}.fwarn{font-size:12px;color:#ffb38a;margin:0 0 12px;line-height:1.6}
 .fact{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
-.sharebar{display:flex;gap:8px;margin-top:10px}.sharebar button{flex:1;justify-content:center;height:44px}
+.sharebar{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.sharebar button{flex:1 1 140px;justify-content:center;min-height:44px;height:auto;white-space:normal;text-align:center}
 .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:#05010f;border:1px solid var(--cyan);color:#fff;padding:12px 18px;font:12px 'JetBrains Mono';z-index:99;opacity:0;transition:.25s;pointer-events:none;max-width:90vw}
 .toast.on{opacity:1;transform:translateX(-50%)}
 .ok.warn .mono{color:#ffb38a!important}
@@ -471,7 +471,7 @@ footer{border-top:1px solid var(--line2);margin-top:60px}
   </div>
  </div>
  <div class="fbig" aria-hidden="true">STOPPER</div>
- <p class="credit mono">3D-модели суппортов (Sketchfab, лицензия <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>, изменены: масштаб, ориентация, материалы, цвет; логотип Spoon удалён): «<a href="https://sketchfab.com/3d-models/free-brake-caliper-brembo-39980ecb6a474ba38b1cf8e7df411a56" target="_blank" rel="noopener">FREE - Brake Caliper Brembo</a>» — Unity Fan (@unityfan777); «<a href="https://sketchfab.com/3d-models/ef37be6ddce44f49b6f616145c1e16af" target="_blank" rel="noopener">6- Lug Brake Rotor and Brembo brake calipers</a>» — @DRIVER-FIRE; «<a href="https://sketchfab.com/3d-models/brake-calliper-b18ea04df4504172a70a4b32d72818a2" target="_blank" rel="noopener">BRAKE CALLIPER</a>» и «<a href="https://sketchfab.com/3d-models/brake-calliper-0934bfa92bf44b1fbf4bbb5ce5e4c85b" target="_blank" rel="noopener">BRAKE CALLIPER</a>» — VR DESIGNER (@vr.designer_09); «<a href="https://sketchfab.com/3d-models/lamborghini-caliper-assembly-e44e844e6a3d48eca34358c462f4a78b" target="_blank" rel="noopener">Lamborghini Caliper Assembly</a>» — @fasteng; «<a href="https://sketchfab.com/3d-models/spoon-car-caliper-ad511e42db72421a9fa0b7b177833f93" target="_blank" rel="noopener">SPOON CAR CALIPER</a>» — ijiklvn (@kelvin-carvalho). Модели AP Racing, Alcon и Wilwood в конфигураторе — похожие по типу суппорты, не точные копии. Детали для разборки — собственные 3D-модели STOPPER по открытым чертежам AP Racing. Диск и колокол 6-поршневого варианта: «<a href="https://sketchfab.com/3d-models/brake-assembly-d36d43ad176a45a18095c04b1754ea79" target="_blank" rel="noopener">Brake Assembly</a>» — Nieve5677 (@niev), CC BY 4.0, изменено. HDRI «Studio Small 09», <a href="https://polyhaven.com/a/studio_small_09" target="_blank" rel="noopener">Poly Haven</a>, CC0. Изображения — визуализация.</p>
+ <p class="credit mono">3D-модели суппортов (Sketchfab, лицензия <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>, изменены: масштаб, ориентация, посадка на диск, материалы, цвет; логотип Spoon удалён): «<a href="https://sketchfab.com/3d-models/free-brake-caliper-brembo-39980ecb6a474ba38b1cf8e7df411a56" target="_blank" rel="noopener">FREE - Brake Caliper Brembo</a>» — Unity Fan (@unityfan777); «<a href="https://sketchfab.com/3d-models/ef37be6ddce44f49b6f616145c1e16af" target="_blank" rel="noopener">6- Lug Brake Rotor and Brembo brake calipers</a>» — @DRIVER-FIRE; «<a href="https://sketchfab.com/3d-models/brake-calliper-b18ea04df4504172a70a4b32d72818a2" target="_blank" rel="noopener">BRAKE CALLIPER</a>» и «<a href="https://sketchfab.com/3d-models/brake-calliper-0934bfa92bf44b1fbf4bbb5ce5e4c85b" target="_blank" rel="noopener">BRAKE CALLIPER</a>» — VR DESIGNER (@vr.designer_09); «<a href="https://sketchfab.com/3d-models/spoon-car-caliper-ad511e42db72421a9fa0b7b177833f93" target="_blank" rel="noopener">SPOON CAR CALIPER</a>» — ijiklvn (@kelvin-carvalho). Модели AP Racing, Alcon и Wilwood в конфигураторе — похожие по типу суппорты, не точные копии. Разборка в первом экране — детали тех же моделей «BRAKE CALLIPER» (корпус, половины, поршни, колодки, пальцы, болты); у 6-поршневого варианта поршни переставлены по три на сторону, щель под диск расширена под толщину диска. Диск и колокол 6-поршневого варианта: «<a href="https://sketchfab.com/3d-models/brake-assembly-d36d43ad176a45a18095c04b1754ea79" target="_blank" rel="noopener">Brake Assembly</a>» — Nieve5677 (@niev), CC BY 4.0, изменено. HDRI «Studio Small 09», <a href="https://polyhaven.com/a/studio_small_09" target="_blank" rel="noopener">Poly Haven</a>, CC0. Изображения — визуализация.</p>
  <div class="fbot mono"><span>© 2026 STOPPER · Контакты указаны для примера</span><span>Товарные знаки принадлежат их владельцам</span></div>
 </footer>
 
@@ -605,8 +605,8 @@ const isMobile=()=>innerWidth<820;
 const fmt=n=>n.toLocaleString('ru-RU').replace(/\u00a0/g,' ');
 
 const VAR={
- '6p':{hd:'drilled',R:.19,size:380,disc:'380 мм',dim:'Ø 380 мм',pist:'Поршни Ø30 / 34 / 38 мм',pistN:'6 поршней Ø30/34/38 мм',kp:['6','поршней в суппорте','380','мм — диаметр диска'],mass:'11,8 кг',sizes:[355,380],label:'Суппорт 6 поршней'},
- '4p':{hd:'ds',R:.165,size:330,disc:'330 мм',dim:'Ø 330 мм',pist:'Поршни Ø36 / 40 мм',pistN:'4 поршня Ø36/40 мм',kp:['4','поршня в суппорте','330','мм — диаметр диска'],mass:'9,6 кг',sizes:[330,355],label:'Суппорт 4 поршня'},
+ '6p':{hd:'drilled',R:.19,size:380,disc:'380 мм',dim:'Ø 380 мм',pist:'Поршни Ø36 / 41 / 45 мм',pistN:'6 поршней Ø36/41/45 мм',body:'цельный корпус (моноблок), эмаль',kp:['6','поршней в суппорте','380','мм — диаметр диска'],mass:'11,8 кг',sizes:[355,380],label:'Суппорт 6 поршней'},
+ '4p':{hd:'ds',R:.165,size:330,disc:'330 мм',dim:'Ø 330 мм',pist:'Поршни Ø44 мм',pistN:'4 поршня Ø44 мм',body:'внешняя половина корпуса, эмаль',kp:['4','поршня в суппорте','330','мм — диаметр диска'],mass:'9,6 кг',sizes:[330,355],label:'Суппорт 4 поршня'},
 };
 // third-party brands: approximate look of our own 3D model, prices approximate; no partnership implied
 const BRANDS={
@@ -631,19 +631,18 @@ const REAL={
  'brembo-4p':{t:'6- Lug Brake Rotor and Brembo brake calipers',a:'DRIVER-FIRE',u:'https://sketchfab.com/3d-models/ef37be6ddce44f49b6f616145c1e16af'},
  'monoblock-6p':{t:'BRAKE CALLIPER',a:'VR DESIGNER',u:'https://sketchfab.com/3d-models/brake-calliper-b18ea04df4504172a70a4b32d72818a2'},
  'monoblock-4p':{t:'BRAKE CALLIPER',a:'VR DESIGNER',u:'https://sketchfab.com/3d-models/brake-calliper-0934bfa92bf44b1fbf4bbb5ce5e4c85b'},
- 'sport-6p':{t:'Lamborghini Caliper Assembly',a:'fasteng',u:'https://sketchfab.com/3d-models/lamborghini-caliper-assembly-e44e844e6a3d48eca34358c462f4a78b'},
  'wilwood-4p':{t:'SPOON CAR CALIPER',a:'ijiklvn',u:'https://sketchfab.com/3d-models/spoon-car-caliper-ad511e42db72421a9fa0b7b177833f93'}};
-const BRAND_MODEL={brembo:{'6p':'brembo-6p','4p':'brembo-4p'},ap:{'6p':'monoblock-6p','4p':'monoblock-4p'},alcon:{'6p':'monoblock-6p','4p':'monoblock-4p'},wilwood:{'6p':'sport-6p','4p':'wilwood-4p'}};
-const realCache={}; const loadReal=k=>realCache[k]||(realCache[k]=new Promise((res,rej)=>gl.load(`assets/real/${k}.glb?r=3`,g=>res(g.scene),undefined,rej)));
-const CAL_PARTS=['CaliperBody','Piston_','Pad_','PadPin','PadSpring','Bleed','Fitting','Bracket','Bolt_'];
+const BRAND_MODEL={brembo:{'6p':'brembo-6p','4p':'brembo-4p'},ap:{'6p':'monoblock-6p','4p':'monoblock-4p'},alcon:{'6p':'monoblock-6p','4p':'monoblock-4p'},wilwood:{'6p':'monoblock-6p','4p':'wilwood-4p'}};
+const realCache={}; const loadReal=k=>realCache[k]||(realCache[k]=new Promise((res,rej)=>gl.load(`assets/real/${k}.glb?r=6`,g=>res(g.scene),undefined,rej)));
+const CAL_PARTS=['CaliperBody','CaliperHalf','Piston_','Pad_','PadPin','PadSpring','Bleed','Fitting','Bracket','Bolt_'];
 const isCalPart=n=>CAL_PARTS.some(p=>n.startsWith(p));
 window.__BRANDS=BRANDS;
-const REAR=-0.7; // caliper sits top-rear of the disc (≈2 o'clock seen from outside), bleed screws up
+// caliper sits radially at 12 o'clock: centred on the disc plane, bridge just over the disc edge, bleed screws up
 const SIZEP={330:0,355:8000,380:0};
 const PRESETS={city:{brand:'wilwood',cal:'4p',pads:'city',disc:'plain',color:'red',size:330,name:'Комплект для города'},
  active:{brand:'ap',cal:'6p',pads:'active',disc:'ds',color:'red',size:380,name:'Для активной езды'},
  track:{brand:'brembo',cal:'6p',pads:'track',disc:'ds',color:'red',size:380,name:'Для трека'}};
-const LABEL={RealCaliper:'Суппорт',Disc_:'Тормозной диск',Hat:'Колокол (центр диска)',CaliperBody:'Корпус суппорта',Piston_:'Поршень',Pad_:'Тормозная колодка',Bracket:'Кронштейн крепления',
+const LABEL={RealCaliper:'Суппорт',CaliperHalf:'Внутренняя половина корпуса',Bolt_A:'Стяжной болт корпуса',Disc_:'Тормозной диск',Hat:'Колокол (центр диска)',CaliperBody:'Корпус суппорта',Piston_:'Поршень',Pad_:'Тормозная колодка',Bracket:'Кронштейн крепления',
  Bolt_M:'Болт крепления',PadPin:'Палец колодок',PadSpring:'Пружина колодок',Bleed:'Штуцеры прокачки',Fitting:'Подвод тормозной жидкости'};
 const labelOf=n=>{const k=Object.keys(LABEL).find(k=>n.startsWith(k));return k?LABEL[k]:n};
 
@@ -692,24 +691,24 @@ axes.forEach(a=>model.add(a));
 // choreography: path = list of segment end offsets (three.js: y up, +z outboard); f = follow caliper body; spin = turns while moving
 const SPEC={
  PadPin:{p:[[0,0,.17],[0,.30,.22]],t:[.02,.30]}, PadSpring:{p:[[0,.24,0]],t:[.12,.34]},
- Bolt_M:{p:[[0,-.05,0],[0,-.22,0]],t:[.04,.36],spin:5},
- Pad_Outer:{p:[[0,.19,0],[0,.27,.13]],t:[.20,.54]}, Pad_Inner:{p:[[0,.19,0],[0,.27,-.13]],t:[.22,.56]},
+ Bolt_M:{p:[[0,-.05,0],[0,-.22,0]],t:[.04,.36],spin:5}, Bolt_A:{p:[[0,0,-.14],[0,.06,-.30]],t:[.04,.36],spin:4,ax:'z'},
+ Pad_Outer:{p:[[0,.19,0],[0,.24,.22]],t:[.20,.54]}, Pad_Inner:{p:[[0,.19,0],[0,.24,-.22]],t:[.22,.56]},
  Bracket:{p:[[0,-.04,-.16],[0,-.12,-.30]],t:[.30,.60]},
- CaliperBody:{p:[[0,.21,0]],t:[.38,.68]},
+ CaliperBody:{p:[[0,.21,0]],t:[.38,.68]}, CaliperHalf:{p:[[0,.21,0],[0,.24,-.16]],t:[.38,.72]},
  Bleed:{p:[[0,.07,0]],t:[.62,.80],f:1}, Fitting:{p:[[-.04,.03,-.07]],t:[.62,.80],f:1},
- Piston_O:{p:[[0,0,.09],[0,-.03,.20]],t:[.62,.92],f:1,xs:.5}, Piston_I:{p:[[0,0,-.09],[0,-.03,-.20]],t:[.64,.94],f:1,xs:.5},
+ Piston_O:{p:[[0,0,.07],[0,-.01,.12]],t:[.62,.92],f:1,xs:.25}, Piston_I:{p:[[0,0,-.07],[0,-.01,-.12]],t:[.64,.94],f:'CaliperHalf',xs:.25},
  Hat:{p:[[0,0,.18],[0,-.02,.34]],t:[.50,.86]}, Disc_:{p:[[0,-.03,.05]],t:[.50,.86]}};
 const H={cur:'6p',groups:{},parts:{},by:{},gnd:null,disc:null};
 const edgeMat=new THREE.LineBasicMaterial({color:0x00e5ff,transparent:true,opacity:0});
 function calls(v){const V=VAR[v];return[
  {k:'Disc_'+V.hd,n:'01',h:'Тормозной диск '+V.disc,p:'вентилируемый, с рёбрами внутри'},
  {k:'Hat',n:'02',h:'Колокол (центр диска)',p:'алюминий, плавающее крепление'},
- {k:'CaliperBody',n:'03',h:V.label,p:'цельный алюминиевый корпус, эмаль'},
- {k:'Piston_O2',n:'04',h:'Поршни',p:V.pist.replace('Поршни ','нержавеющая сталь, ')},
- {k:'Pad_Outer',n:'05',h:'Тормозные колодки',p:'стальная основа, накладка с канавкой'},
- {k:'Bracket',n:'06',h:'Кронштейн крепления',p:'радиальное крепление на 2 болта'},
- {k:'Bolt_M2',n:'07',h:'Болты крепления',p:'титан, откручиваются при разборке'},
- {k:'PadPin',n:'08',h:'Палец и пружина колодок',p:'держат колодки без стука'}].filter(c=>!H.by[v]||H.by[v][c.k])}
+ {k:'CaliperBody',n:'03',h:V.label,p:V.body},
+ {k:'CaliperHalf',n:'04',h:'Внутренняя половина',p:'стягивается с внешней болтами'},
+ {k:'Piston_O2',n:'05',h:'Поршни',p:V.pist.replace('Поршни ','сталь, ')},
+ {k:'Pad_Outer',n:'06',h:'Тормозные колодки',p:'стальная основа + фрикционная накладка'},
+ {k:'Bolt_A2',n:'07',h:'Стяжные болты',p:'держат мост корпуса над диском'},
+ {k:'PadPin1',n:'08',h:'Пальцы колодок',p:'держат колодки, вынимаются первыми'}].filter(c=>!H.by[v]||H.by[v][c.k]).map((c,i)=>({...c,n:String(i+1).padStart(2,'0')}))}
 let CALL=[];
 function buildCallouts(){
   const w=$('callouts'); w.innerHTML=''; CALL=calls(H.cur);
@@ -771,27 +770,26 @@ function update(){
   $('outro').style.opacity=clamp((Ps-.9)/.06);
   { const lg=$('legend'); const lo=mob?clamp((E-.04)/.14):1; lg.style.opacity=lo; lg.style.visibility=lo<.02?'hidden':'visible'; }
   const lift=mob? .36*(1-clamp(Ps/.12))+.07*e : 0;
-  const dist=(mob?2.6:1.55)+e*(mob?1.4:1.0)-DEMO.zoom*(mob?.5:.32);
+  const dist=(mob?2.6:1.55)+e*(mob?1.3:.82)-DEMO.zoom*(mob?.5:.32);
   camera.position.set(0,.18+e*.25-lift-DEMO.zoom*.04,dist); camera.lookAt(0,.08+e*.14-lift+DEMO.zoom*.04,0);
   root.position.x=mob?0:.18*(1-clamp(Ps/.12))*(Ps<.5?1:0);
   root.rotation.y=-0.66+e*.04+DEMO.zoom*.12; root.rotation.x=.10+e*.12;
-  const parts=H.parts[H.cur]; const body=parts.find(p=>p.o.name==='CaliperBody'); let bodyOff=new THREE.Vector3();
-  if(body){ const s=body.s; pathAt(s.p,clamp((E-s.t[0])/(s.t[1]-s.t[0])),bodyOff); }
+  const parts=H.parts[H.cur]; const offs={};
+  for(const nm of ['CaliperBody','CaliperHalf']){ const b=parts.find(p=>p.o.name===nm); if(b){ const s=b.s; offs[nm]=pathAt(s.p,clamp((E-s.t[0])/(s.t[1]-s.t[0])),new THREE.Vector3()); } }
+  const bodyOff=offs.CaliperBody||new THREE.Vector3();
   const cl=DEMO.clamp*.0035;
   for(const p of parts){ const s=p.s, k=clamp((E-s.t[0])/(s.t[1]-s.t[0])); pathAt(s.p,k,tmp); if(s.xs) tmp.x+=p.base.x*s.xs*ease(k)*3;
-    p.o.position.copy(p.base).add(tmp); if(s.f) p.o.position.add(bodyOff);
-    if(s.spin) p.o.rotation.y=p.r0+ease(k)*s.spin*Math.PI*2;
+    p.o.position.copy(p.base).add(tmp); if(s.f) p.o.position.add((s.f!==1&&offs[s.f])||bodyOff);
+    if(s.spin){ if(s.ax==='z') p.o.rotation.z=p.rz0+ease(k)*s.spin*Math.PI*2; else p.o.rotation.y=p.r0+ease(k)*s.spin*Math.PI*2; }
     if(DEMO.on&&E<.02){ const n=p.o.name; const sg=n.endsWith('Outer')||n.startsWith('Piston_O')?-1:n.endsWith('Inner')||n.startsWith('Piston_I')?1:0; if(sg&&(n.startsWith('Pad_')||n.startsWith('Piston_'))) p.o.position.z+=sg*cl*(n.startsWith('Pad_')?1:1); } }
-  { const asm=E<.02; const rc=H.by[H.cur].RealCaliper; if(rc){ rc.visible=asm; H.calParts[H.cur].forEach(o=>o.visible=!asm); } }
-  { const rz=REAR*(1-ease(clamp(E/.25))); H.groups[H.cur].children.forEach(o=>{ if(isCalPart(o.name)){ o.position.applyAxisAngle(ZAX,rz); o.rotation.z=rz; } }); }
   const by=H.by[H.cur]; const dk=by['Disc_'+VAR[H.cur].hd]; dk.rotation.z=-Ps*2.2-DEMO.ang; by.Hat.rotation.z=-Ps*2.2-DEMO.ang;
   edgeMat.opacity=e*.32; axes.forEach(a=>a.material.opacity=.12+e*.45);
   if(H.gnd){H.gnd.userData.sh.material.opacity=.45*(1-e); H.gnd.userData.blob.material.opacity=.9*(1-e);}
   renderer.render(scene,camera);
   $('pbar').style.width=(Ps*100)+'%'; $('pval').textContent=Math.round(e*100)+'%';
-  $('phaseTxt').textContent=DEMO.on?'Тест торможения':Ps>.9?'Узел снова собран':e<.02?'Собранный узел':e<.98?'Разборка · '+Math.round(e*100)+'%':'Разобранный вид · 8 деталей';
+  $('phaseTxt').textContent=DEMO.on?'Тест торможения':Ps>.9?'Узел снова собран':e<.02?'Собранный узел':e<.98?'Разборка · '+Math.round(e*100)+'%':'Разобранный вид';
   let out=''; const items=[];
-  CALL.forEach((c,i)=>{const o=by[c.k]; if(!o) return; const show=E>.18+i*.085; c.el.classList.toggle('on',show); const [x,y]=worldCenterScreen(o); items.push({c,x,y,show});});
+  CALL.forEach((c,i)=>{const o=by[c.k]; if(!o) return; const show=E>.18+i*(.48/Math.max(1,CALL.length-1)); c.el.classList.toggle('on',show); const [x,y]=worldCenterScreen(o); items.push({c,x,y,show});});
   if(mob){ items.forEach(t=>{ if(!t.show) return; out+=`<circle cx="${t.x}" cy="${t.y}" r="9" fill="#05010f" stroke="#00e5ff"/><text x="${t.x}" y="${t.y+3.5}" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#00e5ff">${t.c.n}</text>`; }); }
   const L=mob?[]:items.filter(t=>t.x<w*.5), R=mob?[]:items.filter(t=>t.x>=w*.5);
   const place=(arr,side)=>{ arr.sort((a,b)=>a.y-b.y); const top=h*.17,bot=side==='r'&&w>1100?h*.74:h*.86; const n=arr.length;
@@ -818,19 +816,20 @@ function tick(now){ let dirty=false; const d=P-Ps; if(Math.abs(d)>1e-4){ Ps+=d*.
 // ---------- CONFIGURATOR
 function makeConfigurator(gltfs,hdr){
   const cv=$('cfgGl'), box=cv.parentElement; const r=makeRenderer(cv); const sc=new THREE.Scene(); studio(sc,r,hdr);
-  const cam=new THREE.PerspectiveCamera(30,1,.01,30); cam.position.set(-.86,.34,1.62);
-  const ctl=new OrbitControls(cam,cv); ctl.target.set(0,.035,0); ctl.enableDamping=true; ctl.dampingFactor=.08; ctl.enablePan=false;
-  ctl.minDistance=1.0; ctl.maxDistance=2.6; ctl.minPolarAngle=.5; ctl.maxPolarAngle=1.75; ctl.autoRotate=true; ctl.autoRotateSpeed=.7;
+  const cam=new THREE.PerspectiveCamera(30,1,.01,30); cam.position.set(-.6,.3,1.16);
+  const ctl=new OrbitControls(cam,cv); ctl.target.set(0,.06,0); ctl.enableDamping=true; ctl.dampingFactor=.08; ctl.enablePan=false;
+  ctl.minDistance=.75; ctl.maxDistance=2.2; ctl.minPolarAngle=.5; ctl.maxPolarAngle=1.75; ctl.autoRotate=true; ctl.autoRotateSpeed=.7;
   const G={}, mats={}, pads={}, discs={};
-  for(const v of ['6p','4p']){ const g=gltfs[v].scene.clone(true); g.traverse(m=>{ if(m.isMesh){ m.material=m.material.clone(); m.castShadow=m.receiveShadow=true; } });
+  // both piston variants use the full disc range (plain / drilled / slotted / both) — the 4-piston set gets it scaled to 330 mm
+  for(const v of ['6p','4p']){ const g=gltfs['6p'].scene.clone(true); if(v==='4p') g.scale.setScalar(VAR['4p'].R/VAR['6p'].R); g.traverse(m=>{ if(m.isMesh){ m.material=m.material.clone(); m.castShadow=m.receiveShadow=true; } });
     mats[v]={paint:[],fr:[],bk:[],logo:[]}; discs[v]={}; pads[v]=[];
     g.traverse(m=>{ if(m.isMesh){ const n=m.material.name; if(n==='Caliper_Paint')mats[v].paint.push(m.material); if(n==='Pad_Friction')mats[v].fr.push(m.material); if(n==='Pad_Backing')mats[v].bk.push(m.material); if(n==='Logo_Paint')mats[v].logo.push(m.material);} });
     g.children.forEach(o=>{ if(o.name.startsWith('Disc_')) discs[v][o.name.slice(5)]=o; if(o.name.startsWith('Pad_')) pads[v].push({o,base:o.position.clone(),s:o.name==='Pad_Outer'?1:-1}); });
     g.children.forEach(o=>{ if(isCalPart(o.name)) o.visible=false; });
-    const holder=new THREE.Group(); holder.add(g); holder.userData.g=g; holder.userData.real={}; const gnd=ground(VAR[v].R); gnd.position.y=-VAR[v].R-.001; holder.add(gnd); holder.rotation.y=-.35;
+    const holder=new THREE.Group(); holder.add(g); holder.userData.g=g; holder.userData.real={}; const gnd=ground(VAR[v].R); gnd.position.y=-VAR[v].R-.001; holder.add(gnd); holder.rotation.y=.22;
     sc.add(holder); G[v]=holder; }
   const st={brand:'brembo',cal:'6p',color:'red',pads:'active',disc:'drilled',size:380}; let peek=0, peekT=0, visible=false, dirty=true;
-  function resize(){const w=box.clientWidth,h=box.clientHeight;r.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix();dirty=true}
+  function resize(){const w=cv.clientWidth,h=cv.clientHeight;r.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix(); const d=w<600?1.75:1.3; cam.position.sub(ctl.target).setLength(d).add(ctl.target); dirty=true}
   addEventListener('resize',resize); resize();
   ctl.addEventListener('start',()=>{ctl.autoRotate=false}); ctl.addEventListener('change',()=>dirty=true);
   new IntersectionObserver(es=>es.forEach(e=>visible=e.isIntersecting),{threshold:.05}).observe(box);
@@ -842,12 +841,14 @@ function makeConfigurator(gltfs,hdr){
     $('m4').textContent=B.m['4p']; $('m6').textContent=B.m['6p']; }
   function showReal(){ const key=BRAND_MODEL[st.brand][st.cal], h=G[st.cal];
     for(const v in G) for(const k in G[v].userData.real) G[v].userData.real[k].visible=(v===st.cal&&k===key);
-    if(!h.userData.real[key]){ loadReal(key).then(sc0=>{ if(h.userData.real[key]) return; const o=sc0.clone(true); o.name='RealCaliper'; o.rotation.z=REAR;
-        o.traverse(m=>{ if(m.isMesh){ m.material=m.material.clone(); m.castShadow=m.receiveShadow=true; } }); h.userData.g.add(o); h.userData.real[key]=o; apply(); }).catch(e=>console.error(e)); }
+    if(!h.userData.real[key]){ loadReal(key).then(sc0=>{ if(h.userData.real[key]) return; const o=sc0.clone(true); o.name='RealCaliper';
+        o.traverse(m=>{ if(m.isMesh){ m.material=m.material.clone(); m.castShadow=m.receiveShadow=true; } }); h.add(o); h.userData.real[key]=o; apply(); }).catch(e=>console.error(e)); }
     const R=REAL[key]; $('cfgModel').innerHTML=`3D-модель: «${R.t}» — ${R.a}, <a href="${R.u}" target="_blank" rel="noopener">Sketchfab</a>, CC BY 4.0`;
     return h.userData.real[key]; }
   function apply(){
     renderOptions(); const B=BRANDS[st.brand], C=COLORS[st.color]; const real=showReal();
+    if(real) real.traverse(m=>{ if(m.isMesh&&m.material.name.startsWith('Pad_Backing')){ m.material.color.setHex(PADS[st.pads].bk); m.material.metalness=.3; m.material.roughness=.45; }
+      if(m.isMesh&&m.material.name.startsWith('Pad_Friction')){ m.material.color.setHex(PADS[st.pads].fr); m.material.roughness=PADS[st.pads].frR; } });
     if(real) real.traverse(m=>{ if(m.isMesh&&m.material.name.startsWith('Caliper_Paint')){ const mt=m.material; mt.color.setHex(C.hex); mt.metalness=C.met?.75:B.fin==='anod'?.35:0; mt.roughness=C.met?.3:B.fin==='powder'?.48:B.fin==='anod'?.36:st.color==='black'?.36:.28; if('clearcoat' in mt) mt.clearcoat=B.fin==='gloss'?1:.3; } });
     for(const v in G){ G[v].visible=(v===st.cal); for(const k in discs[v]) discs[v][k].visible=(k===st.disc);
       mats[v].paint.forEach(m=>{m.color.setHex(C.hex); m.metalness=C.met?.75:B.fin==='anod'?.35:.0; m.roughness=C.met?.32:B.fin==='powder'?.48:B.fin==='anod'?.36:st.color==='black'?.38:.3;
@@ -889,28 +890,41 @@ function makeConfigurator(gltfs,hdr){
     for(const p of pads[st.cal]){ p.o.position.copy(p.base); p.o.position.y+=ease(peek)*.085; p.o.position.z+=p.s*ease(peek)*.03; }
     if(ctl.autoRotate) dirty=true; ctl.update();
     if(dirty){ r.render(sc,cam); dirty=false; } })();
-  return {set};
+  return {set,G,st,cam,ctl,render:()=>{dirty=true}};
 }
 
 // ---------- boot
 Promise.all([loadGLB('6p'),loadGLB('4p'),loadHDR(),loadReal('monoblock-6p'),loadReal('monoblock-4p')]).then(([g6,g4,hdr,r6,r4])=>{
+  // hero uses ONE caliper all the way: the real model, split into its own parts (body, half, pistons, pads, pins, bolts)
+  const realParts={'6p':r6,'4p':r4};
   const gltfs={'6p':g6,'4p':g4};
   try{ window.CFG=makeConfigurator(gltfs,hdr); }catch(e){ console.error(e); }
   studio(scene,renderer,hdr);
   for(const v of ['6p','4p']){ const g=gltfs[v].scene; H.groups[v]=g; H.parts[v]=[]; H.by[v]={}; g.visible=v===H.cur;
+    g.children.filter(o=>isCalPart(o.name)).forEach(o=>g.remove(o));
+    realParts[v].clone(true).children.slice().forEach(o=>g.add(o));
     g.traverse(m=>{ if(m.isMesh){ m.castShadow=m.receiveShadow=true; m.material=m.material.clone(); } });
     g.children.slice().forEach(o=>{ H.by[v][o.name]=o; if(o.name.startsWith('Disc_')&&o.name!=='Disc_'+VAR[v].hd){o.visible=false;return;}
       const key=Object.keys(SPEC).find(k=>o.name.startsWith(k)); if(!key) return;
-      H.parts[v].push({o,base:o.position.clone(),r0:o.rotation.y,s:SPEC[key]});
-      o.traverse(m=>{ if(m.isMesh && m.geometry.index && m.geometry.index.count<60000){ m.add(new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry,38),edgeMat)); } }); });
-    const rc=(v==='6p'?r6:r4).clone(true); rc.name='RealCaliper'; rc.rotation.z=REAR; rc.traverse(m=>{ if(m.isMesh){ m.material=m.material.clone(); m.castShadow=m.receiveShadow=true; } }); g.add(rc); H.by[v].RealCaliper=rc;
-    H.calParts=H.calParts||{}; H.calParts[v]=g.children.filter(o=>isCalPart(o.name));
+      H.parts[v].push({o,base:o.position.clone(),r0:o.rotation.y,rz0:o.rotation.z,s:SPEC[key]});
+      if(!isCalPart(o.name)) o.traverse(m=>{ if(m.isMesh && m.geometry.index && m.geometry.index.count<60000){ m.add(new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry,38),edgeMat)); } }); });
     model.add(g); }
   H.gnd=ground(.19); model.add(H.gnd);
   loaderEl&&loaderEl.remove(); onResize(); setHeroVariant('6p'); readP(); Ps=P; last=-1;
   addEventListener('scroll',readP,{passive:true});
   (function loop(now){ tick(now||performance.now()); requestAnimationFrame(loop); })();
 }).catch(err=>{ console.error(err); loaderEl&&loaderEl.remove(); $('fallback').style.display='flex'; });
+// geometry check: where does the caliper sit relative to the disc (disc frame: z = axle, y = up)
+window.__fitCheck=(grp,R,T)=>{ const inv=new THREE.Matrix4().copy(grp.matrixWorld).invert(), v=new THREE.Vector3(); let n=0,hit=0;
+  const b={x0:1e9,x1:-1e9,y0:1e9,y1:-1e9,z0:1e9,z1:-1e9}; const isCal=o=>{ for(let q=o;q&&q!==grp;q=q.parent){ if(q.name==='RealCaliper'||isCalPart(q.name)) return q.visible!==false; } return false; };
+  grp.updateMatrixWorld(true); const pts=[];
+  grp.traverse(m=>{ if(!m.isMesh||!isCal(m)) return; let vis=true; for(let q=m;q&&q!==grp;q=q.parent) if(q.visible===false) vis=false; if(!vis) return;
+    const P=m.geometry.attributes.position; for(let i=0;i<P.count;i+=1){ v.fromBufferAttribute(P,i).applyMatrix4(m.matrixWorld).applyMatrix4(inv); pts.push(v.x,v.y,v.z);
+      b.x0=Math.min(b.x0,v.x);b.x1=Math.max(b.x1,v.x);b.y0=Math.min(b.y0,v.y);b.y1=Math.max(b.y1,v.y);b.z0=Math.min(b.z0,v.z);b.z1=Math.max(b.z1,v.z); n++; } });
+  // vertices that would sit inside the disc (|z|<T/2, radius < R) away from the ends = collision with the disc
+  let pad=0; for(let i=0;i<pts.length;i+=3){ const r=Math.hypot(pts[i],pts[i+1]); if(Math.abs(pts[i+2])<T/2-.0005&&r<R-.003) hit++; }
+  const mm=x=>Math.round(x*1000*10)/10;
+  return {verts:n, axialCentre:mm((b.z0+b.z1)/2), tangentialCentre:mm((b.x0+b.x1)/2), width:mm(b.z1-b.z0), length:mm(b.x1-b.x0), overDisc:mm(b.y1-R), intoDisc:mm(R-b.y0), insideDiscVerts:hit}; };
 window.__H=H; window.__THREE=THREE; window.__R=()=>{last=-1};
 window.__stopper={get progress(){return P}, parts:()=>(H.parts[H.cur]||[]).map(p=>p.o.name), demo:()=>$('brakeBtn').click(), demoAt:t=>{DEMO.fix=t;if(!DEMO.on)$('brakeBtn').click()}};
 
