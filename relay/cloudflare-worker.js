@@ -52,7 +52,7 @@ export default {
       if (rest === sec + '/setup' && req.method === 'GET') return setup(url, env);
       if (rest.startsWith(sec + '/lead/') && req.method === 'GET') {
         const l = await getLead(env, +rest.split('/').pop());
-        return Response.json(l ? { ...l, text: undefined } : { ok: false });
+        return Response.json(l ? { ...l, text: undefined, consent: l.consent ? { at: l.consent.at, doc: l.consent.doc } : undefined } : { ok: false });
       }
       return new Response('not found', { status: 404 });
     }
@@ -127,6 +127,8 @@ async function siteLead(req, env) {
   const clean = v => String(v ?? '').replace(/[\u0000-\u0008\u000b-\u001f]/g, '').trim().slice(0, 600);
   const phone = clean(d.phone), digits = phone.replace(/\D/g, '');
   if (!clean(d.name) || digits.length < 10 || digits.length > 15) return json({ ok: false, error: 'validation' }, 400);
+  if (d.consent !== true) return json({ ok: false, error: 'consent' }, 400); // 152-ФЗ: без согласия заявку не принимаем
+  const consentAt = (() => { const t = Date.parse(d.consentAt); return isFinite(t) && Math.abs(t - Date.now()) < 7 * 86400e3 ? t : Date.now(); })();
 
   let id = 0;
   if (env.LEADS) { id = (+(await env.LEADS.get('seq')) || 0) + 1; await env.LEADS.put('seq', String(id)); }
@@ -137,6 +139,7 @@ async function siteLead(req, env) {
     d.pads && 'Колодки: ' + clean(d.pads), d.color && 'Цвет: ' + clean(d.color), d.price && 'Цена: ≈ ' + fmtN(+d.price) + ' ₽ за ось',
     d.discount && 'Скидка: ' + Number(d.discount) + ' % (промокод ' + clean(d.promo) + ')', d.discount && d.finalPrice && 'Итого: ≈ ' + fmtN(+d.finalPrice) + ' ₽ за ось',
     d.link && 'Комплект: ' + clean(d.link), d.calc && '\n' + clean(d.calc), d.comment && '\nКомментарий: ' + clean(d.comment),
+    '\nСогласие на обработку ПДн: дано ' + msk(consentAt) + ' МСК',
   ].filter(x => typeof x === 'string').join('\n').replace(/\n{3,}/g, '\n\n');
   if (id) text = text.replace(/^Заявка VRAKK/, `Заявка VRAKK #${id}`);
   if (id && !text.startsWith('Заявка VRAKK #')) text = `Заявка VRAKK #${id}\n\n` + text;
@@ -147,7 +150,8 @@ async function siteLead(req, env) {
     id, status: 'new', created: now, updated: now, test, text,
     name: clean(d.name), phone, car: clean(d.car), vin: clean(d.vin), pcd: clean(d.pcd), brand: clean(d.brand), pistons: clean(d.pistons),
     disc: clean(d.disc), pads: clean(d.pads), color: clean(d.color), price: +d.price || 0, discount: +d.discount || 0, promo: clean(d.promo),
-    finalPrice: +d.finalPrice || 0, kit: clean(d.kit), link: clean(d.link), calc: clean(d.calc), comment: clean(d.comment), history: [{ s: 'new', by: 'сайт', at: now }],
+    finalPrice: +d.finalPrice || 0, kit: clean(d.kit), link: clean(d.link), calc: clean(d.calc), comment: clean(d.comment),
+    consent: { at: consentAt, doc: clean(d.consentDoc) || 'consent.html', ip: req.headers.get('CF-Connecting-IP') || '', ua: clean(req.headers.get('User-Agent')).slice(0, 200) }, history: [{ s: 'new', by: 'сайт', at: now }],
   } : null;
 
   const t = await tg(env, 'sendMessage', { chat_id: chatId(env), text: lead ? leadMsg(lead) : text, disable_web_page_preview: true, ...(lead ? { reply_markup: keyboard(lead) } : {}) });
@@ -244,6 +248,7 @@ function details(l) {
     f('Бренд', l.brand), f('Поршни', l.pistons), f('Диск', l.disc), f('Колодки', l.pads), f('Цвет', l.color),
     l.price ? `Цена: ≈ ${fmtN(l.price)} ₽ за ось` : null, l.discount ? `Скидка: ${l.discount} % (${l.promo}), итого ≈ ${fmtN(l.finalPrice)} ₽` : null,
     f('Комплект', l.link), l.calc ? '\n' + l.calc : null, l.comment ? '\nКомментарий: ' + l.comment : null, '',
+    l.consent ? `Согласие на ПДн: ${msk(l.consent.at)} МСК (${l.consent.doc})` : null,
     'История: ' + (l.history || []).map(h => `${ST[h.s] ? ST[h.s].n : h.s} (${h.by}, ${msk(h.at)})`).join(' → '),
   ].filter(x => x !== null).join('\n').replace(/\n{3,}/g, '\n\n');
 }

@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /relay/
+
+Sitemap: https://tosha78.github.io/stopper-site/sitemap.xml
