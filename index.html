@@ -356,6 +356,9 @@ footer{border-top:1px solid var(--line2);margin-top:60px;overflow:hidden}
 @media (max-width:980px){.bc{grid-template-columns:1fr}.bcq{border-right:0;border-bottom:1px solid var(--line)}}
 @media (max-width:820px){.bcq,.bcr{padding:24px 20px}.bcdelta{text-align:left}.bchead{margin:14px 0 20px}.road .car{width:42px;height:19px}.fchart{gap:8px;height:130px}.fxl{gap:8px}.fcol em{font-size:9px}}
 
+/* секции ниже первого экрана не раскладываются, пока до них не дошли */
+section.s,footer{content-visibility:auto;contain-intrinsic-size:auto 900px}
+.cv-off section.s,.cv-off footer{content-visibility:visible}
 /* контакты, согласие, FAQ, доступность */
 .hphone{white-space:nowrap;font:600 14px Manrope;color:#fff;display:flex;align-items:center;gap:8px}.hphone:hover{color:var(--cyan)}.hphone small{display:block;font-size:10.5px;color:var(--dim);font-weight:500;letter-spacing:.06em;text-transform:uppercase}
 .nav .mnav{display:none}
@@ -863,7 +866,7 @@ form.addEventListener('submit',async e=>{ e.preventDefault();
   if(ok){ showOk(); return; }
   toast('Сервер не ответил — открываем Telegram с готовой заявкой'); $('tgSend').onclick(); });
 // comment box grows with the text, no inner scroll
-const ta=form.comment; const grow=()=>{ ta.style.height='auto'; ta.style.height=ta.scrollHeight+2+'px'; }; ta.addEventListener('input',grow); grow();
+const ta=form.comment; const grow=()=>{ ta.style.height='auto'; ta.style.height=ta.scrollHeight+2+'px'; }; ta.addEventListener('input',grow);
 })();
 </script>
 
@@ -921,7 +924,9 @@ function init(){ ['bcM','bcV'].forEach(id=>{ const el=$(id); rngFill(el); el.add
   $('bcRt').addEventListener('change',e=>{ S.rt=e.target.checked; touch(); render(); });
   document.addEventListener('vrakk:fit',syncCar); let q=0; document.addEventListener('vrakk:cfg',()=>{ cancelAnimationFrame(q); q=requestAnimationFrame(render); });
   render(); }
-if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
+// первый расчёт — когда браузер свободен, чтобы не задерживать первый экран
+const later=f=>('requestIdleCallback' in window)?requestIdleCallback(f,{timeout:2000}):setTimeout(f,300);
+later(init);
 })();
 </script>
 
@@ -929,7 +934,7 @@ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded'
 <script>
 // 3D грузится не сразу, а после первого действия пользователя (движение мыши, касание, прокрутка) или через 5 с после загрузки страницы — первый экран показывается быстрее
 (function(){ const EV=['pointerdown','pointermove','wheel','touchstart','scroll','keydown']; let done=false;
- const boot=()=>{ if(done) return; done=true; EV.forEach(e=>removeEventListener(e,boot)); import('./assets/app3d.js?v=2').catch(e=>{ console.error(e); const l=document.getElementById('loader'); l&&l.remove(); document.getElementById('fallback').style.display='flex'; }); };
+ const boot=()=>{ if(done) return; done=true; document.documentElement.classList.add('cv-off'); EV.forEach(e=>removeEventListener(e,boot)); import('./assets/app3d.js?v=2').catch(e=>{ console.error(e); const l=document.getElementById('loader'); l&&l.remove(); document.getElementById('fallback').style.display='flex'; }); };
  EV.forEach(e=>addEventListener(e,boot,{passive:true}));
  if(/^#(k=|configurator|calc)/.test(location.hash)) boot(); else addEventListener('load',()=>setTimeout(boot,5000));
 })();
