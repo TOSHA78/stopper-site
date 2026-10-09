@@ -32,6 +32,7 @@ export default {
       'Автомобиль: ' + (clean(d.car) || 'не указан'), d.vin && 'VIN: ' + clean(d.vin), d.pcd && 'Разболтовка: ' + clean(d.pcd), '',
       d.brand && 'Бренд: ' + clean(d.brand), d.pistons && 'Поршни: ' + clean(d.pistons), d.disc && 'Диск: ' + clean(d.disc),
       d.pads && 'Колодки: ' + clean(d.pads), d.color && 'Цвет: ' + clean(d.color), d.price && 'Цена: ≈ ' + Number(d.price).toLocaleString('ru-RU') + ' ₽ за ось',
+      d.discount && 'Скидка: ' + Number(d.discount) + ' % (промокод ' + clean(d.promo) + ')', d.discount && d.finalPrice && 'Итого: ≈ ' + Number(d.finalPrice).toLocaleString('ru-RU') + ' ₽ за ось',
       d.link && 'Комплект: ' + clean(d.link), d.comment && '\nКомментарий: ' + clean(d.comment),
     ].filter(Boolean).join('\n'));
 

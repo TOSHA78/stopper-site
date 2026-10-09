@@ -209,7 +209,7 @@ form .btn{width:100%;justify-content:center;height:54px;margin-top:6px}
 .ok h3{font-family:Unbounded,Manrope,sans-serif;font-size:22px;font-weight:600;line-height:1.25}
 .legal{font-size:11px;color:var(--dim);margin-top:14px;line-height:1.5}
 /* footer */
-footer{border-top:1px solid var(--line2);margin-top:60px}
+footer{border-top:1px solid var(--line2);margin-top:60px;overflow:hidden}
 .fgrid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;border-left:1px solid var(--line);border-right:1px solid var(--line)}
 .fgrid>div{padding:40px 28px;border-right:1px solid var(--line)}.fgrid>div:last-child{border-right:0}
 .fgrid h5{font-size:10.5px;color:var(--dim);text-transform:uppercase;font-weight:400;margin-bottom:18px}
@@ -271,6 +271,28 @@ footer{border-top:1px solid var(--line2);margin-top:60px}
 .toast.on{opacity:1;transform:translateX(-50%)}
 .ok.warn .mono{color:#ffb38a!important}
 @media (max-width:980px){.fit{grid-template-columns:1fr}.fitq{border-right:0;border-bottom:1px solid var(--line)}.fgridx{grid-template-columns:1fr 1fr}.fgridx div:nth-child(3n){border-right:1px solid var(--line)}.fgridx div:nth-child(2n){border-right:0}.kit{grid-template-columns:1fr auto}.kit .pr{grid-column:1}}
+
+/* персональная скидка */
+.cprice b.disc{color:#fff}.pold{display:block;margin-top:6px;font-size:12.5px;color:var(--mute)}.pold s{color:var(--dim)}.pold em{font-style:normal;color:#ff6b5e;margin-left:6px;font-weight:600}
+.promo{margin-top:14px}
+.pget{width:100%;display:flex;align-items:center;gap:12px;background:linear-gradient(90deg,rgba(255,36,22,.10),rgba(255,36,22,0));border:1px solid rgba(255,36,22,.45);color:#fff;padding:13px 16px;font:600 14px Manrope;cursor:pointer;text-align:left;transition:background .25s,border-color .25s}
+.pget:hover{background:rgba(255,36,22,.16);border-color:#ff2416}.pget i{width:8px;height:8px;background:#ff2416;transform:rotate(45deg);flex:none}.pget span{margin-left:auto;font-size:11px;color:var(--mute);font-weight:500}
+.pbadge{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;border:1px solid rgba(255,36,22,.45);padding:11px 14px;font-size:13px;background:rgba(255,36,22,.06)}
+.pbadge>span.mono:first-child{font-size:10.5px;color:var(--mute);text-transform:uppercase}.pbadge b{font:700 17px Unbounded,Manrope,sans-serif;color:#ff4a3d}.pbadge code{font:600 13px Manrope;letter-spacing:.08em;color:#fff;border:1px dashed var(--line2);padding:2px 8px}
+.pbadge .pt{font-size:11px;color:var(--mute);margin-left:auto}.pbadge em{font-style:normal;font-size:11px;color:#7fe3b0}.pbadge.off{border-color:var(--line);background:none;color:var(--dim)}
+.plink{background:none;border:0;color:var(--cyan);font:600 12px Manrope;cursor:pointer;text-decoration:underline;padding:0}
+.promof .prow{display:flex;gap:8px}.promof input{flex:1;text-transform:uppercase;letter-spacing:.08em}.promof .btn{width:auto!important;height:50px!important;margin:0!important;padding:0 18px}#promoSt{color:#7fe3b0}
+.pmodal{position:fixed;inset:0;z-index:120;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(3,1,10,.72);backdrop-filter:blur(6px);opacity:0;transition:opacity .25s}
+.pmodal.on{opacity:1}.pcard{position:relative;width:min(440px,100%);background:linear-gradient(180deg,#0b0618,#06030f);border:1px solid var(--line2);padding:34px 30px 26px;text-align:center;transform:translateY(12px);transition:transform .3s;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.pmodal.on .pcard{transform:none}.px{position:absolute;right:10px;top:8px;background:none;border:0;color:var(--mute);font-size:26px;cursor:pointer;width:40px;height:40px}.px:hover{color:#fff}
+.pk{font-size:10.5px;color:var(--cyan);text-transform:uppercase}.pcard h3{font:600 21px Unbounded,Manrope,sans-serif;margin-top:12px}
+.pgauge{position:relative;width:220px;margin:18px auto 0}.pgauge svg{width:100%;display:block}.gt,.gv{fill:none;stroke-width:9;stroke-linecap:butt}.gt{stroke:rgba(255,255,255,.07)}.gv{stroke:#ff2416;filter:drop-shadow(0 0 6px rgba(255,36,22,.55))}
+.pnum{position:absolute;left:0;right:0;bottom:4px;font:800 54px Unbounded,Manrope,sans-serif;line-height:1;font-variant-numeric:tabular-nums}.pnum small{font-size:22px;color:var(--mute);margin-left:2px}
+.pcard.done .pnum span{color:#fff;text-shadow:0 0 18px rgba(255,36,22,.5)}
+.pcopy{margin-top:16px;color:var(--mute);font-size:14.5px;line-height:1.5;min-height:22px}.pcode{margin-top:14px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.pcode code{font:700 20px Manrope;letter-spacing:.14em;border:1px dashed rgba(255,36,22,.6);padding:8px 16px;color:#fff}.pcode .pt{font-size:11.5px;color:var(--mute)}
+.pact{display:flex;gap:10px;margin-top:20px}.pact .btn{flex:1;justify-content:center}.pnote{margin-top:16px;font-size:11.5px;color:var(--dim);line-height:1.5}
+@media (max-width:820px){.pcard{padding:30px 20px 22px}.pnum{font-size:46px}.pact{flex-direction:column}.pact .btn{flex:none;height:48px}.pget span{display:none}.pbadge .pt{margin-left:0}}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/"}}</script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
@@ -355,7 +377,8 @@ footer{border-top:1px solid var(--line2);margin-top:60px}
      <div class="seg" data-k="size" id="cfgSizes" style="margin-top:10px"></div>
     </div>
     <dl class="sum mono" id="cfgSpec"></dl>
-    <div class="cprice"><div><span class="mono">ЦЕНА ЗА ОСЬ · ПРИМЕРНАЯ</span><b id="cfgPrice">—</b></div><small class="mono">* цена примерная, точная — после подбора по VIN</small></div>
+    <div class="cprice"><div><span class="mono">ЦЕНА ЗА ОСЬ · ПРИМЕРНАЯ</span><b id="cfgPrice">—</b><span class="pold" id="cfgOld"></span></div><small class="mono">* цена примерная, точная — после подбора по VIN</small></div>
+    <div class="promo" id="cfgPromo"></div>
     <p class="disc mono">Товарные знаки Brembo, AP Racing, Alcon, Wilwood, Hawk, EBC, Ferodo, Pagid принадлежат их владельцам. Мы не официальный представитель этих брендов; внешний вид в 3D — примерный.</p>
     <button class="btn" id="cfgOrder" type="button">Оставить заявку на этот комплект →</button>
     <div class="sharebar"><button class="btn ghost" id="cfgShare" type="button">Скопировать ссылку на комплект</button><button class="btn ghost" id="cfgTg" type="button">В Telegram</button></div>
@@ -475,6 +498,7 @@ footer{border-top:1px solid var(--line2);margin-top:60px}
      <label id="phoneL"><span class="mono">Телефон</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (999) 123-45-67" maxlength="22"><small class="hint">Российский номер или международный в формате +код страны</small></label>
      <label><span class="mono">Автомобиль</span><input name="car" placeholder="Марка, модель, год"></label>
      <label><span class="mono">Комплект (из конфигуратора)</span><input name="kit" placeholder="Не выбран — подберём сами"></label>
+     <label class="promof"><span class="mono">Промокод</span><span class="prow"><input name="promo" autocomplete="off" spellcheck="false" placeholder="Например, VRK-7K2M"><button type="button" class="btn ghost" id="promoGo">Применить</button></span><small class="hint" id="promoSt"></small></label>
      <label><span class="mono">Комментарий</span><textarea name="comment" rows="3" maxlength="400" placeholder="Колёса, вылет, задачи: город, трек, буксировка…"></textarea></label>
      <p class="err" id="err" role="alert">Укажите имя и корректный телефон.</p>
      <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
@@ -502,6 +526,64 @@ footer{border-top:1px solid var(--line2);margin-top:60px}
  <div class="fbot mono"><span>© 2026 VRAKK</span><span>Товарные знаки принадлежат их владельцам</span></div>
 </footer>
 
+<script>
+/* ==== Персональная скидка и промокоды ====
+   Выданный код (VRK-XXXX) хранится в localStorage этого браузера и действует 48 часов.
+   Фиксированные коды: TRACK10 — 10 %, VRAKK5 — 5 %. Окончательно скидку подтверждает инженер. */
+(function(){
+const $=id=>document.getElementById(id), LS=window.localStorage, K_OFFER='vrakk_offer', K_PROMO='vrakk_promo', K_SEEN='vrakk_offer_seen';
+const FIXED={TRACK10:10,VRAKK5:5}, TTL=48*3600*1000;
+const read=k=>{ try{ return JSON.parse(LS.getItem(k)||'null'); }catch(e){ return null; } }, write=(k,v)=>{ try{ LS.setItem(k,JSON.stringify(v)); }catch(e){} };
+const offer=()=>read(K_OFFER), alive=o=>!!o&&Date.now()<o.exp;
+function pickPct(){ const W=[[3,8],[4,14],[5,40],[6,14],[7,10],[8,7],[9,4],[10,3]]; const r=crypto.getRandomValues(new Uint32Array(1))[0]/2**32*100; let a=0; for(const [p,w] of W){ a+=w; if(r<a) return p; } return 5; }
+function makeCode(){ const A='ABCDEFGHJKMNPQRSTUVWXYZ23456789', b=crypto.getRandomValues(new Uint8Array(4)); return 'VRK-'+[...b].map(x=>A[x%A.length]).join(''); }
+function issue(){ let o=offer(); if(!o){ o={pct:pickPct(),code:makeCode(),issued:Date.now()}; o.exp=o.issued+TTL; write(K_OFFER,o); } return o; }
+function check(code){ code=(code||'').trim().toUpperCase().replace(/\s+/g,''); if(!code) return {ok:false,msg:''};
+  if(FIXED[code]) return {ok:true,code,pct:FIXED[code]};
+  const o=offer(); if(o&&o.code===code){ return alive(o)?{ok:true,code,pct:o.pct}:{ok:false,msg:'Срок действия кода истёк'}; }
+  if(/^VRK-[A-Z0-9]{4}$/.test(code)) return {ok:false,msg:'Код не найден. Персональный код действует в том браузере, где он был получен'};
+  return {ok:false,msg:'Такого промокода нет'}; }
+// active promo used by the configurator price and the request text
+window.__promo=()=>{ const p=read(K_PROMO); if(!p) return null; const c=check(p.code); return c.ok?c:null; };
+function applyCode(code,quiet){ const c=check(code); if(c.ok){ write(K_PROMO,{code:c.code}); } refresh(); if(!quiet) window.__toast&&window.__toast(c.ok?`Промокод ${c.code} применён: скидка ${c.pct} %`:c.msg||'Введите промокод'); return c; }
+window.__applyPromo=applyCode;
+const left=ms=>{ ms=Math.max(0,ms); const h=Math.floor(ms/3.6e6), m=Math.floor(ms%3.6e6/6e4), s=Math.floor(ms%6e4/1e3); return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; };
+function refresh(){ const o=offer(), p=window.__promo(), box=$('cfgPromo'); if(window.CFG) window.CFG.set({});
+  if(box){ if(alive(o)) box.innerHTML=`<div class="pbadge"><span class="mono">Ваша скидка</span><b>−${o.pct} %</b><code>${o.code}</code><span class="mono pt" data-exp="${o.exp}">осталось ${left(o.exp-Date.now())}</span>${p&&p.code===o.code?'<em class="mono">применена</em>':`<button type="button" class="plink" data-apply="${o.code}">Применить</button>`}</div>`;
+    else if(o) box.innerHTML=`<div class="pbadge off"><span class="mono">Персональная скидка</span><span>срок кода ${o.code} истёк</span></div>`;
+    else box.innerHTML=`<button type="button" class="pget" id="pGet"><i></i>Получить персональную скидку<span class="mono">3–10 %, один раз</span></button>`; }
+  const f=document.getElementById('form'); if(f&&f.promo&&p&&!f.promo.value) f.promo.value=p.code;
+  const st=$('promoSt'); if(st) st.textContent=p?`Скидка ${p.pct} % по коду ${p.code} учтена в заявке`:''; }
+// modal with a short counter-style reveal
+function openModal(){ if($('pModal')) return; write(K_SEEN,1); const had=!!offer(); const o=issue();
+  const m=document.createElement('div'); m.id='pModal'; m.className='pmodal'; m.setAttribute('role','dialog'); m.setAttribute('aria-modal','true'); m.setAttribute('aria-labelledby','pmT');
+  m.innerHTML=`<div class="pcard"><button class="px" type="button" aria-label="Закрыть">×</button><div class="mono pk">VRAKK · персональное предложение</div><h3 id="pmT">Ваша скидка на комплект</h3>
+   <div class="pgauge"><svg viewBox="0 0 220 130" aria-hidden="true"><path d="M20 120 A90 90 0 0 1 200 120" class="gt"/><path d="M20 120 A90 90 0 0 1 200 120" class="gv" id="pArc"/></svg><div class="pnum"><span id="pNum">0</span><small>%</small></div></div>
+   <p class="pcopy" id="pCopy">Подбираем скидку…</p><div class="pcode" id="pCode" hidden><code>${o.code}</code><span class="mono pt" data-exp="${o.exp}">действует ${left(o.exp-Date.now())}</span></div>
+   <div class="pact" id="pAct" hidden><button class="btn" type="button" id="pUse">Применить к комплекту</button><button class="btn ghost" type="button" id="pClose">Позже</button></div>
+   <p class="pnote">Скидка на комплект из конфигуратора, код одноразовый и действует 48 часов. Окончательную цену подтвердит инженер.</p></div>`;
+  document.body.appendChild(m); requestAnimationFrame(()=>m.classList.add('on'));
+  const close=()=>{ m.classList.remove('on'); setTimeout(()=>m.remove(),250); document.removeEventListener('keydown',esc); }, esc=e=>{ if(e.key==='Escape') close(); };
+  document.addEventListener('keydown',esc); m.addEventListener('click',e=>{ if(e.target===m) close(); }); m.querySelector('.px').onclick=close;
+  const arc=$('pArc'), L=arc.getTotalLength(); arc.style.strokeDasharray=L; arc.style.strokeDashoffset=L;
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches, T=had||reduce?300:2200, t0=performance.now();
+  (function step(now){ const k=Math.min(1,(now-t0)/T), e=1-Math.pow(1-k,3);
+    $('pNum').textContent=k<1?3+(Math.floor(e*46)%8):o.pct;
+    arc.style.strokeDashoffset=L*(1-e*o.pct/10);
+    if(k<1) requestAnimationFrame(step); else { m.querySelector('.pcard').classList.add('done'); $('pCopy').textContent=alive(o)?`Скидка ${o.pct} % закреплена за вами. Код сохранится в этом браузере.`:'Срок действия этого кода уже истёк.'; $('pCode').hidden=false; $('pAct').hidden=!alive(o); $('pUse').focus(); } })(t0);
+  $('pUse').onclick=()=>{ applyCode(o.code); close(); }; $('pClose').onclick=close; refresh(); }
+window.__openPromo=openModal;
+document.addEventListener('click',e=>{ if(e.target.closest('#pGet')) openModal(); const a=e.target.closest('[data-apply]'); if(a) applyCode(a.dataset.apply); });
+// one-time automatic offer: after 3 configurator changes, on exit intent (desktop) or after ~40 s
+let n=0, armed=true; const auto=()=>{ if(!armed||read(K_SEEN)||offer()||document.querySelector('.pmodal')) return; if(document.activeElement&&/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) return; armed=false; openModal(); };
+document.addEventListener('click',e=>{ if(e.target.closest('.panel [data-k] button')&&++n>=3) setTimeout(auto,900); });
+document.addEventListener('mouseout',e=>{ if(!e.relatedTarget&&e.clientY<=0&&matchMedia('(pointer:fine)').matches) auto(); });
+setTimeout(auto,40000);
+setInterval(()=>{ document.querySelectorAll('.pt[data-exp]').forEach(el=>{ const ms=+el.dataset.exp-Date.now(); el.textContent=(el.closest('.pmodal')?'действует ':'осталось ')+left(ms); if(ms<=0) refresh(); }); },1000);
+document.addEventListener('DOMContentLoaded',()=>{ const f=document.getElementById('form'); $('promoGo').onclick=()=>applyCode(f.promo.value); f.promo.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); applyCode(f.promo.value); } }); refresh(); });
+window.__promoRefresh=refresh;
+})();
+</script>
 <script>
 if('scrollRestoration' in history) history.scrollRestoration='manual';
 // small UI bits
@@ -606,7 +688,7 @@ function leadText(maxComment){ const d=leadData(), D=d.D, L=[];
   L.push('Заявка VRAKK','');
   L.push('Имя: '+(d.name||'—'), 'Телефон: '+(d.phone||'—'), '');
   L.push('Автомобиль: '+(d.car?d.car.split(' · ')[0]:'не указан')); if(d.vin) L.push('VIN: '+d.vin); if(d.pcd) L.push('Разболтовка: '+d.pcd); L.push('');
-  if(D){ L.push('Бренд: '+D.brand+' '+D.series, 'Поршни: '+D.pist, 'Диск: '+D.disc, 'Колодки: '+D.pads, 'Цвет: '+D.color, 'Цена: ≈ '+fmt(D.price)+' ₽ за ось (примерно)'); }
+  if(D){ L.push('Бренд: '+D.brand+' '+D.series, 'Поршни: '+D.pist, 'Диск: '+D.disc, 'Колодки: '+D.pads, 'Цвет: '+D.color, ...(D.pct?['Цена без скидки: ≈ '+fmt(D.price)+' ₽ за ось','Скидка: '+D.pct+' % (промокод '+D.promo+')','Итого: ≈ '+fmt(D.final)+' ₽ за ось (примерно)']:['Цена: ≈ '+fmt(D.price)+' ₽ за ось (примерно)'])); }
   else if(d.kit) L.push('Комплект: '+d.kit);
   L.push('Комплект на сайте: '+d.link);
   let cm=d.comment; if(maxComment!=null&&cm.length>maxComment) cm=maxComment>0?cm.slice(0,maxComment).trimEnd()+'…':'';
@@ -639,7 +721,7 @@ form.addEventListener('submit',async e=>{ e.preventDefault();
   if(!validate()) return;
   const {data,text}=leadText(); sendBtn.disabled=true; sendBtn.textContent='Отправляем…'; let ok=false;
   try{ const D=data.D||{}; const r=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body:JSON.stringify({name:data.name,phone:data.phone,car:data.car,vin:data.vin,pcd:data.pcd,brand:D.brand?D.brand+' '+D.series:'',pistons:D.pist||'',disc:D.disc||'',pads:D.pads||'',color:D.color||'',price:D.price||0,kit:data.kit,link:data.link,comment:data.comment,text,website:form.website.value})});
+      body:JSON.stringify({name:data.name,phone:data.phone,car:data.car,vin:data.vin,pcd:data.pcd,brand:D.brand?D.brand+' '+D.series:'',pistons:D.pist||'',disc:D.disc||'',pads:D.pads||'',color:D.color||'',price:D.price||0,discount:D.pct||0,promo:D.promo||'',finalPrice:D.final||D.price||0,kit:data.kit,link:data.link,comment:data.comment,text,website:form.website.value})});
     const j=await r.json().catch(()=>({})); ok=r.ok&&j.ok!==false; }catch(err){ ok=false; }
   sendBtn.disabled=false; sendBtn.textContent='Отправить заявку →';
   if(ok){ showOk(); return; }
@@ -922,12 +1004,12 @@ function makeConfigurator(gltfs,hdr){
     const tier=Object.values(PRESETS).find(p=>p.brand===st.brand&&p.cal===st.cal&&p.pads===st.pads&&p.disc===st.disc&&p.size===st.size)||null;
     const name=`${B.n} ${B.m[st.cal]}`;
     $('cfgName').textContent=name; $('cfgTier').textContent=tier?`= ${tier.name.toUpperCase()}`:''; $('cfgTier').style.display=tier?'':'none';
-    $('cfgCode').textContent=`${B.n} · ${st.size} мм · ${Pd.n}`; $('cfgPrice').textContent='≈ '+fmt(price)+' ₽';
+    $('cfgCode').textContent=`${B.n} · ${st.size} мм · ${Pd.n}`; const PR=window.__promo&&window.__promo(), fin=PR?Math.round(price*(1-PR.pct/100)/100)*100:price; $('cfgPrice').textContent='≈ '+fmt(fin)+' ₽'; $('cfgOld').innerHTML=PR?`<s>≈ ${fmt(price)} ₽</s> <em>−${PR.pct} % · ${PR.code}</em>`:''; $('cfgPrice').classList.toggle('disc',!!PR);
     $('cfgBrandNote').textContent=B.d; $('cfgCalNote').textContent=C.p?`особый цвет +${fmt(C.p)} ₽`:(B.fin==='anod'?'анодирование':'эмаль + лак');
     $('cfgPadNote').textContent=Pd.t+' · '+Pd.temp; $('cfgDiscNote').textContent=Dc.use;
     $('cfgSpec').innerHTML=`<dt>Суппорт</dt><dd>${name} · ${C.n}</dd><dt>Диск</dt><dd>${st.size} мм · ${Dc.n}</dd><dt>Колодки</dt><dd>${Pd.n} — ${Pd.use}</dd><dt>Поршни</dt><dd>${V.pistN}</dd><dt>Колёса</dt><dd>от ${st.size>=380?'19':st.size>=355?'18':'17'}″</dd>`;
     $('cfgHint').textContent=peekT>performance.now()?'КОЛОДКИ ВЫДВИНУТЫ ДЛЯ ОСМОТРА':'\u00a0';
-    window.__cfg={...st,price,name}; { const k=document.getElementById('form').kit; if(k) k.placeholder=`${B.n} ${B.m[st.cal].replace(/, \d поршн.*$/,'')} · ${st.size} мм`; } window.__cfgDesc={brand:B.n,series:B.m[st.cal].replace(/, \d поршн.*$/,''),pist:V.pistN,disc:`${st.size} мм, ${Dc.n}`,pads:`${Pd.n} (${Pd.t.toLowerCase()})`,color:C.n,price}; dirty=true;
+    window.__cfg={...st,price,name}; { const k=document.getElementById('form').kit; if(k) k.placeholder=`${B.n} ${B.m[st.cal].replace(/, \d поршн.*$/,'')} · ${st.size} мм`; } window.__cfgDesc={promo:PR?PR.code:'',pct:PR?PR.pct:0,final:fin,brand:B.n,series:B.m[st.cal].replace(/, \d поршн.*$/,''),pist:V.pistN,disc:`${st.size} мм, ${Dc.n}`,pads:`${Pd.n} (${Pd.t.toLowerCase()})`,color:C.n,price}; dirty=true;
   }
   function set(o,src){ for(const k in o) st[k]=k==='size'?+o[k]:o[k]; apply(); }
   document.querySelector('.panel').addEventListener('click',e=>{const b=e.target.closest('[data-k] button'); if(!b) return; const k=b.closest('[data-k]').dataset.k;
