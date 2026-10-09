@@ -596,7 +596,7 @@ document.querySelectorAll('.rv').forEach(el=>io.observe(el));
 /* ==== Приём заявок ====
    endpoint — адрес релея (Cloudflare Worker или Google Apps Script из папки relay/), который хранит токен бота и chat_id
    и пересылает заявку в Telegram. Пока пусто — кнопка формы открывает чат @hv99978 с уже заполненной заявкой. */
-window.VRAKK_LEADS={endpoint:''};
+window.VRAKK_LEADS={endpoint:'https://vrakk-leads.284864.workers.dev'};
 
 (function(){
 const $=id=>document.getElementById(id), fmt=n=>n.toLocaleString('ru-RU').replace(/\u00a0/g,' ');
