@@ -927,7 +927,7 @@ function makeConfigurator(gltfs,hdr){
     $('cfgPadNote').textContent=Pd.t+' · '+Pd.temp; $('cfgDiscNote').textContent=Dc.use;
     $('cfgSpec').innerHTML=`<dt>Суппорт</dt><dd>${name} · ${C.n}</dd><dt>Диск</dt><dd>${st.size} мм · ${Dc.n}</dd><dt>Колодки</dt><dd>${Pd.n} — ${Pd.use}</dd><dt>Поршни</dt><dd>${V.pistN}</dd><dt>Колёса</dt><dd>от ${st.size>=380?'19':st.size>=355?'18':'17'}″</dd>`;
     $('cfgHint').textContent=peekT>performance.now()?'КОЛОДКИ ВЫДВИНУТЫ ДЛЯ ОСМОТРА':'\u00a0';
-    window.__cfg={...st,price,name}; { const k=document.getElementById('form').kit; if(k) k.placeholder=`${name} · ${st.size} мм · ${C.n} (из конфигуратора)`; } window.__cfgDesc={brand:B.n,series:B.m[st.cal].replace(/, \d поршн.*$/,''),pist:V.pistN,disc:`${st.size} мм, ${Dc.n}`,pads:`${Pd.n} (${Pd.t.toLowerCase()})`,color:C.n,price}; dirty=true;
+    window.__cfg={...st,price,name}; { const k=document.getElementById('form').kit; if(k) k.placeholder=`${B.n} ${B.m[st.cal].replace(/, \d поршн.*$/,'')} · ${st.size} мм`; } window.__cfgDesc={brand:B.n,series:B.m[st.cal].replace(/, \d поршн.*$/,''),pist:V.pistN,disc:`${st.size} мм, ${Dc.n}`,pads:`${Pd.n} (${Pd.t.toLowerCase()})`,color:C.n,price}; dirty=true;
   }
   function set(o,src){ for(const k in o) st[k]=k==='size'?+o[k]:o[k]; apply(); }
   document.querySelector('.panel').addEventListener('click',e=>{const b=e.target.closest('[data-k] button'); if(!b) return; const k=b.closest('[data-k]').dataset.k;
@@ -936,7 +936,7 @@ function makeConfigurator(gltfs,hdr){
     $('cta').scrollIntoView({behavior:'smooth'}); setTimeout(()=>f.name.focus({preventScroll:true}),700);});
   document.querySelectorAll('[data-preset]').forEach(a=>a.addEventListener('click',()=>{const p=PRESETS[a.dataset.preset]; set({brand:p.brand,cal:p.cal,pads:p.pads,disc:p.disc,color:p.color,size:p.size}); setHeroVariant(p.cal);}));
   const enc=()=>`#k=${[st.brand,st.cal,st.color,st.pads,st.disc,st.size].join('.')}`+(window.__fitCar?`&car=${encodeURIComponent(window.__fitCar)}`:'')+(window.__vin?`&vin=${window.__vin}`:'');
-  window.__shareLink=()=>location.origin+location.pathname+enc(); window.__kitLink=()=>location.origin+location.pathname+`#k=${[st.brand,st.cal,st.color,st.pads,st.disc,st.size].join('.')}`;
+  window.__shareLink=()=>location.origin+location.pathname.replace(/index\.html$/,'')+enc(); window.__kitLink=()=>location.origin+location.pathname.replace(/index\.html$/,'')+`#k=${[st.brand,st.cal,st.color,st.pads,st.disc,st.size].join('.')}`;
   $('cfgShare').addEventListener('click',async()=>{ const u=window.__shareLink(); history.replaceState(null,'',enc()); const ok=await window.__copy(u); window.__toast(ok?'Ссылка на комплект скопирована':'Ссылка: '+u); });
   $('cfgTg').addEventListener('click',()=>document.getElementById('tgSend').click());
   { const m=/#k=([^&]+)/.exec(location.hash); if(m){ const [brand,cal,color,pads,disc,size]=decodeURIComponent(m[1]).split('.');
