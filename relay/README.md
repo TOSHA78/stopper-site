@@ -29,3 +29,21 @@ wrangler deploy               # получите https://vrakk-leads.<аккау
 «Заявка отправлена, свяжемся в течение 15 минут». Если релей не ответил, открывается Telegram с готовым текстом.
 
 Проверка: `curl -X POST <endpoint> -H 'Content-Type: text/plain' -d '{"name":"Тест","phone":"+79161234567","text":"Тестовая заявка"}'`
+
+## CRM в боте (Cloudflare Worker + KV)
+
+Воркер `vrakk-leads` хранит заявки в KV `LEADS` (см. `wrangler.toml`), нумерует их (#1, #2, …) и присылает каждую с кнопками
+«В работе / Продано ✅ / Отказ ❌». После «Продано» бот просит ответить суммой сделки (например, `350000` или `350к`).
+
+Команды (работают только в чате менеджера `TG_CHAT_ID`): `/stats`, `/leads`, `/lead N`, `/sold N [сумма]`, `/help`.
+Тестовые заявки (слово «тест» в имени, авто или комментарии) в `/stats` не учитываются.
+
+Развёртывание:
+```
+wrangler kv namespace create LEADS          # id → wrangler.toml
+wrangler secret put TG_TOKEN                # токен бота
+openssl rand -hex 24 | wrangler secret put WEBHOOK_SECRET
+wrangler deploy
+curl https://vrakk-leads.<account>.workers.dev/tg/<WEBHOOK_SECRET>/setup   # setWebhook + меню команд
+```
+Вебхук принимается только по секретному пути и с заголовком `X-Telegram-Bot-Api-Secret-Token`.
