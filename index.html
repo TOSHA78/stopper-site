@@ -218,6 +218,32 @@ footer{border-top:1px solid var(--line2);margin-top:60px}
 .seg.brands{grid-auto-flow:row;grid-template-columns:repeat(4,1fr)}.seg.brands button{padding:10px 8px;font-size:12.5px}
 .panel .disc{font-size:10px;color:var(--dim);line-height:1.5;margin:10px 0 0}
 @media (max-width:820px){.brakebtn{top:126px;right:18px;padding:7px 10px;font-size:10px}.seg.brands{grid-template-columns:repeat(3,1fr)}.seg.brands button{border-bottom:1px solid var(--line)}}
+.fit{display:grid;grid-template-columns:420px 1fr;border:1px solid var(--line2)}
+.fitq{padding:32px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:14px}
+.fitq label{display:block}.fitq label>span{display:block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+.fitq input,.fitq select{width:100%;height:48px;background:rgba(0,0,0,.35);border:1px solid var(--line2);color:var(--ink);padding:0 14px;font:15px Inter;outline:none;border-radius:0}
+.fitq select{appearance:auto}.fitq input:focus,.fitq select:focus{border-color:var(--cyan)}
+#vinIn{font-family:'JetBrains Mono';letter-spacing:.08em;text-transform:uppercase}
+.ftabs{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line2)}.ftabs button{background:none;border:0;color:var(--mute);padding:12px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+.ftabs button.on{background:rgba(0,229,255,.08);color:#fff;box-shadow:inset 0 -2px 0 var(--cyan)}
+.fpane{display:none;flex-direction:column;gap:14px}.fpane.on{display:flex}
+#vinGo{justify-content:center}.fstat{font-size:11px;color:var(--dim);line-height:1.6;margin:0}.fstat.err{color:#ff8a65}.fstat.ok{color:#7fe3b0}
+.fitr{padding:32px;min-height:380px}.fempty{color:var(--dim);font-size:12px;line-height:1.7;max-width:460px}
+.fcar{font-size:24px;font-weight:600}.fcar small{display:block;font-family:'JetBrains Mono';font-size:10px;color:var(--dim);letter-spacing:.1em;margin-top:6px;text-transform:uppercase;font-weight:400}
+.fgridx{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);margin:22px 0}
+.fgridx div{padding:14px 16px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}.fgridx div:nth-child(3n){border-right:0}
+.fgridx span{display:block;font-family:'JetBrains Mono';font-size:10px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase}.fgridx b{display:block;font-size:17px;margin-top:6px;font-weight:600}
+.fgridx em{font-style:normal;font-size:10px;color:#ffb38a;margin-left:6px;font-family:'JetBrains Mono'}
+.kits{display:grid;gap:8px}.kit{display:grid;grid-template-columns:1fr auto auto;gap:16px;align-items:center;padding:12px 14px;border:1px solid var(--line)}
+.kit b{font-weight:600}.kit small{display:block;color:var(--dim);font-family:'JetBrains Mono';font-size:10px;margin-top:4px}.kit .pr{font-family:'JetBrains Mono';font-size:13px;white-space:nowrap}
+.kit button{background:none;border:1px solid var(--cyan);color:var(--cyan);padding:8px 12px;font:11px 'JetBrains Mono';letter-spacing:.06em;cursor:pointer;text-transform:uppercase}.kit button:hover{background:rgba(0,229,255,.1)}
+.kit.no{opacity:.45}.fwarn{font-size:12px;color:#ffb38a;margin:0 0 12px;line-height:1.6}
+.fact{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.sharebar{display:flex;gap:8px;margin-top:10px}.sharebar button{flex:1;justify-content:center;height:44px}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:#05010f;border:1px solid var(--cyan);color:#fff;padding:12px 18px;font:12px 'JetBrains Mono';z-index:99;opacity:0;transition:.25s;pointer-events:none;max-width:90vw}
+.toast.on{opacity:1;transform:translateX(-50%)}
+.ok.warn .mono{color:#ffb38a!important}
+@media (max-width:980px){.fit{grid-template-columns:1fr}.fitq{border-right:0;border-bottom:1px solid var(--line)}.fgridx{grid-template-columns:1fr 1fr}.fgridx div:nth-child(3n){border-right:1px solid var(--line)}.fgridx div:nth-child(2n){border-right:0}.kit{grid-template-columns:1fr auto}.kit .pr{grid-column:1}}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/"}}</script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
@@ -235,7 +261,7 @@ footer{border-top:1px solid var(--line2);margin-top:60px}
   <nav class="nav mono" id="nav">
    <a href="#hero" data-n="01">Конструкция</a><a href="#configurator" data-n="02">Конфигуратор</a><a href="#features" data-n="03">Спецификация</a><a href="#pricing" data-n="04">Комплекты</a><a href="#contacts" data-n="05">Контакты</a>
   </nav>
-  <a href="#cta" class="btn">Подбор по VIN →</a>
+  <a href="#fit" class="btn">Подбор по VIN →</a>
   <button class="burger mono" id="burger" aria-label="Меню">≡</button>
  </div>
 </header>
@@ -307,6 +333,7 @@ footer{border-top:1px solid var(--line2);margin-top:60px}
     <div class="cprice"><div><span class="mono">ЦЕНА ЗА ОСЬ · ПРИМЕРНАЯ</span><b id="cfgPrice">—</b></div><small class="mono">* цена примерная, точная — после подбора по VIN</small></div>
     <p class="disc mono">Товарные знаки Brembo, AP Racing, Alcon, Wilwood, Hawk, EBC, Ferodo, Pagid принадлежат их владельцам. Мы не официальный представитель этих брендов; внешний вид в 3D — примерный.</p>
     <button class="btn" id="cfgOrder" type="button">Оставить заявку на этот комплект →</button>
+    <div class="sharebar"><button class="btn ghost" id="cfgShare" type="button">Скопировать ссылку на комплект</button><button class="btn ghost" id="cfgTg" type="button">В Telegram</button></div>
    </div>
   </div>
  </div>
@@ -380,12 +407,39 @@ footer{border-top:1px solid var(--line2);margin-top:60px}
  </div>
 </section>
 
+<!-- ===== FITMENT ===== -->
+<section class="s" id="fit">
+ <div class="wrap">
+  <div class="shead rv"><div class="k mono">05 / Подбор</div><h2 class="disp">Подбор под ваш автомобиль. <span>По VIN или по марке.</span></h2></div>
+  <div class="fit rv">
+   <div class="fitq">
+    <div class="ftabs mono" role="tablist"><button class="on" data-t="vin" type="button">По VIN</button><button data-t="mm" type="button">По марке и модели</button></div>
+    <div class="fpane on" id="fpVin">
+     <label><span class="mono">VIN (17 символов)</span><input id="vinIn" maxlength="17" placeholder="Например, XTA219010M0000000" autocomplete="off" spellcheck="false"></label>
+     <button class="btn" id="vinGo" type="button">Расшифровать VIN →</button>
+    </div>
+    <div class="fpane" id="fpMm">
+     <label><span class="mono">Марка</span><select id="fMake"><option value="">Загрузка…</option></select></label>
+     <label><span class="mono">Модель</span><select id="fModel" disabled><option value="">—</option></select></label>
+     <label><span class="mono">Год</span><select id="fYear" disabled><option value="">—</option></select></label>
+    </div>
+    <p class="fstat mono" id="vinStat">VIN расшифровывается через открытую базу NHTSA (США). Для машин рынка РФ/ЕС определяем марку и год, модель выберите ниже.</p>
+    <label class="fwheel"><span class="mono">Ваши колёса (диаметр)</span><select id="fWheel"><option value="15">R15</option><option value="16">R16</option><option value="17">R17</option><option value="18" selected>R18</option><option value="19">R19</option><option value="20">R20</option><option value="21">R21</option></select></label>
+   </div>
+   <div class="fitr" id="fitRes">
+    <div class="fempty mono">Выберите автомобиль слева — покажем разболтовку, центральное отверстие, штатные колёса, какой диск поместится и какие комплекты подойдут.</div>
+   </div>
+  </div>
+  <p class="note mono">Данные о колёсах: открытый набор «ANKUSI Wheel Fitment Dataset» (<a href="https://ankusiwheels.com/wheel-fitment-dataset/" target="_blank" rel="noopener">ankusiwheels.com</a>, CC BY 4.0). Размер штатного тормоза и максимальный диск — наша оценка по диаметру колеса; окончательно проверяет инженер по VIN.</p>
+ </div>
+</section>
+
 <!-- ===== CTA ===== -->
 <section class="s" id="cta">
  <div class="wrap">
   <div class="cta rv">
    <div>
-    <div class="k mono" style="font-size:11px;color:#00e5ff;margin-bottom:24px">05 / ЗАЯВКА</div>
+    <div class="k mono" style="font-size:11px;color:#00e5ff;margin-bottom:24px">06 / ЗАЯВКА</div>
     <h2 class="disp">Подберём систему под ваш автомобиль</h2>
     <p>Инженер проверит посадку по VIN, диаметр колеса и вылет, предложит конфигурацию и рассчитает стоимость с установкой.</p>
     <div class="steps"><div><b>01</b>Заявка и проверка посадки по VIN</div><div><b>02</b>Расчёт конфигурации и сроков</div><div><b>03</b>Установка, прокачка и притирка</div></div>
@@ -397,7 +451,8 @@ footer{border-top:1px solid var(--line2);margin-top:60px}
      <label><span class="mono">Автомобиль</span><input name="car" placeholder="Марка, модель, год"></label>
      <label><span class="mono">Комплект (из конфигуратора)</span><input name="kit" placeholder="Не выбран, подберём сами"></label>
      <p class="err mono" id="err">Заполните все поля, телефон: минимум 10 цифр.</p>
-     <button class="btn" type="submit">Отправить заявку →</button>
+     <button class="btn" type="button" id="tgSend" style="width:100%;justify-content:center">Отправить в Telegram →</button>
+     <button class="btn ghost" type="submit" style="width:100%;justify-content:center;margin-top:10px">Отправить заявку →</button>
      <p class="legal">Нажимая кнопку, вы соглашаетесь на обработку персональных данных.</p>
     </form>
     <div class="ok" id="ok"><div class="mono" style="color:#00e5ff;font-size:11px">СТАТУС · ПРИНЯТО</div><h3 style="margin-top:14px">Спасибо, заявка принята.</h3><p>Инженер свяжется с вами в течение 15 минут в рабочее время.</p></div>
@@ -410,9 +465,9 @@ footer{border-top:1px solid var(--line2);margin-top:60px}
  <div class="wrap" style="padding:0">
   <div class="fgrid">
    <div><a href="#hero" class="logo" style="margin-bottom:18px">STOPPER</a><p style="color:#8a93a6;font-size:14px;line-height:1.6;max-width:320px;margin-top:16px">Инженерные тормозные системы для дороги и трека. Проектирование, подбор, установка.</p></div>
-   <div><h5 class="mono">Разделы</h5><ul><li><a href="#hero">Конструкция</a></li><li><a href="#features">Спецификация</a></li><li><a href="#pricing">Комплекты</a></li><li><a href="#cta">Заявка</a></li></ul></div>
+   <div><h5 class="mono">Разделы</h5><ul><li><a href="#hero">Конструкция</a></li><li><a href="#features">Спецификация</a></li><li><a href="#pricing">Комплекты</a></li><li><a href="#fit">Подбор по авто</a></li><li><a href="#cta">Заявка</a></li></ul></div>
    <div><h5 class="mono">Связь</h5><ul><li><a href="tel:+70000000000">+7 (000) 000-00-00</a></li><li><a href="mailto:info@example.com">info@example.com</a></li><li>Москва, ул. Примерная, 1</li><li>Пн–Сб 10:00–20:00</li></ul></div>
-   <div><h5 class="mono">Каналы</h5><ul><li><a href="#">Telegram</a></li><li><a href="#">VK</a></li><li><a href="#">YouTube</a></li></ul></div>
+   <div><h5 class="mono">Каналы</h5><ul><li><a href="https://t.me/hv99978" target="_blank" rel="noopener">Telegram: @hv99978</a></li><li><a href="#">VK</a></li><li><a href="#">YouTube</a></li></ul></div>
   </div>
  </div>
  <div class="fbig" aria-hidden="true">STOPPER</div>
@@ -427,10 +482,112 @@ document.getElementById('burger').onclick=()=>document.getElementById('nav').cla
 document.querySelectorAll('#nav a').forEach(a=>a.onclick=()=>document.getElementById('nav').classList.remove('open'));
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}}),{threshold:.12});
 document.querySelectorAll('.rv').forEach(el=>io.observe(el));
-document.getElementById('form').addEventListener('submit',e=>{e.preventDefault();const f=e.target,p=f.phone.value.replace(/\D/g,'');
- if(!f.name.value.trim()||!f.car.value.trim()||p.length<10){document.getElementById('err').style.display='block';return}
- f.style.display='none';document.getElementById('ok').style.display='block'});
 </script>
+<script>
+/* ==== Приём заявок: заполните ОДНО из полей, иначе форма честно сообщит, что онлайн-отправка не подключена ====
+   formsubmitEmail — ваш e-mail для FormSubmit.co (первую заявку нужно подтвердить по ссылке из письма).
+   web3formsKey    — access key с web3forms.com (бесплатно, ключ можно держать в открытом коде).
+   tgBotToken/tgChatId — авто-отправка ботом Telegram. ВНИМАНИЕ: токен в коде сайта виден всем, лучше FormSubmit/Web3Forms.
+   telegram — ссылка для кнопки «Отправить в Telegram» (работает всегда: копирует текст заявки и открывает чат). */
+window.STOPPER_LEADS={telegram:'https://t.me/hv99978', formsubmitEmail:'', web3formsKey:'', tgBotToken:'', tgChatId:''};
+
+(function(){
+const $=id=>document.getElementById(id), fmt=n=>n.toLocaleString('ru-RU').replace(/\u00a0/g,' ');
+const toast=t=>{let e=$('toast');if(!e){e=document.createElement('div');e.id='toast';e.className='toast';document.body.appendChild(e)}e.textContent=t;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),3200)};
+window.__toast=toast;
+async function copy(t){ try{ await navigator.clipboard.writeText(t); return true; }catch(e){ const a=document.createElement('textarea'); a.value=t; a.style.position='fixed'; a.style.opacity='0'; document.body.appendChild(a); a.select(); let ok=false; try{ok=document.execCommand('copy')}catch(_){} a.remove(); return ok; } }
+window.__copy=copy;
+// ---------- fitment data
+let DB=null; const dbP=fetch('assets/fitment.json').then(r=>r.json()).then(j=>{DB=j.d;fillMakes();return DB}).catch(e=>{console.error(e);$('fMake').innerHTML='<option value="">База не загрузилась</option>';});
+const POP=['Lada','Toyota','Kia','Hyundai','Volkswagen','Skoda','Renault','Nissan','Mitsubishi','Mazda','Honda','Subaru','Ford','BMW','Mercedes-Benz','Audi','Porsche','Lexus','Haval','Geely','Chery','Exeed','Tank'];
+function fillMakes(){ const all=Object.keys(DB); const pop=POP.filter(m=>DB[m]); const rest=all.filter(m=>!pop.includes(m)).sort();
+  $('fMake').innerHTML='<option value="">Выберите марку</option><optgroup label="Популярные в России">'+pop.map(m=>`<option>${m}</option>`).join('')+'</optgroup><optgroup label="Все марки">'+rest.map(m=>`<option>${m}</option>`).join('')+'</optgroup>'; }
+$('fMake').onchange=()=>{ const mk=$('fMake').value; $('fitRes').innerHTML='<div class="fempty mono">Выберите модель и год.</div>'; const ms=mk?Object.keys(DB[mk]):[]; $('fModel').innerHTML='<option value="">Выберите модель</option>'+ms.map(m=>`<option>${m}</option>`).join(''); $('fModel').disabled=!mk; $('fYear').innerHTML='<option value="">—</option>'; $('fYear').disabled=true; };
+$('fModel').onchange=()=>{ const r=DB[$('fMake').value][$('fModel').value]||[]; const ys=[...new Set(r.map(x=>x[0]))].sort((a,b)=>b-a); $('fYear').innerHTML=ys.map(y=>`<option>${y}</option>`).join(''); $('fYear').disabled=!ys.length; show(); };
+$('fYear').onchange=show; $('fWheel').onchange=()=>{ $('fWheel').dataset.user='1'; show(); };
+document.querySelectorAll('.ftabs button').forEach(b=>b.onclick=()=>{ document.querySelectorAll('.ftabs button').forEach(x=>x.classList.toggle('on',x===b)); $('fpVin').classList.toggle('on',b.dataset.t==='vin'); $('fpMm').classList.toggle('on',b.dataset.t==='mm'); });
+const oeClean=s=>{const m=/(\d{2}(?:\.\d)?)\s*x\s*([\d.]+)J?(?:.*?(ET\s?-?\d+))?/i.exec(s||'');return m?`${m[1]}×${m[2]}J${m[3]?' '+m[3].replace(/\s/,''):''}`:(s||'—')};
+const inch=s=>{const m=/(\d{2})(?:\.\d)?\s*x/.exec(s||'');return m?+m[1]:null};
+// rough engineering estimates (mark as оценка)
+const stockDisc=w=>w<=14?240:w==15?260:w==16?280:w==17?310:w==18?340:w==19?360:380;
+const maxDisc=w=>w<=16?0:w==17?330:w==18?355:380;     // kit disc that clears the wheel's inner barrel
+let CUR=null;
+function show(){ const mk=$('fMake').value, mo=$('fModel').value, y=+$('fYear').value; if(!mk||!mo||!y) return;
+  const r=DB[mk][mo].find(x=>x[0]===y); if(!r) return; const [yy,pcd,cb,oe,mx,slug]=r;
+  const oeIn=inch(oe), mxIn=inch(mx); if(!$('fWheel').dataset.user && oeIn) $('fWheel').value=String(Math.min(21,Math.max(15,oeIn)));
+  const w=+$('fWheel').value, md=maxDisc(w), sd=stockDisc(oeIn||w);
+  CUR={mk,mo,y,pcd,cb,oe,mx,w,md,sd}; window.__fitCar=`${mk} ${mo} ${y}`; { const fc=document.getElementById('form').car; if(!fc.value||fc.dataset.auto){ fc.value=`${mk} ${mo} ${y} · ${pcd} · ЦО ${cb} мм · колёса R${w}`; fc.dataset.auto='1'; } }
+  const B=window.__BRANDS||{}; const rows=[];
+  for(const k in B){ for(const cal of ['4p','6p']){ const size=cal==='4p'?(md>=355?355:330):(md>=380?380:355); const ok=md>=size && (cal==='4p'||md>=355);
+      rows.push({k,cal,size,ok,n:`${B[k].n} ${B[k].m[cal]}`,p:B[k].p[cal]+(size===355&&cal==='4p'?8000:0)}); } }
+  rows.sort((a,b)=>(b.ok-a.ok)||(a.p-b.p));
+  $('fitRes').innerHTML=`<div class="fcar">${mk} ${mo}<small>${y} модельный год · <a href="https://ankusiwheels.com/fitment-guide/${slug}/" target="_blank" rel="noopener">источник данных</a></small></div>
+   <div class="fgridx"><div><span>Разболтовка (PCD)</span><b>${pcd||'—'}</b></div><div><span>Центральное отверстие</span><b>${cb?cb+' мм':'—'}</b></div><div><span>Штатные колёса</span><b>${oeClean(oe)}</b></div>
+   <div><span>Макс. колёса (справочно)</span><b>${mx?oeClean(mx):'нет данных'}</b></div><div><span>Штатный диск тормоза</span><b>≈ ${sd} мм<em>оценка</em></b></div><div><span>Макс. диск под R${w}</span><b>${md?md+' мм':'не поместится'}<em>оценка</em></b></div></div>
+   ${md?'':`<p class="fwarn">С колёсами R${w} наши комплекты (диск от 330 мм) не помещаются. Нужны колёса от R17.</p>`}
+   <div class="kits">${rows.map(x=>`<div class="kit${x.ok?'':' no'}"><div><b>${x.n}</b><small>диск ${x.size} мм · кронштейн и колокол под ${pcd}, ЦО ${cb} мм${x.ok?'':' · не помещается в R'+w}</small></div><span class="pr">≈ ${fmt(x.p)} ₽</span>${x.ok?`<button type="button" data-b="${x.k}" data-c="${x.cal}" data-s="${x.size}">Настроить</button>`:'<span></span>'}</div>`).join('')}</div>
+   <div class="fact"><button class="btn" type="button" id="fitOrder">Заявка на подбор для этого авто →</button></div>`;
+  $('fitRes').querySelectorAll('.kit button').forEach(b=>b.onclick=()=>{ if(window.CFG) window.CFG.set({brand:b.dataset.b,cal:b.dataset.c,size:+b.dataset.s,color:(window.__BRANDS[b.dataset.b].colors||['red'])[0]}); document.getElementById('configurator').scrollIntoView({behavior:'smooth'}); });
+  $('fitOrder').onclick=()=>{ const f=$('form'); f.car.dataset.auto=''; f.car.value=`${mk} ${mo} ${y} · ${pcd} · ЦО ${cb} · колёса R${w}`; $('cta').scrollIntoView({behavior:'smooth'}); };
+}
+window.__fitShow=show;
+// ---------- VIN
+const WMI={XTA:'Lada',XTT:'УАЗ',X7L:'Renault',XW8:'Volkswagen',X4X:'BMW',Z94:'Hyundai',XWE:'Kia',X9F:'Ford',Z8N:'Nissan',LVV:'Chery',L6T:'Geely',LGW:'Haval',LVS:'Ford',
+ JTD:'Toyota',JTE:'Toyota',JTN:'Toyota',JTM:'Toyota',JTH:'Lexus',SB1:'Toyota',NMT:'Toyota',VNK:'Toyota',JN1:'Nissan',SJN:'Nissan',JM1:'Mazda',JMZ:'Mazda',JHM:'Honda',SHH:'Honda',JF1:'Subaru',JF2:'Subaru',JA3:'Mitsubishi',JMB:'Mitsubishi',
+ KNA:'Kia',KNE:'Kia',KND:'Kia',KMH:'Hyundai',TMA:'Hyundai',WBA:'BMW',WBS:'BMW',WBX:'BMW',WBY:'BMW',WDD:'Mercedes-Benz',WDB:'Mercedes-Benz',WDC:'Mercedes-Benz',W1K:'Mercedes-Benz',W1N:'Mercedes-Benz',
+ WAU:'Audi',WUA:'Audi',TRU:'Audi',WVW:'Volkswagen',WV1:'Volkswagen',WV2:'Volkswagen',WVG:'Volkswagen',WP0:'Porsche',WP1:'Porsche',TMB:'Skoda',VF1:'Renault',VF3:'Peugeot',VF7:'Citroen',SAL:'Land Rover',SAJ:'Jaguar',
+ YV1:'Volvo',YV4:'Volvo',ZFA:'Fiat',WF0:'Ford','1FA':'Ford','1FT':'Ford','1FM':'Ford','5YJ':'Tesla','7SA':'Tesla',WME:'Smart',VSS:'SEAT',ZAR:'Alfa Romeo',ZFF:'Ferrari',ZHW:'Lamborghini',SCB:'Bentley'};
+const YC='ABCDEFGHJKLMNPRSTVWXY123456789';
+function vinYear(c){ const i=YC.indexOf(c); if(i<0) return null; let y=1980+i; const now=new Date().getFullYear()+1; while(y+30<=now) y+=30; return y; }
+function pickMake(name){ if(!DB||!name) return ''; const n=name.toLowerCase().replace(/[^a-zа-я]/g,''); return Object.keys(DB).find(m=>m.toLowerCase().replace(/[^a-z]/g,'')===n)||Object.keys(DB).find(m=>n.startsWith(m.toLowerCase().replace(/[^a-z]/g,'')))||''; }
+function setStat(t,c){ const s=$('vinStat'); s.textContent=t; s.className='fstat mono'+(c?' '+c:''); }
+async function decodeVin(){ const v=$('vinIn').value.trim().toUpperCase().replace(/[IOQ]/g,m=>({I:'1',O:'0',Q:'0'})[m]); $('vinIn').value=v;
+  if(!/^[A-HJ-NPR-Z0-9]{17}$/.test(v)){ setStat('VIN — 17 символов: латинские буквы (кроме I, O, Q) и цифры.','err'); return; }
+  setStat('Расшифровываем…'); await dbP; let make='',model='',year=null,src='';
+  try{ const r=await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValues/${v}?format=json`); const j=await r.json(); const x=(j.Results||[])[0]||{};
+    make=x.Make||''; model=x.Model||''; year=+x.ModelYear||null; if(make) src='NHTSA vPIC'; }catch(e){ /* offline or blocked — fall back to WMI */ }
+  if(!make){ make=WMI[v.slice(0,3)]||''; if(make) src='код производителя (WMI)'; }
+  if(!year){ year=vinYear(v[9]); }
+  const mk=pickMake(make);
+  if(!make){ setStat('Не удалось определить марку по VIN. Выберите автомобиль по марке и модели.','err'); document.querySelector('.ftabs [data-t=mm]').click(); return; }
+  document.querySelector('.ftabs [data-t=mm]').click();
+  if(mk){ $('fMake').value=mk; $('fMake').onchange(); const models=Object.keys(DB[mk]);
+    const ml=(model||'').toLowerCase(); const mm=ml?(models.find(m=>m.toLowerCase()===ml)||models.find(m=>m.toLowerCase().startsWith(ml))||models.find(m=>m.toLowerCase().includes(ml))):'';
+    if(mm){ $('fModel').value=mm; $('fModel').onchange(); const ys=[...$('fYear').options].map(o=>+o.value); const best=year?ys.reduce((a,b)=>Math.abs(b-year)<Math.abs(a-year)?b:a,ys[0]):ys[0]; $('fYear').value=String(best); show(); }
+  }
+  setStat(`Определено (${src}): ${make}${model?' '+model:''}${year?', '+year+' г. (по 10-му символу'+(src==='NHTSA vPIC'&&model?'':', для РФ/ЕС — ориентировочно')+')':''}.${mk&&!model?' Выберите модель из списка.':''}${!mk?' Этой марки нет в базе колёс — выберите похожую вручную.':''}`,'ok');
+  window.__vin=v;
+}
+$('vinGo').onclick=decodeVin; $('vinIn').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); decodeVin(); } });
+// ---------- request form with real delivery
+const form=$('form');
+function leadText(){ const f=form, c=window.__cfg; const link=(window.__shareLink&&window.__shareLink())||location.href;
+  const kit=f.kit.value.trim()||(c?`${c.name} · диск ${c.size} мм · ≈ ${fmt(c.price)} ₽/ось (примерно)`:'не выбран');
+  const data={name:f.name.value.trim(),phone:f.phone.value.trim(),car:f.car.value.trim()||window.__fitCar||'',kit,vin:window.__vin||'',link};
+  return {data,text:`Заявка STOPPER\n${data.name?'Имя: '+data.name+'\n':''}${data.phone?'Телефон: '+data.phone+'\n':''}Автомобиль: ${data.car||'не указан'}${data.vin?'\nVIN: '+data.vin:''}\nКомплект: ${data.kit}\nСсылка на комплект: ${data.link}`}; }
+window.__leadText=leadText;
+$('tgSend').onclick=async()=>{ const {text}=leadText(); const ok=await copy(text); toast(ok?'Текст заявки скопирован, вставьте в чат':'Не удалось скопировать — перепишите данные в чат'); window.open((window.STOPPER_LEADS||{}).telegram||'https://t.me/hv99978','_blank','noopener'); };
+form.addEventListener('submit',async e=>{ e.preventDefault(); const f=form, p=f.phone.value.replace(/\D/g,'');
+  if(!f.car.value.trim()&&window.__fitCar) f.car.value=window.__fitCar;
+  if(!f.name.value.trim()||!f.car.value.trim()||p.length<10){ $('err').style.display='block'; return; } $('err').style.display='none';
+  const {data,text}=leadText();
+  const L=window.STOPPER_LEADS||{}; const btn=f.querySelector('button[type=submit]'); btn.disabled=true; btn.textContent='Отправляем…';
+  let ok=false, configured=false;
+  try{
+    if(L.web3formsKey){ configured=true; const r=await fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({access_key:L.web3formsKey,subject:'Заявка STOPPER: '+data.car,from_name:'Сайт STOPPER',...data})}); const j=await r.json(); ok=r.ok&&j.success!==false; }
+    else if(L.tgBotToken&&L.tgChatId){ configured=true; const r=await fetch(`https://api.telegram.org/bot${L.tgBotToken}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:L.tgChatId,text})}); const j=await r.json().catch(()=>({})); ok=r.ok&&j.ok; }
+    else if(L.formsubmitEmail){ configured=true; const r=await fetch('https://formsubmit.co/ajax/'+encodeURIComponent(L.formsubmitEmail),{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({_subject:'Заявка STOPPER: '+data.car,_template:'table',_captcha:'false',Имя:data.name,Телефон:data.phone,Автомобиль:data.car,VIN:data.vin,Комплект:data.kit,Ссылка:data.link})}); const j=await r.json().catch(()=>({})); ok=r.ok&&String(j.success)!=='false'; }
+  }catch(err){ ok=false; }
+  btn.disabled=false; btn.textContent='Отправить заявку →';
+  const okEl=$('ok');
+  if(ok){ okEl.classList.remove('warn'); okEl.innerHTML='<div class="mono" style="color:#00e5ff;font-size:11px">СТАТУС · ОТПРАВЛЕНО</div><h3 style="margin-top:14px">Спасибо, заявка отправлена.</h3><p>Мы свяжемся с вами по указанному телефону.</p>'; f.style.display='none'; okEl.style.display='block'; return; }
+  const copied=await copy(text); okEl.classList.add('warn');
+  okEl.innerHTML=`<div class="mono" style="font-size:11px">СТАТУС · НЕ ОТПРАВЛЕНО</div><h3 style="margin-top:14px">${configured?'Не удалось отправить заявку.':'Онлайн-отправка заявок пока не подключена.'}</h3><p>${copied?'Текст заявки со ссылкой на комплект скопирован — отправьте его нам в <a href="'+((L.telegram)||'https://t.me/hv99978')+'" target="_blank" rel="noopener">Telegram</a>.':'Скопируйте текст ниже и отправьте его нам.'}</p><textarea readonly style="width:100%;height:140px;margin-top:12px;background:rgba(0,0,0,.35);color:#cfd6e4;border:1px solid var(--line2);padding:10px;font:12px JetBrains Mono">${text.replace(/</g,'&lt;')}</textarea><button class="btn ghost" type="button" style="margin-top:12px" onclick="this.parentNode.style.display='none';document.getElementById('form').style.display=''">← Вернуться к форме</button>`;
+  f.style.display='none'; okEl.style.display='block';
+});
+})();
+</script>
+
 
 <script type="module">
 import * as THREE from 'three';
@@ -478,6 +635,8 @@ const BRAND_MODEL={brembo:{'6p':'brembo-6p','4p':'brembo-4p'},ap:{'6p':'monobloc
 const realCache={}; const loadReal=k=>realCache[k]||(realCache[k]=new Promise((res,rej)=>gl.load(`assets/real/${k}.glb?r=3`,g=>res(g.scene),undefined,rej)));
 const CAL_PARTS=['CaliperBody','Piston_','Pad_','PadPin','PadSpring','Bleed','Fitting','Bracket','Bolt_'];
 const isCalPart=n=>CAL_PARTS.some(p=>n.startsWith(p));
+window.__BRANDS=BRANDS;
+const REAR=-0.7; // caliper sits top-rear of the disc (≈2 o'clock seen from outside), bleed screws up
 const SIZEP={330:0,355:8000,380:0};
 const PRESETS={city:{brand:'wilwood',cal:'4p',pads:'city',disc:'plain',color:'red',size:330,name:'Комплект для города'},
  active:{brand:'ap',cal:'6p',pads:'active',disc:'ds',color:'red',size:380,name:'Для активной езды'},
@@ -571,7 +730,7 @@ function proj(obj,local){ v3.copy(local); obj.localToWorld(v3); v3.project(camer
 const _b=new THREE.Box3(), _c=new THREE.Vector3();
 function worldCenterScreen(o){ _b.setFromObject(o); _b.getCenter(_c); _c.project(camera); return [(_c.x+1)/2*stage.clientWidth,(1-_c.y)/2*stage.clientHeight]; }
 function explodeAmount(p){ return Math.min(clamp((p-.06)/.56), 1-clamp((p-.80)/.14)); }
-const tmp=new THREE.Vector3();
+const tmp=new THREE.Vector3(); const ZAX=new THREE.Vector3(0,0,1);
 function pathAt(path,k,out){ out.set(0,0,0); if(k<=0) return out; const n=path.length, f=k*n, i=Math.min(n-1,Math.floor(f)), u=ease(f-i);
   const a=i?path[i-1]:[0,0,0], b=path[i]; return out.set(a[0]+(b[0]-a[0])*u, a[1]+(b[1]-a[1])*u, a[2]+(b[2]-a[2])*u); }
 // ---- braking demo state
@@ -622,6 +781,7 @@ function update(){
     if(s.spin) p.o.rotation.y=p.r0+ease(k)*s.spin*Math.PI*2;
     if(DEMO.on&&E<.02){ const n=p.o.name; const sg=n.endsWith('Outer')||n.startsWith('Piston_O')?-1:n.endsWith('Inner')||n.startsWith('Piston_I')?1:0; if(sg&&(n.startsWith('Pad_')||n.startsWith('Piston_'))) p.o.position.z+=sg*cl*(n.startsWith('Pad_')?1:1); } }
   { const asm=E<.02; const rc=H.by[H.cur].RealCaliper; if(rc){ rc.visible=asm; H.calParts[H.cur].forEach(o=>o.visible=!asm); } }
+  { const rz=REAR*(1-ease(clamp(E/.25))); H.groups[H.cur].children.forEach(o=>{ if(isCalPart(o.name)){ o.position.applyAxisAngle(ZAX,rz); o.rotation.z=rz; } }); }
   const by=H.by[H.cur]; const dk=by['Disc_'+VAR[H.cur].hd]; dk.rotation.z=-Ps*2.2-DEMO.ang; by.Hat.rotation.z=-Ps*2.2-DEMO.ang;
   edgeMat.opacity=e*.32; axes.forEach(a=>a.material.opacity=.12+e*.45);
   if(H.gnd){H.gnd.userData.sh.material.opacity=.45*(1-e); H.gnd.userData.blob.material.opacity=.9*(1-e);}
@@ -680,7 +840,7 @@ function makeConfigurator(gltfs,hdr){
     $('m4').textContent=B.m['4p']; $('m6').textContent=B.m['6p']; }
   function showReal(){ const key=BRAND_MODEL[st.brand][st.cal], h=G[st.cal];
     for(const v in G) for(const k in G[v].userData.real) G[v].userData.real[k].visible=(v===st.cal&&k===key);
-    if(!h.userData.real[key]){ loadReal(key).then(sc0=>{ if(h.userData.real[key]) return; const o=sc0.clone(true); o.name='RealCaliper';
+    if(!h.userData.real[key]){ loadReal(key).then(sc0=>{ if(h.userData.real[key]) return; const o=sc0.clone(true); o.name='RealCaliper'; o.rotation.z=REAR;
         o.traverse(m=>{ if(m.isMesh){ m.material=m.material.clone(); m.castShadow=m.receiveShadow=true; } }); h.userData.g.add(o); h.userData.real[key]=o; apply(); }).catch(e=>console.error(e)); }
     const R=REAL[key]; $('cfgModel').innerHTML=`3D-модель: «${R.t}» — ${R.a}, <a href="${R.u}" target="_blank" rel="noopener">Sketchfab</a>, CC BY 4.0`;
     return h.userData.real[key]; }
@@ -712,6 +872,14 @@ function makeConfigurator(gltfs,hdr){
   $('cfgOrder').addEventListener('click',()=>{const f=$('form'); const c=window.__cfg; f.kit.value=`${c.name} · ${COLORS[c.color].n} · диск ${c.size} мм ${DISCS[c.disc].n} · колодки ${PADS[c.pads].n} · ≈ ${fmt(c.price)} ₽/ось (примерно)`;
     $('cta').scrollIntoView({behavior:'smooth'}); setTimeout(()=>f.name.focus({preventScroll:true}),700);});
   document.querySelectorAll('[data-preset]').forEach(a=>a.addEventListener('click',()=>{const p=PRESETS[a.dataset.preset]; set({brand:p.brand,cal:p.cal,pads:p.pads,disc:p.disc,color:p.color,size:p.size}); setHeroVariant(p.cal);}));
+  const enc=()=>`#k=${[st.brand,st.cal,st.color,st.pads,st.disc,st.size].join('.')}`+(window.__fitCar?`&car=${encodeURIComponent(window.__fitCar)}`:'')+(window.__vin?`&vin=${window.__vin}`:'');
+  window.__shareLink=()=>location.origin+location.pathname+enc();
+  $('cfgShare').addEventListener('click',async()=>{ const u=window.__shareLink(); history.replaceState(null,'',enc()); const ok=await window.__copy(u); window.__toast(ok?'Ссылка на комплект скопирована':'Ссылка: '+u); });
+  $('cfgTg').addEventListener('click',()=>document.getElementById('tgSend').click());
+  { const m=/#k=([^&]+)/.exec(location.hash); if(m){ const [brand,cal,color,pads,disc,size]=decodeURIComponent(m[1]).split('.');
+      if(BRANDS[brand]&&VAR[cal]){ Object.assign(st,{brand,cal}); if(COLORS[color]) st.color=color; if(PADS[pads]) st.pads=pads; if(DISCS[disc]) st.disc=disc; if(+size) st.size=+size; }
+      const c=/car=([^&]+)/.exec(location.hash), v=/vin=([^&]+)/.exec(location.hash); if(c){ window.__fitCar=decodeURIComponent(c[1]); $('form').car.value=window.__fitCar; } if(v) window.__vin=v[1];
+      setTimeout(()=>{ document.getElementById('configurator').scrollIntoView({behavior:'instant'}); if(H.cur!==st.cal) setHeroVariant(st.cal); },300); } }
   apply();
   (function loop(){ requestAnimationFrame(loop); if(!visible) return;
     const now=performance.now(), target=now<peekT?1:0; const np=peek+(target-peek)*.08; if(Math.abs(np-peek)>1e-4){peek=np;dirty=true;} else peek=target;
@@ -733,7 +901,7 @@ Promise.all([loadGLB('6p'),loadGLB('4p'),loadHDR(),loadReal('monoblock-6p'),load
       const key=Object.keys(SPEC).find(k=>o.name.startsWith(k)); if(!key) return;
       H.parts[v].push({o,base:o.position.clone(),r0:o.rotation.y,s:SPEC[key]});
       o.traverse(m=>{ if(m.isMesh && m.geometry.index && m.geometry.index.count<60000){ m.add(new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry,38),edgeMat)); } }); });
-    const rc=(v==='6p'?r6:r4).clone(true); rc.name='RealCaliper'; rc.traverse(m=>{ if(m.isMesh){ m.material=m.material.clone(); m.castShadow=m.receiveShadow=true; } }); g.add(rc); H.by[v].RealCaliper=rc;
+    const rc=(v==='6p'?r6:r4).clone(true); rc.name='RealCaliper'; rc.rotation.z=REAR; rc.traverse(m=>{ if(m.isMesh){ m.material=m.material.clone(); m.castShadow=m.receiveShadow=true; } }); g.add(rc); H.by[v].RealCaliper=rc;
     H.calParts=H.calParts||{}; H.calParts[v]=g.children.filter(o=>isCalPart(o.name));
     model.add(g); }
   H.gnd=ground(.19); model.add(H.gnd);
