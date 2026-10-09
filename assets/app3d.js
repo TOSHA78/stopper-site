@@ -1,4 +1,4 @@
-// VRAKK — 3D (hero + конфигуратор). Загружается после первого взаимодействия или через 2,5 с после load.
+// VRAKK — 3D (hero + конфигуратор). Загружается после первого взаимодействия или через 5 с после load.
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
@@ -119,7 +119,7 @@ function calls(v){const V=VAR[v];return[
 let CALL=[];
 function buildCallouts(){
   const w=$('callouts'); w.innerHTML=''; CALL=calls(H.cur);
-  CALL.forEach(c=>{const d=document.createElement('div');d.className='co';d.innerHTML=`<div class="n mono">${c.n} ——</div><h4>${c.h}</h4><p class="mono">${c.p}</p>`;w.appendChild(d);c.el=d});
+  CALL.forEach(c=>{const d=document.createElement('div');d.className='co';d.innerHTML=`<div class="n mono">${c.n} ——</div><b class="cot">${c.h}</b><p class="mono">${c.p}</p>`;w.appendChild(d);c.el=d});
   $('legend').innerHTML=CALL.map(c=>`<div><b>${c.n}</b>${c.h.replace(/ \d+ мм$/,'')}</div>`).join('');
   const V=VAR[H.cur]; $('kP').textContent=V.kp[0];$('kPd').textContent=V.kp[1];$('kD').textContent=V.kp[2];$('kDd').textContent=V.kp[3];
   $('tbCode').textContent=V.label.replace('Суппорт ',''); $('tbDisc').textContent=V.disc;

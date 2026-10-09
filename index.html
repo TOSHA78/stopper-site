@@ -92,7 +92,7 @@ body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;bac
 .co{position:absolute;width:250px;opacity:0;transform:translateY(6px);transition:opacity .45s,transform .45s}
 .co.on{opacity:1;transform:none}
 .co .n{font-size:10.5px;color:var(--cyan)}
-.co h4{font-family:Manrope,sans-serif;font-size:15px;font-weight:700;margin-top:4px;color:#fff}
+.co .cot{display:block;font-family:Manrope,sans-serif;font-size:15px;font-weight:700;margin-top:4px;color:#fff}
 .co p{font-size:11px;color:var(--mute);margin-top:4px;line-height:1.5}
 .co.r{text-align:left}.co.l{text-align:right}
 .dimtxt{font-family:Manrope;font-size:12px;fill:var(--cyan)}
@@ -232,7 +232,7 @@ footer{border-top:1px solid var(--line2);margin-top:60px;overflow:hidden}
  .nav,.hdr .btn{display:none}.burger{display:block}
  .nav.open{display:flex;position:absolute;top:64px;left:0;right:0;flex-direction:column;background:#05010f;padding:20px 28px;gap:18px;border-bottom:1px solid var(--line2)}
  .intro{top:auto;bottom:70px;transform:none;left:24px;right:24px}.intro p{font-size:15px}.kpis{display:none}
- .co{width:160px}.co p{display:none}.co h4{font-size:13px}
+ .co{width:160px}.co p{display:none}.co .cot{font-size:13px}
  section.s{padding:76px 0}.shead{grid-template-columns:1fr;gap:16px;margin-bottom:36px}.spec,.plans,.cta,.render,.fgrid{grid-template-columns:1fr}
  .spec article,.plan,.cta>div:first-child,.render figure,.fgrid>div{border-right:0;border-bottom:1px solid var(--line)}
  .callouts{display:none}
@@ -927,11 +927,11 @@ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded'
 
 
 <script>
-// 3D грузится не сразу, а после первого действия пользователя или через 2,5 с после загрузки страницы — первый экран показывается быстрее
+// 3D грузится не сразу, а после первого действия пользователя (движение мыши, касание, прокрутка) или через 5 с после загрузки страницы — первый экран показывается быстрее
 (function(){ const EV=['pointerdown','pointermove','wheel','touchstart','scroll','keydown']; let done=false;
- const boot=()=>{ if(done) return; done=true; EV.forEach(e=>removeEventListener(e,boot)); import('./assets/app3d.js?v=1').catch(e=>{ console.error(e); const l=document.getElementById('loader'); l&&l.remove(); document.getElementById('fallback').style.display='flex'; }); };
+ const boot=()=>{ if(done) return; done=true; EV.forEach(e=>removeEventListener(e,boot)); import('./assets/app3d.js?v=2').catch(e=>{ console.error(e); const l=document.getElementById('loader'); l&&l.remove(); document.getElementById('fallback').style.display='flex'; }); };
  EV.forEach(e=>addEventListener(e,boot,{passive:true}));
- if(/^#(k=|configurator|calc)/.test(location.hash)) boot(); else addEventListener('load',()=>setTimeout(boot,2500));
+ if(/^#(k=|configurator|calc)/.test(location.hash)) boot(); else addEventListener('load',()=>setTimeout(boot,5000));
 })();
 </script>
 </body>
