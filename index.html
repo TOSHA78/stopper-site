@@ -561,7 +561,7 @@ function openModal(){ if($('pModal')) return; write(K_SEEN,1); const had=!!offer
    <div class="pgauge"><svg viewBox="0 0 220 130" aria-hidden="true"><path d="M20 120 A90 90 0 0 1 200 120" class="gt"/><path d="M20 120 A90 90 0 0 1 200 120" class="gv" id="pArc"/></svg><div class="pnum"><span id="pNum">0</span><small>%</small></div></div>
    <p class="pcopy" id="pCopy">Подбираем скидку…</p><div class="pcode" id="pCode" hidden><code>${o.code}</code><span class="mono pt" data-exp="${o.exp}">действует ${left(o.exp-Date.now())}</span></div>
    <div class="pact" id="pAct" hidden><button class="btn" type="button" id="pUse">Применить к комплекту</button><button class="btn ghost" type="button" id="pClose">Позже</button></div>
-   <p class="pnote">Скидка на комплект из конфигуратора, код одноразовый и действует 48 часов. Окончательную цену подтвердит инженер.</p></div>`;
+   <p class="pnote">Скидка на комплект из конфигуратора, код действует 48 часов. Окончательную цену подтвердит инженер.</p></div>`;
   document.body.appendChild(m); requestAnimationFrame(()=>m.classList.add('on'));
   const close=()=>{ m.classList.remove('on'); setTimeout(()=>m.remove(),250); document.removeEventListener('keydown',esc); }, esc=e=>{ if(e.key==='Escape') close(); };
   document.addEventListener('keydown',esc); m.addEventListener('click',e=>{ if(e.target===m) close(); }); m.querySelector('.px').onclick=close;
