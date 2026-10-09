@@ -633,7 +633,7 @@ const REAL={
  'monoblock-4p':{t:'BRAKE CALLIPER',a:'VR DESIGNER',u:'https://sketchfab.com/3d-models/brake-calliper-0934bfa92bf44b1fbf4bbb5ce5e4c85b'},
  'wilwood-4p':{t:'SPOON CAR CALIPER',a:'ijiklvn',u:'https://sketchfab.com/3d-models/spoon-car-caliper-ad511e42db72421a9fa0b7b177833f93'}};
 const BRAND_MODEL={brembo:{'6p':'brembo-6p','4p':'brembo-4p'},ap:{'6p':'monoblock-6p','4p':'monoblock-4p'},alcon:{'6p':'monoblock-6p','4p':'monoblock-4p'},wilwood:{'6p':'monoblock-6p','4p':'wilwood-4p'}};
-const realCache={}; const loadReal=k=>realCache[k]||(realCache[k]=new Promise((res,rej)=>gl.load(`assets/real/${k}.glb?r=6`,g=>res(g.scene),undefined,rej)));
+const realCache={}; const loadReal=k=>realCache[k]||(realCache[k]=new Promise((res,rej)=>gl.load(`assets/real/${k}.glb?r=7`,g=>res(g.scene),undefined,rej)));
 const CAL_PARTS=['CaliperBody','CaliperHalf','Piston_','Pad_','PadPin','PadSpring','Bleed','Fitting','Bracket','Bolt_'];
 const isCalPart=n=>CAL_PARTS.some(p=>n.startsWith(p));
 window.__BRANDS=BRANDS;
