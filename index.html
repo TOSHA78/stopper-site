@@ -191,7 +191,8 @@ section.s{position:relative;padding:112px 0}
 form label{display:block;margin-bottom:22px}
 form label span{display:block;font-size:10.5px;color:var(--dim);text-transform:uppercase;margin-bottom:8px}
 form input,form select,form textarea{width:100%;height:50px;background:rgba(0,0,0,.35);border:1px solid var(--line2);color:var(--ink);padding:0 16px;font:15px Manrope;outline:none;transition:border-color .2s;border-radius:0;appearance:none}
-form textarea{height:auto;min-height:92px;padding:12px 16px;resize:vertical;line-height:1.5}
+form textarea{height:auto;min-height:92px;padding:12px 16px;resize:none;overflow:hidden;line-height:1.5}
+form .bad input{border-color:var(--hot)}
 form input:focus,form select:focus,form textarea:focus{border-color:var(--cyan)}
 form .bad input{border-color:var(--hot)}
 form label small.hint{display:block;margin-top:6px;font-size:11.5px;color:var(--dim)}
@@ -470,15 +471,16 @@ footer{border-top:1px solid var(--line2);margin-top:60px}
    </div>
    <div>
     <form id="form" novalidate>
-     <label><span class="mono">Имя</span><input name="name" autocomplete="name" placeholder="Как к вам обращаться"></label>
+     <label id="nameL"><span class="mono">Имя</span><input name="name" autocomplete="name" placeholder="Как к вам обращаться"></label>
      <label id="phoneL"><span class="mono">Телефон</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (999) 123-45-67" maxlength="22"><small class="hint">Российский номер или международный в формате +код страны</small></label>
      <label><span class="mono">Автомобиль</span><input name="car" placeholder="Марка, модель, год"></label>
      <label><span class="mono">Комплект (из конфигуратора)</span><input name="kit" placeholder="Не выбран — подберём сами"></label>
      <label><span class="mono">Комментарий</span><textarea name="comment" rows="3" maxlength="400" placeholder="Колёса, вылет, задачи: город, трек, буксировка…"></textarea></label>
-     <p class="err" id="err" role="alert">Укажите имя, автомобиль и корректный телефон.</p>
-     <button class="btn" type="button" id="tgSend" style="width:100%;justify-content:center">Отправить в Telegram →</button>
-     <button class="btn ghost" type="submit" style="width:100%;justify-content:center;margin-top:10px">Отправить заявку →</button>
-     <p class="legal">«Отправить в Telegram» откроет чат @hv99978 с уже заполненной заявкой — останется нажать «Отправить». Текст заявки также копируется в буфер обмена. Нажимая кнопку, вы соглашаетесь на обработку персональных данных.</p>
+     <p class="err" id="err" role="alert">Укажите имя и корректный телефон.</p>
+     <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+     <button class="btn" type="submit" id="sendBtn" style="width:100%;justify-content:center">Отправить в Telegram →</button>
+     <button class="btn ghost" type="button" id="tgSend" style="width:100%;justify-content:center;margin-top:10px;display:none">Написать в Telegram →</button>
+     <p class="legal" id="legal">Откроется чат @hv99978 с уже заполненной заявкой — останется нажать «Отправить». Нажимая кнопку, вы соглашаетесь на обработку персональных данных.</p>
     </form>
     <div class="ok" id="ok"><div class="mono" style="color:#00e5ff;font-size:11px">СТАТУС · ПРИНЯТО</div><h3 style="margin-top:14px">Спасибо, заявка принята.</h3><p>Инженер свяжется с вами в течение 15 минут в рабочее время.</p></div>
    </div>
@@ -509,12 +511,10 @@ const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.targ
 document.querySelectorAll('.rv').forEach(el=>io.observe(el));
 </script>
 <script>
-/* ==== Приём заявок: заполните ОДНО из полей, иначе форма честно сообщит, что онлайн-отправка не подключена ====
-   formsubmitEmail — ваш e-mail для FormSubmit.co (первую заявку нужно подтвердить по ссылке из письма).
-   web3formsKey    — access key с web3forms.com (бесплатно, ключ можно держать в открытом коде).
-   tgBotToken/tgChatId — авто-отправка ботом Telegram. ВНИМАНИЕ: токен в коде сайта виден всем, лучше FormSubmit/Web3Forms.
-   telegram — ссылка для кнопки «Отправить в Telegram» (работает всегда: копирует текст заявки и открывает чат). */
-window.STOPPER_LEADS={telegram:'https://t.me/hv99978', formsubmitEmail:'', web3formsKey:'', tgBotToken:'', tgChatId:''};
+/* ==== Приём заявок ====
+   endpoint — адрес релея (Cloudflare Worker или Google Apps Script из папки relay/), который хранит токен бота и chat_id
+   и пересылает заявку в Telegram. Пока пусто — кнопка формы открывает чат @hv99978 с уже заполненной заявкой. */
+window.STOPPER_LEADS={endpoint:''};
 
 (function(){
 const $=id=>document.getElementById(id), fmt=n=>n.toLocaleString('ru-RU').replace(/\u00a0/g,' ');
@@ -623,24 +623,29 @@ $('tgSend').onclick=()=>{ if(form.phone.value.trim()&&!phoneOk(form.phone.value)
   if(/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)){ let left=false; const h=()=>{ if(document.hidden) left=true; }; document.addEventListener('visibilitychange',h);
     location.href=L.app; setTimeout(()=>{ document.removeEventListener('visibilitychange',h); if(!left&&!document.hidden) location.href=L.web; },1500); }
   else { const w=window.open('about:blank','_blank'); if(w){ w.opener=null; w.location.href=L.web; } else location.href=L.web; } };
-form.addEventListener('submit',async e=>{ e.preventDefault(); const f=form, p=f.phone.value.replace(/\D/g,'');
+// one primary action: with LEADS_ENDPOINT the request is delivered automatically (relay → Telegram bot);
+// without it (or if the relay fails) the same button opens the chat with the request already typed in
+const ENDPOINT=((window.STOPPER_LEADS||{}).endpoint||'').trim();
+const sendBtn=$('sendBtn'), tgAlt=$('tgSend');
+if(ENDPOINT){ sendBtn.textContent='Отправить заявку →'; tgAlt.style.display=''; $('legal').textContent='Заявка придёт инженеру сразу. Нажимая кнопку, вы соглашаетесь на обработку персональных данных.'; } else { sendBtn.textContent='Отправить в Telegram →'; tgAlt.style.display='none'; }
+function validate(needAll){ const f=form, okPhone=phoneOk(f.phone.value), okName=!!f.name.value.trim();
   if(!f.car.value.trim()&&window.__fitCar) f.car.value=window.__fitCar;
-  const okPhone=phoneOk(f.phone.value); $('phoneL').classList.toggle('bad',!okPhone); if(!f.name.value.trim()||!f.car.value.trim()||!okPhone){ $('err').style.display='block'; (!f.name.value.trim()?f.name:!okPhone?f.phone:f.car).focus(); return; } $('err').style.display='none';
-  const {data,text}=leadText();
-  const L=window.STOPPER_LEADS||{}; const btn=f.querySelector('button[type=submit]'); btn.disabled=true; btn.textContent='Отправляем…';
-  let ok=false, configured=false;
-  try{
-    if(L.web3formsKey){ configured=true; const r=await fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({access_key:L.web3formsKey,subject:'Заявка STOPPER: '+data.car,from_name:'Сайт STOPPER',...data})}); const j=await r.json(); ok=r.ok&&j.success!==false; }
-    else if(L.tgBotToken&&L.tgChatId){ configured=true; const r=await fetch(`https://api.telegram.org/bot${L.tgBotToken}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:L.tgChatId,text})}); const j=await r.json().catch(()=>({})); ok=r.ok&&j.ok; }
-    else if(L.formsubmitEmail){ configured=true; const r=await fetch('https://formsubmit.co/ajax/'+encodeURIComponent(L.formsubmitEmail),{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({_subject:'Заявка STOPPER: '+data.car,_template:'table',_captcha:'false',Имя:data.name,Телефон:data.phone,Автомобиль:data.car,VIN:data.vin,Комплект:data.kit||(data.D?data.D.brand+' '+data.D.series:''),Комментарий:data.comment,Ссылка:data.link})}); const j=await r.json().catch(()=>({})); ok=r.ok&&String(j.success)!=='false'; }
-  }catch(err){ ok=false; }
-  btn.disabled=false; btn.textContent='Отправить заявку →';
-  const okEl=$('ok');
-  if(ok){ okEl.classList.remove('warn'); okEl.innerHTML='<div class="mono" style="color:#00e5ff;font-size:11px">СТАТУС · ОТПРАВЛЕНО</div><h3 style="margin-top:14px">Спасибо, заявка отправлена.</h3><p>Мы свяжемся с вами по указанному телефону.</p>'; f.style.display='none'; okEl.style.display='block'; return; }
-  const copied=await copy(text); okEl.classList.add('warn');
-  okEl.innerHTML=`<div class="mono" style="font-size:11px">СТАТУС · НЕ ОТПРАВЛЕНО</div><h3 style="margin-top:14px">${configured?'Не удалось отправить заявку.':'Онлайн-отправка заявок пока не подключена.'}</h3><p>${copied?'Текст заявки со ссылкой на комплект скопирован — отправьте его нам в <a href="'+((L.telegram)||'https://t.me/hv99978')+'" target="_blank" rel="noopener">Telegram</a>.':'Скопируйте текст ниже и отправьте его нам.'}</p><textarea readonly style="width:100%;height:140px;margin-top:12px;background:rgba(0,0,0,.35);color:#cfd6e4;border:1px solid var(--line2);padding:10px;font:12px Manrope">${text.replace(/</g,'&lt;')}</textarea><button class="btn ghost" type="button" style="margin-top:12px" onclick="this.parentNode.style.display='none';document.getElementById('form').style.display=''">← Вернуться к форме</button>`;
-  f.style.display='none'; okEl.style.display='block';
-});
+  $('phoneL').classList.toggle('bad',!okPhone); $('nameL').classList.toggle('bad',!okName);
+  const ok=okName&&okPhone; $('err').style.display=ok?'none':'block'; if(!ok) (!okName?f.name:f.phone).focus(); return ok; }
+function showOk(){ const okEl=$('ok'); okEl.innerHTML='<div class="mono" style="color:#00e5ff;font-size:11px">СТАТУС · ОТПРАВЛЕНО</div><h3 style="margin-top:14px">Заявка отправлена, свяжемся в течение 15 минут.</h3><p>В рабочее время инженер позвонит или напишет на указанный номер.</p><button class="btn ghost" type="button" style="margin-top:22px" id="okBack">← Новая заявка</button>';
+  form.style.display='none'; okEl.style.display='block'; $('okBack').onclick=()=>{ okEl.style.display='none'; form.style.display=''; }; }
+form.addEventListener('submit',async e=>{ e.preventDefault();
+  if(!ENDPOINT){ if(form.phone.value.trim()&&!phoneOk(form.phone.value)){ validate(); return; } $('tgSend').onclick(); return; }
+  if(!validate()) return;
+  const {data,text}=leadText(); sendBtn.disabled=true; sendBtn.textContent='Отправляем…'; let ok=false;
+  try{ const D=data.D||{}; const r=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify({name:data.name,phone:data.phone,car:data.car,vin:data.vin,pcd:data.pcd,brand:D.brand?D.brand+' '+D.series:'',pistons:D.pist||'',disc:D.disc||'',pads:D.pads||'',color:D.color||'',price:D.price||0,kit:data.kit,link:data.link,comment:data.comment,text,website:form.website.value})});
+    const j=await r.json().catch(()=>({})); ok=r.ok&&j.ok!==false; }catch(err){ ok=false; }
+  sendBtn.disabled=false; sendBtn.textContent='Отправить заявку →';
+  if(ok){ showOk(); return; }
+  toast('Сервер не ответил — открываем Telegram с готовой заявкой'); $('tgSend').onclick(); });
+// comment box grows with the text, no inner scroll
+const ta=form.comment; const grow=()=>{ ta.style.height='auto'; ta.style.height=ta.scrollHeight+2+'px'; }; ta.addEventListener('input',grow); grow();
 })();
 </script>
 
@@ -922,7 +927,7 @@ function makeConfigurator(gltfs,hdr){
     $('cfgPadNote').textContent=Pd.t+' · '+Pd.temp; $('cfgDiscNote').textContent=Dc.use;
     $('cfgSpec').innerHTML=`<dt>Суппорт</dt><dd>${name} · ${C.n}</dd><dt>Диск</dt><dd>${st.size} мм · ${Dc.n}</dd><dt>Колодки</dt><dd>${Pd.n} — ${Pd.use}</dd><dt>Поршни</dt><dd>${V.pistN}</dd><dt>Колёса</dt><dd>от ${st.size>=380?'19':st.size>=355?'18':'17'}″</dd>`;
     $('cfgHint').textContent=peekT>performance.now()?'КОЛОДКИ ВЫДВИНУТЫ ДЛЯ ОСМОТРА':'\u00a0';
-    window.__cfg={...st,price,name}; window.__cfgDesc={brand:B.n,series:B.m[st.cal].replace(/, \d поршн.*$/,''),pist:V.pistN,disc:`${st.size} мм, ${Dc.n}`,pads:`${Pd.n} (${Pd.t.toLowerCase()})`,color:C.n,price}; dirty=true;
+    window.__cfg={...st,price,name}; { const k=document.getElementById('form').kit; if(k) k.placeholder=`${name} · ${st.size} мм · ${C.n} (из конфигуратора)`; } window.__cfgDesc={brand:B.n,series:B.m[st.cal].replace(/, \d поршн.*$/,''),pist:V.pistN,disc:`${st.size} мм, ${Dc.n}`,pads:`${Pd.n} (${Pd.t.toLowerCase()})`,color:C.n,price}; dirty=true;
   }
   function set(o,src){ for(const k in o) st[k]=k==='size'?+o[k]:o[k]; apply(); }
   document.querySelector('.panel').addEventListener('click',e=>{const b=e.target.closest('[data-k] button'); if(!b) return; const k=b.closest('[data-k]').dataset.k;
