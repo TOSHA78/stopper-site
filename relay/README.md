@@ -1,49 +1,65 @@
-# Релей заявок VRAKK → Telegram-бот
+# Релей заявок VRAKK → Telegram-бот @VRAKK1_bot
 
-Сайт отправляет заявку (JSON, `Content-Type: text/plain`) на адрес из `window.VRAKK_LEADS.endpoint` в `index.html`.
-Релей хранит токен бота и chat_id, поэтому в коде сайта их нет. Пока `endpoint` пустой, кнопка формы открывает
-`https://t.me/hv99978?text=…` с уже заполненной заявкой.
+Сайт отправляет заявку (JSON, `Content-Type: text/plain`, без предзапроса CORS) на адрес из `window.VRAKK_LEADS.endpoint` в `index.html`.
+Токен бота и id чата живут только в секретах Cloudflare (или в свойствах Apps Script). В репозитории их нет.
+Пока `endpoint` пустой или релей не ответил, форма показывает ссылки на Telegram и телефон и открывает чат @hv99978 с уже заполненной заявкой.
 
-## 1. Бот и chat_id
-1. В Telegram: @BotFather → `/newbot` → получите токен.
-2. Напишите своему боту любое сообщение (или добавьте его в группу и напишите там).
-3. Откройте `https://api.telegram.org/bot<ТОКЕН>/getUpdates` и возьмите `message.chat.id` — это TG_CHAT_ID.
+## Какие секреты задать при деплое
 
-## 2а. Cloudflare Worker (рекомендуется)
+Воркер **не деплоить из этого репозитория автоматически**. Команды ниже — для владельца, с его машины после `npx wrangler login`.
+
+| Имя | Где | Что это |
+|---|---|---|
+| `TG_TOKEN` | секрет Worker | Токен бота @VRAKK1_bot от @BotFather. Не логировать и не коммитить. |
+| `TG_CHAT_ID` | секрет Worker | Id чата менеджера, только цифры. Раньше лежал в `wrangler.toml` — это персональные данные, в git больше не хранится. |
+| `WEBHOOK_SECRET` | секрет Worker | Случайная строка. Путь вебхука `/tg/<WEBHOOK_SECRET>` и заголовок `X-Telegram-Bot-Api-Secret-Token`. |
+| `ALLOWED_ORIGIN` | `[vars]` в `wrangler.toml` | Уже задан: `https://tosha78.github.io`. Это origin, без пути. Менять только если сменится домен. |
+| `CLOUDFLARE_ACCOUNT_ID` | переменная окружения или `wrangler login` | Id аккаунта Cloudflare. В `wrangler.toml` не записан. |
+| `LEADS` | KV binding | Неймспейс заявок. `id` в `wrangler.toml` — идентификатор привязки, не ключ доступа. |
+
+Свойства Apps Script, если используется запасной релей: `TG_TOKEN`, `TG_CHAT_ID`.
+
+```bash
+cd relay
+npx wrangler secret put TG_TOKEN
+npx wrangler secret put TG_CHAT_ID
+openssl rand -hex 24 | npx wrangler secret put WEBHOOK_SECRET
+npx wrangler deploy
+# один раз, подставьте секрет вебхука (его не сохраняйте в shell history скриншотом в открытый чат):
+# curl "https://vrakk-leads.<account>.workers.dev/tg/<WEBHOOK_SECRET>/setup"
 ```
-npm i -g wrangler && wrangler login
-wrangler init vrakk-leads   # выберите «Hello World», JavaScript
-# замените src/index.js содержимым cloudflare-worker.js
-wrangler secret put TG_TOKEN
-wrangler secret put TG_CHAT_ID
-wrangler deploy               # получите https://vrakk-leads.<аккаунт>.workers.dev
+
+`/setup` ставит вебхук и меню команд. Повторять его нужно только если секрет или адрес воркера сменились.
+
+Если неймспейс KV ещё не создан: `npx wrangler kv namespace create LEADS` и впишите выданный `id` в `wrangler.toml` локально.
+
+## Что проверяет воркер
+
+- CORS: `Access-Control-Allow-Origin` только если заголовок `Origin` равен `ALLOWED_ORIGIN`. Чужой origin — `403` без отражения origin. Запрос без `Origin` (curl с вашей машины) допускается.
+- Тело не больше 16 КБ, только JSON-объект.
+- Имя (от 2 символов, есть буква), телефон (РФ `7/8` и 10 цифр, либо `+` и 10–15 цифр), согласие `consent: true`. Иначе `400` и код `validation` или `consent`.
+- Текст заявки собирается на сервере из полей. Переносы строк в имени и телефоне вырезаются, длина полей ограничена. VIN принимается только если это 17 символов без I, O, Q. Ссылка — только на `https://tosha78.github.io/stopper-site`.
+- Скрытое поле `vrakk_hp` (honeypot): если заполнено, ответ `{ok:true}` и в Telegram ничего не уходит.
+- Не больше 8 запросов за 10 минут с одного IP (`429`, `Retry-After`). Повтор той же заявки (телефон + имя + начало комментария) в течение 90 секунд не создаёт второе сообщение.
+- Нет `TG_TOKEN` или `TG_CHAT_ID` — `503` и `error: "config"`, сайт уходит в запасной сценарий с Telegram и телефоном.
+- Ошибка Telegram — `502` и `error: "telegram"`.
+
+## Проверка с машины
+
+```bash
+curl -sS -X POST 'https://vrakk-leads.<account>.workers.dev' \
+  -H 'Content-Type: text/plain; charset=utf-8' \
+  -H 'Origin: https://tosha78.github.io' \
+  -d '{"name":"Тест","phone":"+79172290000","consent":true,"comment":"проверочная заявка"}'
 ```
-Либо в панели Cloudflare: Workers → Create → вставить код → Settings → Variables → добавить секреты.
 
-## 2б. Google Apps Script
-См. комментарии в `apps-script.gs` (свойства скрипта TG_TOKEN / TG_CHAT_ID, развёртывание «Веб-приложение, доступ: все»).
+Слово «тест» в имени, авто или комментарии помечает заявку тестовой: в `/stats` она не считается.
 
-## 3. Подключение на сайте
-В `index.html`: `window.VRAKK_LEADS={endpoint:'https://vrakk-leads.<аккаунт>.workers.dev'};`
-После этого основная кнопка — «Отправить заявку»: заявка уходит боту автоматически, посетитель видит
-«Заявка отправлена, свяжемся в течение 15 минут». Если релей не ответил, открывается Telegram с готовым текстом.
+## Команды бота
 
-Проверка: `curl -X POST <endpoint> -H 'Content-Type: text/plain' -d '{"name":"Тест","phone":"+79161234567","text":"Тестовая заявка"}'`
+Работают только в чате `TG_CHAT_ID`: `/stats`, `/leads`, `/lead N`, `/sold N [сумма]`, `/help`.
+Под заявкой кнопки «В работе / Продано / Отказ». После «Продано» ответьте на сообщение суммой (`350000` или `350к`).
 
-## CRM в боте (Cloudflare Worker + KV)
+## Запасной путь: Google Apps Script
 
-Воркер `vrakk-leads` хранит заявки в KV `LEADS` (см. `wrangler.toml`), нумерует их (#1, #2, …) и присылает каждую с кнопками
-«В работе / Продано ✅ / Отказ ❌». После «Продано» бот просит ответить суммой сделки (например, `350000` или `350к`).
-
-Команды (работают только в чате менеджера `TG_CHAT_ID`): `/stats`, `/leads`, `/lead N`, `/sold N [сумма]`, `/help`.
-Тестовые заявки (слово «тест» в имени, авто или комментарии) в `/stats` не учитываются.
-
-Развёртывание:
-```
-wrangler kv namespace create LEADS          # id → wrangler.toml
-wrangler secret put TG_TOKEN                # токен бота
-openssl rand -hex 24 | wrangler secret put WEBHOOK_SECRET
-wrangler deploy
-curl https://vrakk-leads.<account>.workers.dev/tg/<WEBHOOK_SECRET>/setup   # setWebhook + меню команд
-```
-Вебхук принимается только по секретному пути и с заголовком `X-Telegram-Bot-Api-Secret-Token`.
+См. комментарии в `apps-script.gs`. Тот же контракт полей (`name`, `phone`, `consent`, `vrakk_hp`). Секреты — только в свойствах скрипта.

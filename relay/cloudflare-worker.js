@@ -1,7 +1,10 @@
 // VRAKK — релей заявок с сайта в Telegram + мини-CRM в боте (Cloudflare Worker).
-// Секреты: TG_TOKEN (токен @BotFather), WEBHOOK_SECRET (случайная строка: путь вебхука /tg/<секрет> и X-Telegram-Bot-Api-Secret-Token).
-// Переменные (wrangler.toml): TG_CHAT_ID — чат менеджера, ALLOWED_ORIGIN — сайт. KV: LEADS — заявки.
-// После деплоя один раз: GET https://<worker>/tg/<WEBHOOK_SECRET>/setup — ставит вебхук и меню команд.
+// Секреты (wrangler secret put, НЕ в репозитории):
+//   TG_TOKEN        — токен бота @VRAKK1_bot от @BotFather
+//   TG_CHAT_ID      — id чата менеджера (только цифры)
+//   WEBHOOK_SECRET  — случайная строка: путь /tg/<секрет> и заголовок X-Telegram-Bot-Api-Secret-Token
+// Переменная (wrangler.toml [vars], не секрет): ALLOWED_ORIGIN — origin сайта.
+// KV binding LEADS — заявки. После деплоя один раз: GET https://<worker>/tg/<WEBHOOK_SECRET>/setup
 const MAX = 3500;
 const TZ = 3 * 3600e3; // Москва, UTC+3
 const ST = {
@@ -69,7 +72,74 @@ async function tg(env, method, body) {
   console.log('tg', method, j.ok ? 'ok' : 'fail: ' + (j.description || r.status));
   return j;
 }
-const chatId = env => String(env.TG_CHAT_ID || '969895267');
+const ORIGIN_DEFAULT = 'https://tosha78.github.io';
+const RATE_MAX = 8;
+const RATE_WINDOW_S = 600;
+const BODY_MAX = 16000;
+const memHits = new Map();
+
+const chatId = env => {
+  const id = String(env.TG_CHAT_ID || '').trim();
+  return /^-?\d{1,20}$/.test(id) ? id : '';
+};
+function safeEq(a, b) {
+  a = String(a ?? ''); b = String(b ?? '');
+  const n = Math.max(a.length, b.length);
+  let o = a.length ^ b.length;
+  for (let i = 0; i < n; i++) o |= (a.charCodeAt(i) || 0) ^ (b.charCodeAt(i) || 0);
+  return o === 0;
+}
+function allowedOrigins(env) {
+  return String(env.ALLOWED_ORIGIN || ORIGIN_DEFAULT).split(',').map(s => s.trim()).filter(Boolean);
+}
+function corsFor(req, env) {
+  const origin = req.headers.get('Origin') || '';
+  const ok = !!origin && allowedOrigins(env).includes(origin);
+  const headers = {
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Max-Age': '86400',
+    Vary: 'Origin',
+    'Cache-Control': 'no-store',
+  };
+  if (ok) headers['Access-Control-Allow-Origin'] = origin;
+  return { origin, ok, headers };
+}
+const cleanLine = (v, n = 300) => String(v ?? '')
+  .replace(/[\u0000-\u001f\u007f\u200b-\u200f\u202a-\u202e\ufeff]/g, ' ')
+  .replace(/\s+/g, ' ').trim().slice(0, n);
+const cleanBlock = (v, n = 800) => String(v ?? '')
+  .replace(/[\u0000-\u0008\u000b-\u001f\u007f\u200b-\u200f\u202a-\u202e\ufeff]/g, '')
+  .trim().slice(0, n);
+function phoneOkSrv(phone) {
+  const t = String(phone || '').trim();
+  const d = t.replace(/\D/g, '');
+  if (d.length < 10 || d.length > 15) return false;
+  if (/^[78]\d{10}$/.test(d)) return true;
+  return t.startsWith('+');
+}
+function num(v, max) {
+  const n = Number(v);
+  if (!Number.isFinite(n) || n < 0 || n > max) return 0;
+  return Math.round(n);
+}
+function tooManyMem(ip) {
+  const now = Date.now();
+  const arr = (memHits.get(ip) || []).filter(t => now - t < RATE_WINDOW_S * 1000);
+  if (arr.length >= RATE_MAX) { memHits.set(ip, arr); return true; }
+  arr.push(now); memHits.set(ip, arr);
+  if (memHits.size > 500) memHits.clear();
+  return false;
+}
+async function tooMany(env, ip) {
+  if (tooManyMem(ip)) return true;
+  if (!env.LEADS) return false;
+  const k = 'rl:' + ip;
+  const n = +(await env.LEADS.get(k)) || 0;
+  if (n >= RATE_MAX) return true;
+  await env.LEADS.put(k, String(n + 1), { expirationTtl: RATE_WINDOW_S });
+  return false;
+}
 
 // ---------- storage: lead:<000123> (value = JSON, metadata = короткая сводка для /stats и /leads), m:<message_id> → id
 const key = id => 'lead:' + String(id).padStart(6, '0');
@@ -113,56 +183,106 @@ async function setStatus(env, l, status, user, amount) {
 
 // ---------- site → lead
 async function siteLead(req, env) {
-  const origin = req.headers.get('Origin') || '';
-  const allowed = (env.ALLOWED_ORIGIN || 'https://tosha78.github.io').split(',').map(s => s.trim());
-  const cors = { 'Access-Control-Allow-Origin': allowed.includes(origin) ? origin : allowed[0], 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type', 'Vary': 'Origin' };
-  const json = (o, status = 200) => new Response(JSON.stringify(o), { status, headers: { ...cors, 'Content-Type': 'application/json' } });
-  if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
+  const { origin, ok: originOk, headers } = corsFor(req, env);
+  const json = (o, status = 200, extra) => new Response(JSON.stringify(o), {
+    status, headers: { ...headers, 'Content-Type': 'application/json; charset=utf-8', ...(extra || {}) },
+  });
+  if (req.method === 'OPTIONS') {
+    if (origin && !originOk) return new Response(null, { status: 403, headers });
+    return new Response(null, { status: 204, headers });
+  }
   if (req.method !== 'POST') return json({ ok: false, error: 'method' }, 405);
-  if (origin && !allowed.includes(origin)) return json({ ok: false, error: 'origin' }, 403);
+  if (origin && !originOk) return json({ ok: false, error: 'origin' }, 403);
 
+  const ip = (req.headers.get('CF-Connecting-IP') || '0').split(',')[0].trim().slice(0, 64);
+  if (await tooMany(env, ip)) return json({ ok: false, error: 'rate' }, 429, { 'Retry-After': '60' });
+
+  const len = +(req.headers.get('Content-Length') || 0);
+  if (len > BODY_MAX) return json({ ok: false, error: 'size' }, 413);
+  const raw = await req.text();
+  if (raw.length > BODY_MAX) return json({ ok: false, error: 'size' }, 413);
   let d;
-  try { d = JSON.parse(await req.text()); } catch { return json({ ok: false, error: 'json' }, 400); }
-  if (d.website) return json({ ok: true }); // honeypot
-  const clean = v => String(v ?? '').replace(/[\u0000-\u0008\u000b-\u001f]/g, '').trim().slice(0, 600);
-  const phone = clean(d.phone), digits = phone.replace(/\D/g, '');
-  if (!clean(d.name) || digits.length < 10 || digits.length > 15) return json({ ok: false, error: 'validation' }, 400);
-  if (d.consent !== true) return json({ ok: false, error: 'consent' }, 400); // 152-ФЗ: без согласия заявку не принимаем
-  const consentAt = (() => { const t = Date.parse(d.consentAt); return isFinite(t) && Math.abs(t - Date.now()) < 7 * 86400e3 ? t : Date.now(); })();
+  try { d = JSON.parse(raw); } catch { return json({ ok: false, error: 'json' }, 400); }
+  if (!d || typeof d !== 'object' || Array.isArray(d)) return json({ ok: false, error: 'json' }, 400);
+  // honeypot: obscure field, not "website" — browsers autofill that and a real заявка пропадала бы молча
+  if (cleanLine(d.vrakk_hp, 200)) return json({ ok: true });
+
+  const name = cleanLine(d.name, 80);
+  const phone = cleanLine(d.phone, 24);
+  if (name.length < 2 || !/\p{L}/u.test(name) || !phoneOkSrv(phone)) return json({ ok: false, error: 'validation' }, 400);
+  if (d.consent !== true) return json({ ok: false, error: 'consent' }, 400);
+  if (!env.TG_TOKEN || !chatId(env)) return json({ ok: false, error: 'config' }, 503);
+
+  const car = cleanLine(d.car, 180);
+  const vinRaw = cleanLine(d.vin, 20).toUpperCase();
+  const vin = /^[A-HJ-NPR-Z0-9]{17}$/.test(vinRaw) ? vinRaw : '';
+  const pcd = cleanLine(d.pcd, 80);
+  const brand = cleanLine(d.brand, 80);
+  const pistons = cleanLine(d.pistons, 80);
+  const disc = cleanLine(d.disc, 80);
+  const pads = cleanLine(d.pads, 120);
+  const color = cleanLine(d.color, 40);
+  const kit = cleanLine(d.kit, 240);
+  const linkRaw = cleanLine(d.link, 400);
+  const link = /^https:\/\/tosha78\.github\.io\/stopper-site(?:\/|[?#]|$)/.test(linkRaw) ? linkRaw : '';
+  const promo = cleanLine(d.promo, 32).toUpperCase();
+  const comment = cleanBlock(d.comment, 400);
+  const calc = cleanBlock(d.calc, 500);
+  const price = num(d.price, 2e7);
+  const discount = Math.min(100, num(d.discount, 100));
+  const finalPrice = num(d.finalPrice, 2e7);
+  const consentAt = (() => { const t = Date.parse(d.consentAt); return Number.isFinite(t) && Math.abs(t - Date.now()) < 7 * 86400e3 ? t : Date.now(); })();
+  const consentDoc = cleanLine(d.consentDoc, 80) || 'consent.html';
+
+  let dupKey = '';
+  if (env.LEADS) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(phone.replace(/\D/g, '') + '|' + name.toLowerCase() + '|' + comment.slice(0, 40)));
+    dupKey = 'dup:' + [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 32);
+    if (await env.LEADS.get(dupKey)) return json({ ok: true, duplicate: true });
+    await env.LEADS.put(dupKey, '1', { expirationTtl: 90 });
+  }
 
   let id = 0;
   if (env.LEADS) { id = (+(await env.LEADS.get('seq')) || 0) + 1; await env.LEADS.put('seq', String(id)); }
-  let text = clean(d.text) ? String(d.text).replace(/[\u0000-\u0008\u000b-\u001f]/g, '').slice(0, MAX) : [
-    'Заявка VRAKK', '', 'Имя: ' + clean(d.name), 'Телефон: ' + phone, '',
-    'Автомобиль: ' + (clean(d.car) || 'не указан'), d.vin && 'VIN: ' + clean(d.vin), d.pcd && 'Разболтовка: ' + clean(d.pcd), '',
-    d.brand && 'Бренд: ' + clean(d.brand), d.pistons && 'Поршни: ' + clean(d.pistons), d.disc && 'Диск: ' + clean(d.disc),
-    d.pads && 'Колодки: ' + clean(d.pads), d.color && 'Цвет: ' + clean(d.color), d.price && 'Цена: ≈ ' + fmtN(+d.price) + ' ₽ за ось',
-    d.discount && 'Скидка: ' + Number(d.discount) + ' % (промокод ' + clean(d.promo) + ')', d.discount && d.finalPrice && 'Итого: ≈ ' + fmtN(+d.finalPrice) + ' ₽ за ось',
-    d.link && 'Комплект: ' + clean(d.link), d.calc && '\n' + clean(d.calc), d.comment && '\nКомментарий: ' + clean(d.comment),
-    '\nСогласие на обработку ПДн: дано ' + msk(consentAt) + ' МСК',
-  ].filter(x => typeof x === 'string').join('\n').replace(/\n{3,}/g, '\n\n');
-  if (id) text = text.replace(/^Заявка VRAKK/, `Заявка VRAKK #${id}`);
-  if (id && !text.startsWith('Заявка VRAKK #')) text = `Заявка VRAKK #${id}\n\n` + text;
+  const text = [
+    id ? `Заявка VRAKK #${id}` : 'Заявка VRAKK', '',
+    'Имя: ' + name, 'Телефон: ' + phone, '',
+    'Автомобиль: ' + (car || 'не указан'),
+    vin ? 'VIN: ' + vin : null, pcd ? 'Разболтовка: ' + pcd : null, '',
+    brand ? 'Бренд: ' + brand : null, pistons ? 'Поршни: ' + pistons : null, disc ? 'Диск: ' + disc : null,
+    pads ? 'Колодки: ' + pads : null, color ? 'Цвет: ' + color : null,
+    price ? 'Цена: ≈ ' + fmtN(price) + ' ₽ за ось' : null,
+    discount && promo ? 'Скидка: ' + discount + ' % (промокод ' + promo + ')' : null,
+    discount && finalPrice ? 'Итого: ≈ ' + fmtN(finalPrice) + ' ₽ за ось' : null,
+    kit ? 'Комплект: ' + kit : null, link ? 'Ссылка: ' + link : null,
+    calc ? '\n' + calc : null, comment ? '\nКомментарий: ' + comment : null,
+    '\nСогласие на обработку ПДн: дано ' + msk(consentAt) + ' МСК (' + consentDoc + ')',
+  ].filter(x => typeof x === 'string').join('\n').replace(/\n{3,}/g, '\n\n').slice(0, MAX);
 
-  const test = /тест/i.test([d.name, d.comment, d.car].join(' '));
+  const test = /тест/i.test([name, comment, car].join(' '));
   const now = Date.now();
   const lead = id ? {
     id, status: 'new', created: now, updated: now, test, text,
-    name: clean(d.name), phone, car: clean(d.car), vin: clean(d.vin), pcd: clean(d.pcd), brand: clean(d.brand), pistons: clean(d.pistons),
-    disc: clean(d.disc), pads: clean(d.pads), color: clean(d.color), price: +d.price || 0, discount: +d.discount || 0, promo: clean(d.promo),
-    finalPrice: +d.finalPrice || 0, kit: clean(d.kit), link: clean(d.link), calc: clean(d.calc), comment: clean(d.comment),
-    consent: { at: consentAt, doc: clean(d.consentDoc) || 'consent.html', ip: req.headers.get('CF-Connecting-IP') || '', ua: clean(req.headers.get('User-Agent')).slice(0, 200) }, history: [{ s: 'new', by: 'сайт', at: now }],
+    name, phone, car, vin, pcd, brand, pistons, disc, pads, color, price, discount, promo, finalPrice, kit, link, calc, comment,
+    consent: { at: consentAt, doc: consentDoc, ip, ua: cleanLine(req.headers.get('User-Agent'), 200) },
+    history: [{ s: 'new', by: 'сайт', at: now }],
   } : null;
 
-  const t = await tg(env, 'sendMessage', { chat_id: chatId(env), text: lead ? leadMsg(lead) : text, disable_web_page_preview: true, ...(lead ? { reply_markup: keyboard(lead) } : {}) });
-  if (!t.ok) return json({ ok: false, error: 'telegram' }, 502);
+  const t = await tg(env, 'sendMessage', {
+    chat_id: chatId(env), text: lead ? leadMsg(lead) : text, disable_web_page_preview: true,
+    ...(lead ? { reply_markup: keyboard(lead) } : {}),
+  });
+  if (!t.ok) {
+    if (dupKey && env.LEADS) await env.LEADS.delete(dupKey);
+    return json({ ok: false, error: 'telegram' }, 502);
+  }
   if (lead) { lead.msg = t.result.message_id; await putLead(env, lead); await env.LEADS.put('m:' + lead.msg, String(id)); }
   return json({ ok: true, id: id || undefined });
 }
 
 // ---------- Telegram webhook
 async function webhook(req, env) {
-  if (req.headers.get('X-Telegram-Bot-Api-Secret-Token') !== env.WEBHOOK_SECRET) return new Response('forbidden', { status: 403 });
+  if (!safeEq(req.headers.get('X-Telegram-Bot-Api-Secret-Token'), env.WEBHOOK_SECRET)) return new Response('forbidden', { status: 403 });
   let u; try { u = await req.json(); } catch { return new Response('ok'); }
   try {
     if (u.callback_query) await onCallback(env, u.callback_query);
@@ -254,6 +374,7 @@ function details(l) {
 }
 
 async function setup(url, env) {
+  if (!env.TG_TOKEN || !env.WEBHOOK_SECRET || !chatId(env)) return Response.json({ ok: false, error: 'config' }, { status: 503 });
   const hook = `${url.origin}/tg/${env.WEBHOOK_SECRET}`;
   const a = await tg(env, 'setWebhook', { url: hook, secret_token: env.WEBHOOK_SECRET, allowed_updates: ['message', 'callback_query'], drop_pending_updates: true });
   const b = await tg(env, 'setMyCommands', { commands: COMMANDS, scope: { type: 'default' } });
