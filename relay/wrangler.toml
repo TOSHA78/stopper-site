@@ -1,15 +1,21 @@
 # VRAKK — релей заявок + мини-CRM в Telegram (Cloudflare Worker)
-# Секреты (не в этом файле): wrangler secret put TG_TOKEN · wrangler secret put WEBHOOK_SECRET
+# Секретов и персональных данных здесь нет. Имена секретов и как их задать — в README.md.
+# Идентификатор аккаунта Cloudflare в этот файл не пишем: npx wrangler login или переменная CLOUDFLARE_ACCOUNT_ID.
 name = "vrakk-leads"
 main = "cloudflare-worker.js"
 compatibility_date = "2024-09-23"
-account_id = "e7c4a08246a766129ff0e4f323fc9491"
 workers_dev = true
 
 [vars]
-TG_CHAT_ID = "969895267"
+# Origin сайта (не путь). Несколько значений — через запятую.
 ALLOWED_ORIGIN = "https://tosha78.github.io"
 
+# Секреты задаются отдельно, не в этом файле:
+#   npx wrangler secret put TG_TOKEN
+#   npx wrangler secret put TG_CHAT_ID
+#   npx wrangler secret put WEBHOOK_SECRET
+
+# id неймспейса — не секрет (без API-токена данные не прочитать), нужен для привязки LEADS.
 [[kv_namespaces]]
 binding = "LEADS"
 id = "9422cdc6a6244db093657c1d0ad6e1c8"

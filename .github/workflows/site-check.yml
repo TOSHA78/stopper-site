@@ -1,0 +1,21 @@
+name: Проверка сайта
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: HTML
+        run: npx --yes html-validate@9.7.1 -c .htmlvalidate.json index.html privacy.html consent.html 404.html
+      - name: Ссылки
+        run: node scripts/check-site.mjs
+      - name: Релей
+        run: node --test --test-concurrency=1 relay/worker.test.mjs
